@@ -1,0 +1,6 @@
+06:24:00 **** Clean-only build of configuration Nios II for project MasterSoC_3pAIP_v0_bsp ****
+make clean 
+[BSP clean complete]
+
+06:24:02 Build Finished (took 1s.528ms)
+
