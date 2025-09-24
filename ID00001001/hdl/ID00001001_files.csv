@@ -1,0 +1,8 @@
+type,name
+top,ID00001001_dummy
+file,./src/ID00001001_dummy.v
+file,./src/ID00001001_dummyCore.v
+file,./src/ID00001001_dummyCtrl.v
+file,./src/ID00001001_aip.v
+file,../basicblocks/aip/aipModules.v
+file,../basicblocks/memories/simple_dual_port_ram_single_clk.v

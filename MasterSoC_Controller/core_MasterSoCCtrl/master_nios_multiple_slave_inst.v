@@ -1,0 +1,46 @@
+	master_nios_multiple_slave u0 (
+		.aip_up_0_aip_dataout (<connected-to-aip_up_0_aip_dataout>), //   aip_up_0.aip_dataout
+		.aip_up_0_aip_int     (<connected-to-aip_up_0_aip_int>),     //           .aip_int
+		.aip_up_0_aip_config  (<connected-to-aip_up_0_aip_config>),  //           .aip_config
+		.aip_up_0_aip_datain  (<connected-to-aip_up_0_aip_datain>),  //           .aip_datain
+		.aip_up_0_aip_read    (<connected-to-aip_up_0_aip_read>),    //           .aip_read
+		.aip_up_0_aip_write   (<connected-to-aip_up_0_aip_write>),   //           .aip_write
+		.aip_up_0_core_int    (<connected-to-aip_up_0_core_int>),    //           .core_int
+		.aip_up_0_aip_start   (<connected-to-aip_up_0_aip_start>),   //           .aip_start
+		.clk_clk              (<connected-to-clk_clk>),              //        clk.clk
+		.int_ip_s0_export     (<connected-to-int_ip_s0_export>),     //  int_ip_s0.export
+		.leds_export          (<connected-to-leds_export>),          //       leds.export
+		.port_s0_aip_dataout  (<connected-to-port_s0_aip_dataout>),  //    port_s0.aip_dataout
+		.port_s0_aip_int      (<connected-to-port_s0_aip_int>),      //           .aip_int
+		.port_s0_aip_config   (<connected-to-port_s0_aip_config>),   //           .aip_config
+		.port_s0_aip_datain   (<connected-to-port_s0_aip_datain>),   //           .aip_datain
+		.port_s0_aip_read     (<connected-to-port_s0_aip_read>),     //           .aip_read
+		.port_s0_aip_write    (<connected-to-port_s0_aip_write>),    //           .aip_write
+		.port_s0_core_int     (<connected-to-port_s0_core_int>),     //           .core_int
+		.port_s0_aip_start    (<connected-to-port_s0_aip_start>),    //           .aip_start
+		.port_s1_aip_dataout  (<connected-to-port_s1_aip_dataout>),  //    port_s1.aip_dataout
+		.port_s1_aip_int      (<connected-to-port_s1_aip_int>),      //           .aip_int
+		.port_s1_aip_config   (<connected-to-port_s1_aip_config>),   //           .aip_config
+		.port_s1_aip_datain   (<connected-to-port_s1_aip_datain>),   //           .aip_datain
+		.port_s1_aip_read     (<connected-to-port_s1_aip_read>),     //           .aip_read
+		.port_s1_aip_write    (<connected-to-port_s1_aip_write>),    //           .aip_write
+		.port_s1_core_int     (<connected-to-port_s1_core_int>),     //           .core_int
+		.port_s1_aip_start    (<connected-to-port_s1_aip_start>),    //           .aip_start
+		.port_s2_aip_dataout  (<connected-to-port_s2_aip_dataout>),  //    port_s2.aip_dataout
+		.port_s2_aip_int      (<connected-to-port_s2_aip_int>),      //           .aip_int
+		.port_s2_aip_config   (<connected-to-port_s2_aip_config>),   //           .aip_config
+		.port_s2_aip_datain   (<connected-to-port_s2_aip_datain>),   //           .aip_datain
+		.port_s2_aip_read     (<connected-to-port_s2_aip_read>),     //           .aip_read
+		.port_s2_aip_write    (<connected-to-port_s2_aip_write>),    //           .aip_write
+		.port_s2_core_int     (<connected-to-port_s2_core_int>),     //           .core_int
+		.port_s2_aip_start    (<connected-to-port_s2_aip_start>),    //           .aip_start
+		.reset_reset_n        (<connected-to-reset_reset_n>),        //      reset.reset_n
+		.spi_MISO             (<connected-to-spi_MISO>),             //        spi.MISO
+		.spi_MOSI             (<connected-to-spi_MOSI>),             //           .MOSI
+		.spi_SCLK             (<connected-to-spi_SCLK>),             //           .SCLK
+		.spi_SS_n             (<connected-to-spi_SS_n>),             //           .SS_n
+		.start_up_0_export    (<connected-to-start_up_0_export>),    // start_up_0.export
+		.uart_rxd             (<connected-to-uart_rxd>),             //       uart.rxd
+		.uart_txd             (<connected-to-uart_txd>)              //           .txd
+	);
+
