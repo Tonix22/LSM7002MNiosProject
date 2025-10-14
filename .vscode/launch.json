@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Nios II GDB attach",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/MasterSoC_Controller/software/MasterSoC_3pAIP_v1/app.elf",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/home/tonix/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-pc-linux-gnu/bin/nios2-elf-gdb",
+      "miDebuggerServerAddress": "localhost:2342",
+      "cwd": "${workspaceFolder}",
+      "externalConsole": true,
+      "setupCommands": [
+        { "text": "target remote :2342" },
+        { "text": "monitor reset" },
+        { "text": "load" },
+        { "text": "break main" },
+        { "text": "continue" }
+      ]
+    }
+  ]
+}

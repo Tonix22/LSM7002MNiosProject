@@ -1,0 +1,68 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "gdb: start server (detached)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "set -euo pipefail; \
+         mkdir -p .vscode; \
+         pkill -f \"nios2-gdb-server.*--tcpport 2342\" || true; \
+         nohup nios2-gdb-server -c 'DE-SoC [1-12]' -d 2 -i 0 --tcpport 2342 --tcppersist --tcptimeout 60 \
+           > .vscode/nios2-gdb-server.log 2>&1 < /dev/null & echo $! > .vscode/nios2-gdb-server.pid; \
+         for i in {1..50}; do \
+           grep -q \"Listening on port 2342\" .vscode/nios2-gdb-server.log && exit 0; \
+           sleep 0.1; \
+         done; \
+         echo 'ERROR: nios2-gdb-server not ready'; tail -n +1 .vscode/nios2-gdb-server.log; exit 1"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "gdb: stop server",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "if [ -f .vscode/nios2-gdb-server.pid ]; then kill $(cat .vscode/nios2-gdb-server.pid) 2>/dev/null || true; rm -f .vscode/nios2-gdb-server.pid; fi; \
+         pkill -f 'nios2-gdb-server.*--tcpport 2342' || true"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "uart: nios2-terminal",
+      "type": "shell",
+      "command": "nios2-terminal",
+      "args": ["--cable", "DE-SoC [1-12]", "--device", "2", "--instance", "0"],
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "gdb: client (nios2-elf-gdb)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "nios2-elf-gdb MasterSoC_Controller/software/MasterSoC_3pAIP_v1/app.elf \
+          -ex 'target remote :2342' \
+          -ex 'monitor reset' \
+          -ex 'load' \
+          -ex 'break main' \
+          -ex 'continue'"
+      ],
+      "presentation": { "panel": "new", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "debug: Nios (server + terminal + gdb)",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "gdb: start server (detached)",
+        "uart: nios2-terminal",
+        "gdb: client (nios2-elf-gdb)"
+      ]
+    }
+  ]
+}
