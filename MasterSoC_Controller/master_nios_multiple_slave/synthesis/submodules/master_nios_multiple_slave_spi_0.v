@@ -33,7 +33,7 @@
 //TARGETCLOCK: 50000000
 //NUMSLAVES: 1
 //CPOL: 0
-//CPHA: 1
+//CPHA: 0
 //LSBFIRST: 0
 //EXTRADELAY: 0
 //TARGETSSDELAY: 0
@@ -128,7 +128,6 @@ wire    [ 10: 0] spi_status;
 reg     [  4: 0] state;
 reg              stateZero;
 wire             status_wr_strobe;
-reg              transaction_primed;
 reg              transmitting;
 reg              tx_holding_primed;
 reg     [  7: 0] tx_holding_reg;
@@ -330,7 +329,6 @@ wire             write_tx_holding;
           tx_holding_primed <= 0;
           transmitting <= 0;
           SCLK_reg <= 0;
-          transaction_primed <= 0;
         end
       else 
         begin
@@ -368,31 +366,22 @@ wire             write_tx_holding;
               ROE <= 0;
               TOE <= 0;
             end
-          if (transaction_primed)
-            begin
-              transaction_primed <= 0;
-              //A transaction has just completed.  Shift the rx data into the rx holding register, and flag the read overrun error if rx holdingwas already occupied.
-              transmitting <= 0;
-
-              RRDY <= 1;
-              // Transfer the rx data to the holding register.
-              rx_holding_reg <= shift_reg;
-
-              //This may be unnecessary...
-              SCLK_reg <= 0;
-
-              if (RRDY)
-                  ROE <= 1;
-            end
           if (slowclock)
             begin
               if (state == 17)
-                  transaction_primed <= 1;
+                begin
+                  transmitting <= 0;
+                  RRDY <= 1;
+                  rx_holding_reg <= shift_reg;
+                  SCLK_reg <= 0;
+                  if (RRDY)
+                      ROE <= 1;
+                end
               else if (state != 0)
                   if (transmitting)
                       SCLK_reg <= ~SCLK_reg;
-              if (SCLK_reg ^ 1 ^ 0)
-                  if (state != 0 && state != 1)
+              if (SCLK_reg ^ 0 ^ 0)
+                  if (1)
                       shift_reg <= {shift_reg[6 : 0], ds_MISO};
             end
         end

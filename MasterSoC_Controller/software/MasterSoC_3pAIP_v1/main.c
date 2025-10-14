@@ -40,7 +40,7 @@ int main(void)
   
     ID00001001_getStatus(DUMMY_0, &dataFlit);
 
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
+    /*for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
     {
         dataFlits[i] = 1<<i;
     }
@@ -61,9 +61,9 @@ int main(void)
         dataFlits[i] = 7-i;
     }
 
-    ID00001001_writeData(DUMMY_2, dataFlits, DUMMY_MEM_SIZE, 0);
+    ID00001001_writeData(DUMMY_2, dataFlits, DUMMY_MEM_SIZE, 0);*/
 
-    ID00001001_enableDelay(DUMMY_0, 10000);
+    /*ID00001001_enableDelay(DUMMY_0, 10000);
 
     ID00001001_startIP(DUMMY_0);
 
@@ -134,7 +134,7 @@ int main(void)
     {
         printf("Data[%i]: %x ", i, dataFlits[i]);
     }
-    printf("\n");
+    printf("\n");*/
 
 
 
@@ -150,6 +150,11 @@ int main(void)
 				printf("\n The data in memory[1]: %lx\n", data[1]);
 				printf("\n The data in memory[2]: %lx\n", data[2]);
 
+
+				printf("test111\n");
+			   spidev_interface_transact(data[0], false);
+			   printf("test\n");
+			   printf("Data in Dummy 2:\n");
 
 		   start_state = 0;
 		}
