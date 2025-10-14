@@ -19,3 +19,6 @@ MasterSoC_Controller/software/MasterSoC_3pAIP_v1/app.objdump
 MasterSoC_Controller/software/MasterSoC_3pAIP_v1/.settings/*
 MasterSoC_Controller/software/MasterSoC_3pAIP_v1_bsp/libhal_bsp.a
 MasterSoC_Controller/software/MasterSoC_3pAIP_v1_bsp/obj
+MasterSoC_Controller/software/MasterSoC_3pAIP_v2_bsp/system.h
+MasterSoC_Controller/software/MasterSoC_3pAIP_v2_bsp/drivers/src/*.c
+MasterSoC_Controller/software/MasterSoC_3pAIP_v2_bsp/obj/HAL/src/*.d

@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'master_nios_multiple_slave'
  * SOPC Builder design path: ../../master_nios_multiple_slave.sopcinfo
  *
- * Generated: Sat Oct 11 02:18:10 CDT 2025
+ * Generated: Tue Oct 14 16:44:51 CDT 2025
  */
 
 /*
@@ -355,7 +355,7 @@
 #define ALT_MODULE_CLASS_spi_0 altera_avalon_spi
 #define SPI_0_BASE 0x46040
 #define SPI_0_CLOCKMULT 1
-#define SPI_0_CLOCKPHASE 1
+#define SPI_0_CLOCKPHASE 0
 #define SPI_0_CLOCKPOLARITY 0
 #define SPI_0_CLOCKUNITS "Hz"
 #define SPI_0_DATABITS 8
