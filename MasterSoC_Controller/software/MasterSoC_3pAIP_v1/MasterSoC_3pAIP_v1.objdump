@@ -35,41 +35,41 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   8 .debug_aranges 000004b0  00000000  00000000  00002e68  2**3
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_info   00006d87  00000000  00000000  00003318  2**0
+  9 .debug_info   00006d8a  00000000  00000000  00003318  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_abbrev 00002368  00000000  00000000  0000a09f  2**0
+ 10 .debug_abbrev 00002368  00000000  00000000  0000a0a2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_line   000028b9  00000000  00000000  0000c407  2**0
+ 11 .debug_line   00002891  00000000  00000000  0000c40a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_frame  00000974  00000000  00000000  0000ecc0  2**2
+ 12 .debug_frame  00000974  00000000  00000000  0000ec9c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_str    00001b78  00000000  00000000  0000f634  2**0
+ 13 .debug_str    00001c54  00000000  00000000  0000f610  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_loc    000025c7  00000000  00000000  000111ac  2**0
+ 14 .debug_loc    000025c7  00000000  00000000  00011264  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_alt_sim_info 00000010  00000000  00000000  00013774  2**2
+ 15 .debug_alt_sim_info 00000010  00000000  00000000  0001382c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_ranges 00000388  00000000  00000000  00013788  2**3
+ 16 .debug_ranges 00000388  00000000  00000000  00013840  2**3
                   CONTENTS, READONLY, DEBUGGING
- 17 .thread_model 00000003  00000000  00000000  000153ad  2**0
+ 17 .thread_model 00000003  00000000  00000000  00015465  2**0
                   CONTENTS, READONLY
- 18 .cpu          0000000c  00000000  00000000  000153b0  2**0
+ 18 .cpu          0000000c  00000000  00000000  00015468  2**0
                   CONTENTS, READONLY
- 19 .qsys         00000001  00000000  00000000  000153bc  2**0
+ 19 .qsys         00000001  00000000  00000000  00015474  2**0
                   CONTENTS, READONLY
- 20 .simulation_enabled 00000001  00000000  00000000  000153bd  2**0
+ 20 .simulation_enabled 00000001  00000000  00000000  00015475  2**0
                   CONTENTS, READONLY
- 21 .stderr_dev   0000000b  00000000  00000000  000153be  2**0
+ 21 .stderr_dev   0000000b  00000000  00000000  00015476  2**0
                   CONTENTS, READONLY
- 22 .stdin_dev    0000000b  00000000  00000000  000153c9  2**0
+ 22 .stdin_dev    0000000b  00000000  00000000  00015481  2**0
                   CONTENTS, READONLY
- 23 .stdout_dev   0000000b  00000000  00000000  000153d4  2**0
+ 23 .stdout_dev   0000000b  00000000  00000000  0001548c  2**0
                   CONTENTS, READONLY
- 24 .sopc_system_name 0000001a  00000000  00000000  000153df  2**0
+ 24 .sopc_system_name 0000001a  00000000  00000000  00015497  2**0
                   CONTENTS, READONLY
- 25 .quartus_project_dir 0000004e  00000000  00000000  000153f9  2**0
+ 25 .quartus_project_dir 0000004f  00000000  00000000  000154b1  2**0
                   CONTENTS, READONLY
- 26 .sopcinfo     0006816a  00000000  00000000  00015447  2**0
+ 26 .sopcinfo     0006bb40  00000000  00000000  00015500  2**0
                   CONTENTS, READONLY
 SYMBOL TABLE:
 00000000 l    d  .entry	00000000 .entry
@@ -627,83 +627,28 @@ alt_after_alt_main:
      1b8:	003fff06 	br	1b8 <__alt_data_end+0xfffc19b8>
 
 000001bc <ID00001001_init>:
-
-static int32_t ID00001001_clearStatus(uint32_t port);
-
-
-int32_t ID00001001_init(uint32_t port)
-{
      1bc:	defffb04 	addi	sp,sp,-20
-    uint32_t id;
-
-    //aip_init(port, ID00001001_csv, ID00001001_CONFIG_AMOUNT);
-
-    aip_getID(port, &id);
      1c0:	d80b883a 	mov	r5,sp
-
-static int32_t ID00001001_clearStatus(uint32_t port);
-
-
-int32_t ID00001001_init(uint32_t port)
-{
      1c4:	dfc00415 	stw	ra,16(sp)
      1c8:	dc800315 	stw	r18,12(sp)
      1cc:	dc400215 	stw	r17,8(sp)
      1d0:	dc000115 	stw	r16,4(sp)
      1d4:	2023883a 	mov	r17,r4
-    uint32_t id;
-
-    //aip_init(port, ID00001001_csv, ID00001001_CONFIG_AMOUNT);
-
-    aip_getID(port, &id);
      1d8:	00005f00 	call	5f0 <aip_getID>
-    printf("ID:%x\n",id);
      1dc:	d9400017 	ldw	r5,0(sp)
      1e0:	01000034 	movhi	r4,0
      1e4:	21071804 	addi	r4,r4,7264
      1e8:	0000eb80 	call	eb8 <printf>
-    return 0;
-}
-
-static int32_t ID00001001_clearStatus(uint32_t port)
-{
-    for(uint32_t i = 0; i < ID00001001_STATUS_BITS; i++)
      1ec:	0021883a 	mov	r16,zero
      1f0:	04800204 	movi	r18,8
-    {
-        aip_disableINT(port, i);
      1f4:	800b883a 	mov	r5,r16
      1f8:	8809883a 	mov	r4,r17
      1fc:	00006cc0 	call	6cc <aip_disableINT>
-        
-        aip_clearINT(port, i);
      200:	800b883a 	mov	r5,r16
      204:	8809883a 	mov	r4,r17
-    return 0;
-}
-
-static int32_t ID00001001_clearStatus(uint32_t port)
-{
-    for(uint32_t i = 0; i < ID00001001_STATUS_BITS; i++)
      208:	84000044 	addi	r16,r16,1
-    {
-        aip_disableINT(port, i);
-        
-        aip_clearINT(port, i);
      20c:	000075c0 	call	75c <aip_clearINT>
-    return 0;
-}
-
-static int32_t ID00001001_clearStatus(uint32_t port)
-{
-    for(uint32_t i = 0; i < ID00001001_STATUS_BITS; i++)
      210:	84bff81e 	bne	r16,r18,1f4 <__alt_data_end+0xfffc19f4>
-    aip_getID(port, &id);
-    printf("ID:%x\n",id);
-    ID00001001_clearStatus(port);
-
-    return 0;
-}
      214:	0005883a 	mov	r2,zero
      218:	dfc00417 	ldw	ra,16(sp)
      21c:	dc800317 	ldw	r18,12(sp)
@@ -713,54 +658,21 @@ static int32_t ID00001001_clearStatus(uint32_t port)
      22c:	f800283a 	ret
 
 00000230 <ID00001001_enableDelay>:
-
-int32_t ID00001001_enableDelay(uint32_t port, uint32_t msec)
-{
-    uint32_t delay = 0;
-
-    delay = (msec << 1) | 1;
      230:	294b883a 	add	r5,r5,r5
-
-    return 0;
-}
-
-int32_t ID00001001_enableDelay(uint32_t port, uint32_t msec)
-{
      234:	defffc04 	addi	sp,sp,-16
-    uint32_t delay = 0;
-
-    delay = (msec << 1) | 1;
      238:	29400054 	ori	r5,r5,1
      23c:	d9400115 	stw	r5,4(sp)
-
-    aip_writeConfReg(port, CDELAY, &delay, 1, 0);
      240:	01c00044 	movi	r7,1
      244:	d9800104 	addi	r6,sp,4
      248:	d8000015 	stw	zero,0(sp)
      24c:	01400104 	movi	r5,4
-
-    return 0;
-}
-
-int32_t ID00001001_enableDelay(uint32_t port, uint32_t msec)
-{
      250:	dfc00315 	stw	ra,12(sp)
      254:	dc000215 	stw	r16,8(sp)
      258:	2021883a 	mov	r16,r4
-    uint32_t delay = 0;
-
-    delay = (msec << 1) | 1;
-
-    aip_writeConfReg(port, CDELAY, &delay, 1, 0);
      25c:	00005700 	call	570 <aip_writeConfReg>
-
-    aip_enableINT(port, ID00001001_STATUS_BIT_DONE);
      260:	000b883a 	mov	r5,zero
      264:	8009883a 	mov	r4,r16
      268:	00006400 	call	640 <aip_enableINT>
-
-    return 0;
-}
      26c:	0005883a 	mov	r2,zero
      270:	dfc00317 	ldw	ra,12(sp)
      274:	dc000217 	ldw	r16,8(sp)
@@ -768,51 +680,22 @@ int32_t ID00001001_enableDelay(uint32_t port, uint32_t msec)
      27c:	f800283a 	ret
 
 00000280 <ID00001001_disableDelay>:
-
-int32_t ID00001001_disableDelay(uint32_t port)
-{
      280:	defffc04 	addi	sp,sp,-16
-    uint32_t delay = 0;
-
-    aip_writeConfReg(port, CDELAY, &delay, 1, 0);
      284:	01c00044 	movi	r7,1
      288:	d9800104 	addi	r6,sp,4
      28c:	d8000015 	stw	zero,0(sp)
      290:	01400104 	movi	r5,4
-
-    return 0;
-}
-
-int32_t ID00001001_disableDelay(uint32_t port)
-{
      294:	dfc00315 	stw	ra,12(sp)
      298:	dc000215 	stw	r16,8(sp)
-    uint32_t delay = 0;
      29c:	d8000115 	stw	zero,4(sp)
-
-    return 0;
-}
-
-int32_t ID00001001_disableDelay(uint32_t port)
-{
      2a0:	2021883a 	mov	r16,r4
-    uint32_t delay = 0;
-
-    aip_writeConfReg(port, CDELAY, &delay, 1, 0);
      2a4:	00005700 	call	570 <aip_writeConfReg>
-
-    aip_disableINT(port, 0);
      2a8:	8009883a 	mov	r4,r16
      2ac:	000b883a 	mov	r5,zero
      2b0:	00006cc0 	call	6cc <aip_disableINT>
-        
-    aip_clearINT(port, 0);
      2b4:	000b883a 	mov	r5,zero
      2b8:	8009883a 	mov	r4,r16
      2bc:	000075c0 	call	75c <aip_clearINT>
-
-    return 0;
-}
      2c0:	0005883a 	mov	r2,zero
      2c4:	dfc00317 	ldw	ra,12(sp)
      2c8:	dc000217 	ldw	r16,8(sp)
@@ -820,114 +703,60 @@ int32_t ID00001001_disableDelay(uint32_t port)
      2d0:	f800283a 	ret
 
 000002d4 <ID00001001_startIP>:
-
-int32_t ID00001001_startIP(uint32_t port)
-{
      2d4:	deffff04 	addi	sp,sp,-4
      2d8:	dfc00015 	stw	ra,0(sp)
-    aip_start(port);
      2dc:	00005e00 	call	5e0 <aip_start>
-
-    return 0;
-}
      2e0:	0005883a 	mov	r2,zero
      2e4:	dfc00017 	ldw	ra,0(sp)
      2e8:	dec00104 	addi	sp,sp,4
      2ec:	f800283a 	ret
 
 000002f0 <ID00001001_writeData>:
-
-int32_t ID00001001_writeData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      2f0:	defffe04 	addi	sp,sp,-8
-    aip_writeMem(port, MDATAIN, data, size, offset);
      2f4:	d9c00015 	stw	r7,0(sp)
      2f8:	31ffffcc 	andi	r7,r6,65535
      2fc:	280d883a 	mov	r6,r5
      300:	000b883a 	mov	r5,zero
-
-    return 0;
-}
-
-int32_t ID00001001_writeData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      304:	dfc00115 	stw	ra,4(sp)
-    aip_writeMem(port, MDATAIN, data, size, offset);
      308:	00005dc0 	call	5dc <aip_writeMem>
-
-    return 0;
-}
      30c:	0005883a 	mov	r2,zero
      310:	dfc00117 	ldw	ra,4(sp)
      314:	dec00204 	addi	sp,sp,8
      318:	f800283a 	ret
 
 0000031c <ID00001001_readData>:
-
-int32_t ID00001001_readData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      31c:	defffe04 	addi	sp,sp,-8
-    aip_readMem(port, MDATAOUT, data, size, offset);
      320:	d9c00015 	stw	r7,0(sp)
      324:	31ffffcc 	andi	r7,r6,65535
      328:	280d883a 	mov	r6,r5
      32c:	01400084 	movi	r5,2
-
-    return 0;
-}
-
-int32_t ID00001001_readData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      330:	dfc00115 	stw	ra,4(sp)
-    aip_readMem(port, MDATAOUT, data, size, offset);
      334:	00005040 	call	504 <aip_readMem>
-
-    return 0;
-}
      338:	0005883a 	mov	r2,zero
      33c:	dfc00117 	ldw	ra,4(sp)
      340:	dec00204 	addi	sp,sp,8
      344:	f800283a 	ret
 
 00000348 <ID00001001_getStatus>:
-
-int32_t ID00001001_getStatus(uint32_t port, uint32_t *status)
-{
      348:	deffff04 	addi	sp,sp,-4
      34c:	dfc00015 	stw	ra,0(sp)
-    aip_getStatus(port, status);
      350:	00006180 	call	618 <aip_getStatus>
-
-    return 0;
-}
      354:	0005883a 	mov	r2,zero
      358:	dfc00017 	ldw	ra,0(sp)
      35c:	dec00104 	addi	sp,sp,4
      360:	f800283a 	ret
 
 00000364 <ID00001001_waitDone>:
-
-int32_t ID00001001_waitDone(uint32_t port)
-{
      364:	defffd04 	addi	sp,sp,-12
      368:	dc000115 	stw	r16,4(sp)
      36c:	dfc00215 	stw	ra,8(sp)
      370:	2021883a 	mov	r16,r4
-    uint32_t statusINT = 0;
      374:	d8000015 	stw	zero,0(sp)
-
-    do
-    {
-        aip_getINT(port, &statusINT);
      378:	d80b883a 	mov	r5,sp
      37c:	8009883a 	mov	r4,r16
      380:	000078c0 	call	78c <aip_getINT>
-    } while (!(statusINT && 0x1));
      384:	d8800017 	ldw	r2,0(sp)
      388:	103ffb26 	beq	r2,zero,378 <__alt_data_end+0xfffc1b78>
-
-    return 0;
-}
      38c:	0005883a 	mov	r2,zero
      390:	dfc00217 	ldw	ra,8(sp)
      394:	dc000117 	ldw	r16,4(sp)
@@ -935,174 +764,82 @@ int32_t ID00001001_waitDone(uint32_t port)
      39c:	f800283a 	ret
 
 000003a0 <ID00001001_waitirq>:
-{
-    uint32_t statusINT = 0;
-
-    do
-    {
-        asm("nop");
      3a0:	0001883a 	nop
-
-    } while (!start_state);
      3a4:	d0a04417 	ldw	r2,-32496(gp)
      3a8:	103ffd26 	beq	r2,zero,3a0 <__alt_data_end+0xfffc1ba0>
-    start_state = 0;
      3ac:	d0204415 	stw	zero,-32496(gp)
-    return 0;
-}
      3b0:	0005883a 	mov	r2,zero
      3b4:	f800283a 	ret
 
 000003b8 <ID00004003_init>:
-
-static int32_t ID00004003_clearStatus(uint32_t port);
-
-
-int32_t ID00004003_init(uint32_t port)
-{
      3b8:	defffe04 	addi	sp,sp,-8
-    uint32_t id;
-
-    //aip_init(port, ID00004003_csv, ID00004003_CONFIG_AMOUNT);
-
-    aip_getID(port, &id);
      3bc:	d80b883a 	mov	r5,sp
-
-static int32_t ID00004003_clearStatus(uint32_t port);
-
-
-int32_t ID00004003_init(uint32_t port)
-{
      3c0:	dfc00115 	stw	ra,4(sp)
-    uint32_t id;
-
-    //aip_init(port, ID00004003_csv, ID00004003_CONFIG_AMOUNT);
-
-    aip_getID(port, &id);
      3c4:	00005f00 	call	5f0 <aip_getID>
-    printf("The ID is: %x \n", id );
      3c8:	d9400017 	ldw	r5,0(sp)
      3cc:	01000034 	movhi	r4,0
      3d0:	21071a04 	addi	r4,r4,7272
      3d4:	0000eb80 	call	eb8 <printf>
-    //ID00004003_clearStatus(port);
-
-    return 0;
-}
      3d8:	0005883a 	mov	r2,zero
      3dc:	dfc00117 	ldw	ra,4(sp)
      3e0:	dec00204 	addi	sp,sp,8
      3e4:	f800283a 	ret
 
 000003e8 <ID00004003_startIP>:
-
-int32_t ID00004003_startIP(uint32_t port)
-{
      3e8:	deffff04 	addi	sp,sp,-4
      3ec:	dfc00015 	stw	ra,0(sp)
-    aip_start(port);
      3f0:	00005e00 	call	5e0 <aip_start>
-
-    return 0;
-}
      3f4:	0005883a 	mov	r2,zero
      3f8:	dfc00017 	ldw	ra,0(sp)
      3fc:	dec00104 	addi	sp,sp,4
      400:	f800283a 	ret
 
 00000404 <ID00004003_writeData>:
-
-int32_t ID00004003_writeData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      404:	defffe04 	addi	sp,sp,-8
-    aip_writeMem(port, MDATAOUT, data, size, offset);
      408:	d9c00015 	stw	r7,0(sp)
      40c:	31ffffcc 	andi	r7,r6,65535
      410:	280d883a 	mov	r6,r5
      414:	01400084 	movi	r5,2
-
-    return 0;
-}
-
-int32_t ID00004003_writeData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      418:	dfc00115 	stw	ra,4(sp)
-    aip_writeMem(port, MDATAOUT, data, size, offset);
      41c:	00005dc0 	call	5dc <aip_writeMem>
-
-    return 0;
-}
      420:	0005883a 	mov	r2,zero
      424:	dfc00117 	ldw	ra,4(sp)
      428:	dec00204 	addi	sp,sp,8
      42c:	f800283a 	ret
 
 00000430 <ID00004003_readData>:
-
-int32_t ID00004003_readData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      430:	defffe04 	addi	sp,sp,-8
-    aip_readMem(port, MDATAIN, data, size, offset);
      434:	d9c00015 	stw	r7,0(sp)
      438:	31ffffcc 	andi	r7,r6,65535
      43c:	280d883a 	mov	r6,r5
      440:	000b883a 	mov	r5,zero
-
-    return 0;
-}
-
-int32_t ID00004003_readData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
      444:	dfc00115 	stw	ra,4(sp)
-    aip_readMem(port, MDATAIN, data, size, offset);
      448:	00005040 	call	504 <aip_readMem>
-
-    return 0;
-}
      44c:	0005883a 	mov	r2,zero
      450:	dfc00117 	ldw	ra,4(sp)
      454:	dec00204 	addi	sp,sp,8
      458:	f800283a 	ret
 
 0000045c <ID00004003_getStatus>:
-
-int32_t ID00004003_getStatus(uint32_t port, uint32_t *status)
-{
      45c:	deffff04 	addi	sp,sp,-4
      460:	dfc00015 	stw	ra,0(sp)
-    aip_getStatus(port, status);
      464:	00006180 	call	618 <aip_getStatus>
-
-    return 0;
-}
      468:	0005883a 	mov	r2,zero
      46c:	dfc00017 	ldw	ra,0(sp)
      470:	dec00104 	addi	sp,sp,4
      474:	f800283a 	ret
 
 00000478 <ID00004003_waitDone>:
-
-int32_t ID00004003_waitDone(uint32_t port)
-{
      478:	defffd04 	addi	sp,sp,-12
      47c:	dc000115 	stw	r16,4(sp)
      480:	dfc00215 	stw	ra,8(sp)
      484:	2021883a 	mov	r16,r4
-    uint32_t statusINT = 0;
      488:	d8000015 	stw	zero,0(sp)
-
-    do
-    {
-        aip_getINT(port, &statusINT);
      48c:	d80b883a 	mov	r5,sp
      490:	8009883a 	mov	r4,r16
      494:	000078c0 	call	78c <aip_getINT>
-    } while (!(statusINT && 0x1));
      498:	d8800017 	ldw	r2,0(sp)
      49c:	103ffb26 	beq	r2,zero,48c <__alt_data_end+0xfffc1c8c>
-
-    return 0;
-}
      4a0:	0005883a 	mov	r2,zero
      4a4:	dfc00217 	ldw	ra,8(sp)
      4a8:	dc000117 	ldw	r16,4(sp)
@@ -2438,15 +2175,15 @@ int main(void)
 
 
 
-        while(1){
-    		if(start_state != 0){
+	while(1){
+		if(start_state != 0){
      cb4:	d0a04417 	ldw	r2,-32496(gp)
      cb8:	103ffe26 	beq	r2,zero,cb4 <__alt_data_end+0xfffc24b4>
 
 
 
 
-    			    ID00004003_readData(AIP_UP_0_BASE, data, 4,0);
+				ID00004003_readData(AIP_UP_0_BASE, data, 4,0);
      cbc:	01000134 	movhi	r4,4
      cc0:	000f883a 	mov	r7,zero
      cc4:	01800104 	movi	r6,4
@@ -2454,24 +2191,24 @@ int main(void)
      ccc:	21170004 	addi	r4,r4,23552
      cd0:	00004300 	call	430 <ID00004003_readData>
 
-           			printf("\n The opcode in memory[0]: %lx\n", data[0]);
+				printf("\n The opcode in memory[0]: %lx\n", data[0]);
      cd4:	d9400817 	ldw	r5,32(sp)
      cd8:	01000034 	movhi	r4,0
      cdc:	21073a04 	addi	r4,r4,7400
      ce0:	0000eb80 	call	eb8 <printf>
-           			printf("\n The data in memory[1]: %lx\n", data[1]);
+				printf("\n The data in memory[1]: %lx\n", data[1]);
      ce4:	d9400917 	ldw	r5,36(sp)
      ce8:	01000034 	movhi	r4,0
      cec:	21074204 	addi	r4,r4,7432
      cf0:	0000eb80 	call	eb8 <printf>
-           			printf("\n The data in memory[2]: %lx\n", data[2]);
+				printf("\n The data in memory[2]: %lx\n", data[2]);
      cf4:	d9400a17 	ldw	r5,40(sp)
      cf8:	01000034 	movhi	r4,0
      cfc:	21074a04 	addi	r4,r4,7464
      d00:	0000eb80 	call	eb8 <printf>
 
 
-    		   start_state = 0;
+		   start_state = 0;
      d04:	d0204415 	stw	zero,-32496(gp)
      d08:	003fea06 	br	cb4 <__alt_data_end+0xfffc24b4>
 
@@ -3579,24 +3316,12 @@ int alt_iic_isr_register(alt_u32 ic_id, alt_u32 irq, alt_isr_func isr,
     1a14:	f800283a 	ret
 
 00001a18 <alt_load>:
- * there is no bootloader, so this application is responsible for loading to
- * RAM any sections that are required.
- */  
-
-void alt_load (void)
-{
     1a18:	deffff04 	addi	sp,sp,-4
     1a1c:	01000034 	movhi	r4,0
     1a20:	01400034 	movhi	r5,0
     1a24:	dfc00015 	stw	ra,0(sp)
     1a28:	21075204 	addi	r4,r4,7496
     1a2c:	29479004 	addi	r5,r5,7744
-
-static void ALT_INLINE alt_load_section (alt_u32* from, 
-                                         alt_u32* to, 
-                                         alt_u32* end)
-{
-  if (to != from)
     1a30:	2140061e 	bne	r4,r5,1a4c <alt_load+0x34>
     1a34:	01000034 	movhi	r4,0
     1a38:	01400034 	movhi	r5,0
@@ -3608,11 +3333,7 @@ static void ALT_INLINE alt_load_section (alt_u32* from,
     1a50:	18c79004 	addi	r3,r3,7744
     1a54:	1907c83a 	sub	r3,r3,r4
     1a58:	0005883a 	mov	r2,zero
-  {
-    while( to != end )
     1a5c:	10fff526 	beq	r2,r3,1a34 <__alt_data_end+0xfffc3234>
-    {
-      *to++ = *from++;
     1a60:	114f883a 	add	r7,r2,r5
     1a64:	39c00017 	ldw	r7,0(r7)
     1a68:	110d883a 	add	r6,r2,r4
@@ -3623,62 +3344,28 @@ static void ALT_INLINE alt_load_section (alt_u32* from,
     1a7c:	01400034 	movhi	r5,0
     1a80:	21071804 	addi	r4,r4,7264
     1a84:	29471804 	addi	r5,r5,7264
-
-static void ALT_INLINE alt_load_section (alt_u32* from, 
-                                         alt_u32* to, 
-                                         alt_u32* end)
-{
-  if (to != from)
     1a88:	2140101e 	bne	r4,r5,1acc <alt_load+0xb4>
     1a8c:	00000b06 	br	1abc <alt_load+0xa4>
     1a90:	00c00034 	movhi	r3,0
     1a94:	18c06004 	addi	r3,r3,384
     1a98:	1907c83a 	sub	r3,r3,r4
     1a9c:	0005883a 	mov	r2,zero
-  {
-    while( to != end )
     1aa0:	10fff526 	beq	r2,r3,1a78 <__alt_data_end+0xfffc3278>
-    {
-      *to++ = *from++;
     1aa4:	114f883a 	add	r7,r2,r5
     1aa8:	39c00017 	ldw	r7,0(r7)
     1aac:	110d883a 	add	r6,r2,r4
     1ab0:	10800104 	addi	r2,r2,4
     1ab4:	31c00015 	stw	r7,0(r6)
     1ab8:	003ff906 	br	1aa0 <__alt_data_end+0xfffc32a0>
-  
-  /*
-   * Now ensure that the caches are in synch.
-   */
-  
-  alt_dcache_flush_all();
     1abc:	0001bdc0 	call	1bdc <alt_dcache_flush_all>
-  alt_icache_flush_all();
-}
     1ac0:	dfc00017 	ldw	ra,0(sp)
     1ac4:	dec00104 	addi	sp,sp,4
-  /*
-   * Now ensure that the caches are in synch.
-   */
-  
-  alt_dcache_flush_all();
-  alt_icache_flush_all();
     1ac8:	0001be01 	jmpi	1be0 <alt_icache_flush_all>
     1acc:	00c00034 	movhi	r3,0
     1ad0:	18c75204 	addi	r3,r3,7496
     1ad4:	1907c83a 	sub	r3,r3,r4
-
-static void ALT_INLINE alt_load_section (alt_u32* from, 
-                                         alt_u32* to, 
-                                         alt_u32* end)
-{
-  if (to != from)
     1ad8:	0005883a 	mov	r2,zero
-  {
-    while( to != end )
     1adc:	18bff726 	beq	r3,r2,1abc <__alt_data_end+0xfffc32bc>
-    {
-      *to++ = *from++;
     1ae0:	114f883a 	add	r7,r2,r5
     1ae4:	39c00017 	ldw	r7,0(r7)
     1ae8:	110d883a 	add	r6,r2,r4
