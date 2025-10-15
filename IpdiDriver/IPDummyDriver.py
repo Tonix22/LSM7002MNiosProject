@@ -157,7 +157,7 @@ class IPDummyDriver:
             self.__pyaip.clearINT(i)
 
 
-class PicoRV32Controller:
+class IPDIWrapperController:
     def __init__(
         self,
         connector: str = "/dev/ttyACM0",
@@ -263,7 +263,7 @@ class PicoRV32Controller:
 if __name__ == "__main__":
 
     data = ""
-    picorv32 = PicoRV32Controller()
+    ipdiInstance = IPDIWrapperController()
     
     while data != "00000000":
         data = input("Enter 8 hex digits (00000000 to quit): ").strip()
@@ -274,42 +274,6 @@ if __name__ == "__main__":
         except ValueError:
             print("Invalid hex."); continue
         
-        picorv32.writeData(b)
+        ipdiInstance.writeData(b)
 
-        
-    picorv32.finish()
-"""
-if __name__=="__main__":
-    import sys, random, time, os
-    logging.basicConfig(level=logging.INFO)
-    connector = '/dev/ttyACM0'
-    csv_file = 'ID0000200F_config.csv'
-    addr = 1
-    port = 0
-    aip_mem_size = 8
-
-    try:
-        picorv32_module = IPDummyDriver(connector, addr, port, csv_file)
-        logging.info("Test PICORV32: Driver created")
-    except:
-        logging.error("Test PICORV32: Driver not created")
-        sys.exit()
-
-    random.seed(1)
-
-    picorv32_module.disableINT()
-    
-    picorv32_module.resetPICORV32()
-    
-    logging.info(f"PICORV32 starts")
-
-
-    picorv32_module.startIP()
-
-    picorv32_module.status()
-    picorv32_module.writeData([0xCA,0x5A,0xB0,0x7A])
-
-    picorv32_module.finish()
-
-    logging.info("The End")
-"""
+    ipdiInstance.finish()
