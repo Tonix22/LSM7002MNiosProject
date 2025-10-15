@@ -79,6 +79,10 @@ case "$cmd" in
     make -C "$APP_DIR" clean all
     ;;
 
+  download)
+    nios2-download -g MasterSoC_Controller/software/MasterSoC_3pAIP_v1/app.elf
+    ;;
+
   *)
     echo "Comando desconocido: $cmd"; echo
     usage; exit 1
