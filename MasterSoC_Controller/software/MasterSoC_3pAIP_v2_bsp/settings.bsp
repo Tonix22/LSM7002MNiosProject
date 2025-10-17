@@ -2,11 +2,11 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Oct 14, 2025 4:57:34 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1760479054223</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/tonix/Documents/MasterSoC_DE1SoC/MasterSoC_Controller/software/MasterSoC_3pAIP_v2_bsp</BspGeneratedLocation>
-        <BspSettingsFile>/home/tonix/Documents/MasterSoC_DE1SoC/MasterSoC_Controller/software/MasterSoC_3pAIP_v2_bsp/settings.bsp</BspSettingsFile>
-        <SopcDesignFile>../../master_nios_multiple_slave.sopcinfo</SopcDesignFile>
+        <BspGeneratedTimeStamp>15-oct-2025 10:51:58</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1760543518674</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\WorkspaceDDigital\LSM7002MNiosProject\MasterSoC_Controller\software\MasterSoC_3pAIP_v2_bsp</BspGeneratedLocation>
+        <BspSettingsFile>settings.bsp</BspSettingsFile>
+        <SopcDesignFile>..\..\master_nios_multiple_slave.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>nios2_gen2_0</Cpu>
         <SchemaVersion>1.9</SchemaVersion>

@@ -142,7 +142,11 @@ ACDS_VERSION := 18.1
 ELF := app.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS :=
+C_SRCS += ID00001001_dummy.c
+C_SRCS += ID00004003_masterSOC.c
+C_SRCS += aip.c
+C_SRCS += main.c
+C_SRCS += spi.c
 CXX_SRCS :=
 ASM_SRCS :=
 SRC_DIR_01 := $(call adjust-path,/home/tonix/Documents/MasterSoC_DE1SoC/MasterSoC_Controller/software/MasterSoC_3pAIP_v1)
