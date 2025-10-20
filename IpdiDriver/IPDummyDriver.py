@@ -238,8 +238,8 @@ class IPDIWrapperController:
         assert self._driver is not None, "Driver not initialized"
         return self._driver.status()
 
-    def writeData(self, data: Iterable[int]) -> None:
-        data_list: List[int] = [int(x) & 0xFF for x in data]
+    def writeData(self, data) -> None:
+        data_list = data if isinstance(data, list) else [data]
         self._driver.disableINT()
         self._driver.resetPICORV32()
         self._driver.writeData(data_list)
@@ -260,6 +260,7 @@ class IPDIWrapperController:
         assert self._driver is not None
         self._driver.startIP()
 
+
 if __name__ == "__main__":
 
     data = ""
@@ -268,12 +269,16 @@ if __name__ == "__main__":
     while data != "00000000":
         data = input("Enter 8 hex digits (00000000 to quit): ").strip()
         if len(data) != 8:
-            print("Need exactly 8 hex digits."); continue
-        try:
-            b = [int(data[i:i+2], 16) for i in range(0, 8, 2)]
-        except ValueError:
-            print("Invalid hex."); continue
-        
-        ipdiInstance.writeData(b)
+            print("Need exactly 8 hex digits.")
+        else:
+            try:
+                b = [int(data[i:i+2], 16) for i in range(0, 8, 2)]
+                b32 = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]
+                print(f"Bytes: {b}")
+                print(f"Uint32: {b32:#010x} ({b32})")
+            except ValueError:
+                print("Invalid hex.")
+
+        ipdiInstance.writeData(b32)
 
     ipdiInstance.finish()

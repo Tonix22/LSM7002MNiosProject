@@ -29,11 +29,11 @@ int main(void)
 
     uint32_t data[4];
 
-
-
+    printf("MasterSoC AIP Controller Test Application\n");
     int_setup();
+    printf("Int Setup Done\n");
     start_setup();
-
+    printf("Start Setup Done\n");
    // ID00001001_init(DUMMY_0);
   //  ID00001001_init(DUMMY_1);
   //  ID00001001_init(DUMMY_2);
@@ -140,15 +140,13 @@ int main(void)
     printf("Waiting to start\n");
 	while(1){
 		if(start_state != 0){
-
-
-
-
 				ID00004003_readData(AIP_UP_0_BASE, data, 4,0);
 
 				printf("\n The opcode in memory[0]: %lx\n", data[0]);
 				printf("\n The data in memory[1]: %lx\n", data[1]);
 				printf("\n The data in memory[2]: %lx\n", data[2]);
+                printf("\n The data in memory[3]: %lx\n", data[3]);
+                printf("\n The data in memory[4]: %lx\n", data[4]);
 
 				spidev_interface_transact(0xABCD1234, 0);
 				spidev_interface_transact(0xA1A10000, 1);

@@ -137,12 +137,18 @@ class MainWindow(tk.Tk):
             stream += self._pad4_left(b)
 
         # 3) Emitir en palabras de 4 bytes
+        hex_words = []
+        u32_words = []
         for i in range(0, len(stream), 4):
             word = stream[i:i+4]
             if len(word) < 4:
                 word = self._pad4_left(word)
-            print("Sending 8 hex:", "".join(f"{x:02X}" for x in word))
-            ipdiInstance.writeData(word)
+            hx = ''.join(f'{x:02X}' for x in word)  # your line
+            hex_words.append(hx)
+            u32_words.append(int(hx, 16))           # <-- uint32 from hex
+        print(hex_words)
+        print(u32_words)
+        ipdiInstance.writeData(u32_words)
 
     def show_details(self, event):
         # Remove any previous widgets from the parameter frame
@@ -239,7 +245,7 @@ class MainWindow(tk.Tk):
 
 
 if __name__ == "__main__":
-    #ipdiInstance = IPDIWrapperController()
-    ipdiInstance = 3
+    ipdiInstance = IPDIWrapperController()
     app = MainWindow(ipdiInstance)
     app.mainloop()
+    ipdiInstance.finish()

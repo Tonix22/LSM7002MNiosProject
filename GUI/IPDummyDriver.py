@@ -238,8 +238,8 @@ class IPDIWrapperController:
         assert self._driver is not None, "Driver not initialized"
         return self._driver.status()
 
-    def writeData(self, data: Iterable[int]) -> None:
-        data_list: List[int] = [int(x) & 0xFF for x in data]
+    def writeData(self, data) -> None:
+        data_list = data if isinstance(data, list) else [data]
         self._driver.disableINT()
         self._driver.resetPICORV32()
         self._driver.writeData(data_list)

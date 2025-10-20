@@ -48,6 +48,11 @@ OPTIONS
 
 
 ## Download Software
+
+```
+./BuildNios.sh download
+```
+
 nios2-download -g MasterSoC_Controller/software/MasterSoC_3pAIP_v1/app.elf
 
 ## NIOS Terminal
@@ -64,7 +69,7 @@ nios2-gdb-server -c "DE-SoC [1-12]" -d 2 -i 0 --tcpport 2342
 
 ### CLIENT
 
-nios2-elf-gdb MasterSoC_Controller/software/MasterSoC_3pAIP_v1/app.elf \
+nios2-elf-gdb MasterSoC_Controller/software/MasterSoC_3pAIP_v2/MasterSoC_3pAIP_v2.elf \
   -ex "target remote :2342" \
   -ex "monitor reset" \
   -ex "load" \

@@ -80,7 +80,7 @@ case "$cmd" in
     ;;
 
   download)
-    nios2-download -g MasterSoC_Controller/software/MasterSoC_3pAIP_v1/app.elf
+    nios2-download -g MasterSoC_Controller/software/MasterSoC_3pAIP_v2/MasterSoC_3pAIP_v2.elf
     ;;
 
   *)
