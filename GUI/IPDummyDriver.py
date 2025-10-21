@@ -1,7 +1,11 @@
 import logging, time, io
 from ipdi.ip.pyaip import pyaip, pyaip_init
 from typing import Iterable, List, Optional
+import os
 #from ipdi_lib.ipdi.ip.pyaip import pyaip, pyaip_init
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.abspath(os.path.join(script_dir, "../IpdiDriver/ID0000200F_config.csv"))
+
 
 ## IP Dummy driver class
 class IPDummyDriver:
@@ -163,7 +167,7 @@ class IPDIWrapperController:
         connector: str = "/dev/ttyACM0",
         addr: int = 1,
         port: int = 0,
-        csv_file: str = "ID0000200F_config.csv",
+        csv_file: str = file_path,
         aip_mem_size: int = 8,
         *,
         auto_init: bool = True,

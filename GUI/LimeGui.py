@@ -9,7 +9,7 @@ import struct
 
 # Build the file path relative to this script's location
 script_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.abspath(os.path.join(script_dir, "AutoGenCode.xlsx"))
+file_path = os.path.abspath(os.path.join(script_dir, "../ApiDataBase/AutoGenCode.xlsx"))
 
 # Read the merged Excel file
 data = pd.read_excel(file_path)
