@@ -1378,14 +1378,14 @@
 			</provider>
 			<provider id="altera.tool.Nios2GCCBuildCommandParser">
 				<language id="org.eclipse.cdt.core.gcc">
-					<resource project-relative-path="ID00004003_masterSOC.c">
-						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
+					<resource project-relative-path="drivers/src/altera_avalon_uart_init.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
-						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
-						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/drivers/inc">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
@@ -1399,8 +1399,10 @@
 						<entry kind="macro" name="__hal__" value=""/>
 						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
 					</resource>
-					<resource project-relative-path="aip.c">
-						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002M_NIOS_driver/MasterSoC_DE1SoC/MasterSoC_Controller/Firmware/src/platform_generic"/>
+					<resource project-relative-path="ID00004003_masterSOC.c">
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/platform_generic"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/LMS7002M_lib"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/include"/>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -1422,7 +1424,9 @@
 						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
 					</resource>
 					<resource project-relative-path="main.c">
-						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002M_NIOS_driver/MasterSoC_DE1SoC/MasterSoC_Controller/Firmware/src/platform_generic"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/platform_generic"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/LMS7002M_lib"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/include"/>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -1443,8 +1447,52 @@
 						<entry kind="macro" name="__hal__" value=""/>
 						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
 					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_jtag_uart_write.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_spi.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
 					<resource project-relative-path="spi.c">
-						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002M_NIOS_driver/MasterSoC_DE1SoC/MasterSoC_Controller/Firmware/src/platform_generic"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/platform_generic"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/LMS7002M_lib"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/include"/>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -1452,6 +1500,90 @@
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_uart_fd.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_uart_write.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_timer_vars.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_timer_sc.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
@@ -1487,6 +1619,9 @@
 						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
 					</resource>
 					<resource project-relative-path="ID00001001_dummy.c">
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/platform_generic"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/LMS7002M_lib"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/include"/>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -1494,6 +1629,93 @@
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_timer_ts.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_uart_read.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="aip.c">
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/platform_generic"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/LMS7002M_lib"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/include"/>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/drivers/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_C_PLUS_PLUS" value=""/>
+						<entry kind="macro" name="ALT_NO_EXIT" value=""/>
+						<entry kind="macro" name="ALT_NO_INSTRUCTION_EMULATION" value=""/>
+						<entry kind="macro" name="ALT_SINGLE_THREADED" value=""/>
+						<entry kind="macro" name="ALT_USE_DIRECT_DRIVERS" value=""/>
+						<entry kind="macro" name="ALT_USE_SMALL_DRIVERS" value=""/>
+						<entry kind="macro" name="SMALL_C_LIB" value=""/>
+						<entry kind="macro" name="__hal__" value=""/>
+						<entry kind="macro" name="exit(a)" value="_exit(a)"/>
+					</resource>
+					<resource project-relative-path="drivers/src/altera_avalon_uart_ioctl.c">
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/HAL/inc">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp">
+							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
+						</entry>
+						<entry kind="includePath" name="/MasterSoC_3pAIP_v1_bsp/drivers/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="macro" name="ALT_NO_CLEAN_EXIT" value=""/>

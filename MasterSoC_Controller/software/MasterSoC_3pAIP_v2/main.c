@@ -6,6 +6,55 @@
 #include "aip.h"
 #include "ID00001001_dummy.h"
 
+// **************************************************************
+#include <LMS7002M/LMS7002M.h>
+#include <LMS7002M/LMS7002M_logger.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "platform.h"
+//#include "broker.h"
+//#include "xilinx_user_gpio.h"
+
+
+#define SPI_DEVICE_ID				0
+#define REF_FREQ (61.44e6/2)
+
+#define EMIO_OFFSET 54
+#define RESET_EMIO    (EMIO_OFFSET+0)
+#define DIG_RST_EMIO  (EMIO_OFFSET+1)
+#define RXEN_EMIO     (EMIO_OFFSET+2)
+#define TXEN_EMIO     (EMIO_OFFSET+3)
+#define DIO_DIR_CTRL1_EMIO   (EMIO_OFFSET+4)
+#define DIO_DIR_CTRL2_EMIO   (EMIO_OFFSET+5)
+#define IQSEL1_DIR_EMIO      (EMIO_OFFSET+6)
+#define IQSEL2_DIR_EMIO      (EMIO_OFFSET+7)
+
+#define SET_EMIO_OUT_LVL(emio, lvl) \
+    gpio_init(emio); \
+    gpio_direction(emio, 1); \
+    gpio_set_value(emio, lvl);
+
+#define CLEANUP_EMIO(emio) \
+    gpio_direction(emio, 0); \
+
+#define FPGA_REGS 0x43C00000
+
+#define FPGA_REG_RD_SENTINEL 0 //readback a known value
+#define FPGA_REG_RD_RX_CLKS 8 //sanity check clock counter
+#define FPGA_REG_RD_TX_CLKS 12 //sanity check clock counter
+#define FPGA_REG_RD_DATA_A 28 //RXA data for loopback test
+#define FPGA_REG_RD_DATA_B 32 //RXB data for loopback test
+
+#define FPGA_REG_WR_EXT_RST 12 //active high external reset
+//#define FPGA_REG_WR_RX_STORE_OK 8 //can register RX samples (for test)
+#define FPGA_REG_WR_DATA_A 28 //TXA data for loopback test
+#define FPGA_REG_WR_DATA_B 32 //TXB data for loopback test
+#define FPGA_REG_WR_TX_TEST 36
+
+//***************************************************************************************
+
 
 #define DUMMY_0 AIP_0_BASE
 #define DUMMY_1 AIP_1_BASE
@@ -33,12 +82,12 @@ int main(void)
     int_setup();
     printf("Int Setup Done\n");
     start_setup();
-    printf("Start Setup Done\n");
-   // ID00001001_init(DUMMY_0);
-  //  ID00001001_init(DUMMY_1);
-  //  ID00001001_init(DUMMY_2);
+
+    ID00001001_init(DUMMY_0);
+    ID00001001_init(DUMMY_1);
+    ID00001001_init(DUMMY_2);
   
-    /*ID00001001_getStatus(DUMMY_0, &dataFlit);
+   /* ID00001001_getStatus(DUMMY_0, &dataFlit);
 
     for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
     {
@@ -76,8 +125,8 @@ int main(void)
     for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
     {
         dataFlits[i] = 0;
-    }
-    ID00001001_readData(DUMMY_0, dataFlits, DUMMY_MEM_SIZE, 0);
+    }*/
+   /* ID00001001_readData(DUMMY_0, dataFlits, DUMMY_MEM_SIZE, 0);
     
     printf("Data in Dummy 0:\n");
 
@@ -119,7 +168,7 @@ int main(void)
 
     ID00001001_getStatus(DUMMY_2, &dataFlit);
 
-    ID00001001_waitDone(DUMMY_2);
+    ID00001001_waitirq(DUMMY_2);
 
     ID00001001_getStatus(DUMMY_2, &dataFlit);
 
@@ -136,11 +185,27 @@ int main(void)
     }
     printf("\n");*/
 
+    LMS7002M_t *lms = LMS7002M_create(spidev_interface_transact);
+    LMS7002M_reset(lms);
+    LMS7002M_set_spi_mode(lms, 4); //set 4-wire spi before reading back
+
+    int ret = 0;
+    double actualRate = 0.0;
+    //ret = LMS7002M_set_lo_freq(lms, LMS_TX, REF_FREQ, 2.500e9, &actualRate);
+
+    uint32_t opcode;
+	uint32_t parameter_1;
+	uint32_t parameter_2;
+	uint32_t parameter_3;
+	uint32_t parameter_4;
 
     printf("Waiting to start\n");
 	while(1){
 		if(start_state != 0){
 				ID00004003_readData(AIP_UP_0_BASE, data, 4,0);
+			    opcode = data[0];
+			    parameter_1 = data[1];
+			    parameter_2 = data[2];
 
 				printf("\n The opcode in memory[0]: %lx\n", data[0]);
 				printf("\n The data in memory[1]: %lx\n", data[1]);
@@ -148,9 +213,36 @@ int main(void)
                 printf("\n The data in memory[3]: %lx\n", data[3]);
                 printf("\n The data in memory[4]: %lx\n", data[4]);
 
-				spidev_interface_transact(0xABCD1234, 0);
-				spidev_interface_transact(0xA1A10000, 1);
+				switch(opcode){
+					case 0: spidev_interface_transact(parameter_1, parameter_2);
+						break;
+					case 1:
+					ID00001001_readData(DUMMY_0, dataFlits, DUMMY_MEM_SIZE, 0);
 
+				    printf("Data in Dummy 0:\n");
+
+				    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
+				    {
+				        printf("Data[%i]: %x ", i, dataFlits[i]);
+				    }
+				    printf("\n");
+						break;
+					case 2:
+						 ID00001001_readData(DUMMY_1, dataFlits, DUMMY_MEM_SIZE, 0);
+
+						    printf("Data in Dummy 1:\n");
+
+						    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
+						    {
+						        printf("Data[%i]: %x ", i, dataFlits[i]);
+						    }
+						    printf("\n");
+					default: printf("\n Valor no valido\n");
+						break;
+
+				};
+				//spidev_interface_transact(0xA1A10000, 1);
+				//LMS7002M_set_nco_freq(NULL, 0, 0, 0.0);
 
 		   start_state = 0;
 		}
@@ -182,7 +274,7 @@ void int_isr(void * context) {
     if(edge_status) {
         start_state = 1;
 
-        printf("Start DETECTED!\n");
+        printf("INT DETECTED!\n");
 
         for(int i = 0; i < 32; i++) {
             if(edge_status & (1 << i)) {

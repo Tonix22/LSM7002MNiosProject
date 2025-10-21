@@ -5,6 +5,8 @@
 # List of include directories for -I compiler option (-I added when used).
 # Includes the BSP.
 ALT_INCLUDE_DIRS := ../../Firmware/src/platform_generic
+ALT_INCLUDE_DIRS += ../../Firmware/src/LMS7002M_lib
+ALT_INCLUDE_DIRS += ../../Firmware/include
 
 # List of library directories for -L linker option (-L added when used).
 # Includes the BSP.
@@ -141,19 +143,22 @@ ACDS_VERSION := 18.1
 # 
 ELF := MasterSoC_3pAIP_v2.elf
 
+# Directorio donde están los .c
+ALT_SRC_DIRS += ../../Firmware/src/platform_generic
+ALT_SRC_DIRS += ../../Firmware/src/LMS7002M_lib
+
 # Paths to C, C++, and assembly source files.
 C_SRCS += ID00004003_masterSOC.c
 C_SRCS += aip.c
 C_SRCS += spi.c
 C_SRCS += ID00001001_dummy.c
 C_SRCS += main.c
-C_SRCS += $(wildcard $(ALT_SRC_DIRS)/*.c)
+C_SRCS += $(C_SRCS_DIRS)
 CXX_SRCS :=
 ASM_SRCS :=
-# Directorio donde están los .c
-ALT_SRC_DIRS := ../../Firmware/src/platform_generic
+#C_SRCS += $(wildcard $(addsuffix /*.c,$(ALT_SRC_DIRS)))
+C_SRCS_DIRS := $(foreach d,$(ALT_SRC_DIRS),$(wildcard $(call adjust-path-mixed,$(d))/*.c))
 
-#C_SRCS += ../../Firmware/src/platform_generic/platform.c
 
 
 # Path to root of object file tree.
@@ -177,7 +182,10 @@ APP_CFLAGS_WARNINGS := -Wall
 APP_CFLAGS_USER_FLAGS :=
 
 APP_ASFLAGS_USER :=
-APP_LDFLAGS_USER :=
+#APP_LDFLAGS_USER += -Wl,--gc-sections
+APP_LDFLAGS_USER := -lc -lm -lgcc
+
+
 
 # Linker options that have default values assigned later if not
 # assigned here.

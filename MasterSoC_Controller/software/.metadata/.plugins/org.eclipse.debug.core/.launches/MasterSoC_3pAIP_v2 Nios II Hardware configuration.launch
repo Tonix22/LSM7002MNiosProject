@@ -6,7 +6,9 @@
 <stringAttribute key="byteStreamDeviceDeviceID" value="2"/>
 <stringAttribute key="byteStreamDeviceInstanceID" value="0"/>
 <booleanAttribute key="downloadProgram" value="true"/>
-<stringAttribute key="elfFile" value="C:\WorkspaceDDigital\LSM7002M_NIOS_driver\MasterSoC_DE1SoC\MasterSoC_Controller\software\MasterSoC_3pAIP_v2\MasterSoC_3pAIP_v2.elf"/>
+<stringAttribute key="elfFile" value="C:\WorkspaceDDigital\LSM7002MNiosProject\MasterSoC_Controller\software\MasterSoC_3pAIP_v2\MasterSoC_3pAIP_v2.elf"/>
+<stringAttribute key="elfUserFile" value="C:\WorkspaceDDigital\LSM7002MNiosProject\MasterSoC_Controller\software\MasterSoC_3pAIP_v2\MasterSoC_3pAIP_v2.elf"/>
+<booleanAttribute key="enableElfUserFile" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.mi.core.GDB_INIT" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.altera.debug.cdi.gdb.plugin.Nios2GdbCdiDebugger"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="run"/>
