@@ -68,6 +68,7 @@ source ~/intelFPGA_lite/18.1/nios2eds/nios2_command_shell.sh
 nios2-gdb-server -c "DE-SoC [1-12]" -d 2 -i 0 --tcpport 2342
 
 ### CLIENT
+run setupNiosEnv.sh first to have acces gdb
 
 nios2-elf-gdb MasterSoC_Controller/software/MasterSoC_3pAIP_v2/MasterSoC_3pAIP_v2.elf \
   -ex "target remote :2342" \
@@ -76,3 +77,11 @@ nios2-elf-gdb MasterSoC_Controller/software/MasterSoC_3pAIP_v2/MasterSoC_3pAIP_v
   -ex "break main" \
   -ex "continue"
 
+### GDB Commands
+
+run                         # Execute the program
+continue                    # Resume execution until next breakpoint
+break aip.c:69              # Set breakpoint at line 69 in aip.c
+info breakpoints            # List all breakpoints
+x/10wx dataRead             # Examine 10 words (4 bytes each) in hex
+x/10wd dataRead             # Examine 10 words in decimal
