@@ -7,6 +7,7 @@
 ALT_INCLUDE_DIRS := ../../Firmware/src/platform_generic
 ALT_INCLUDE_DIRS += ../../Firmware/src/LMS7002M_lib
 ALT_INCLUDE_DIRS += ../../Firmware/include
+ALT_INCLUDE_DIRS += ../../Firmware/src/Broker
 
 # List of library directories for -L linker option (-L added when used).
 # Includes the BSP.
@@ -146,6 +147,8 @@ ELF := MasterSoC_3pAIP_v2.elf
 # Directorio donde están los .c
 ALT_SRC_DIRS += ../../Firmware/src/platform_generic
 ALT_SRC_DIRS += ../../Firmware/src/LMS7002M_lib
+ALT_SRC_DIRS += ../../Firmware/src/Broker
+
 
 # Paths to C, C++, and assembly source files.
 C_SRCS += ID00004003_masterSOC.c

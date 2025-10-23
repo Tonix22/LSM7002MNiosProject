@@ -1,3 +1,4 @@
+from xml.etree.ElementPath import ops
 import pandas as pd
 import os
 import re
@@ -64,6 +65,7 @@ def generate_typedefs(excel_file, output_file):
     
     with open(output_file, 'w') as f:
         f.write("/* Auto-generated typedefs grouped by number of parameters */\n\n")
+        f.write('#include "LMS7002M/LMS7002M.h"\n\n')
         # Process groups in order of increasing parameter count
         for num_params, group in sorted(typedef_groups, key=lambda x: x[0]):
             f.write(f"// Typedefs for functions with {num_params} parameter(s)\n")
@@ -107,6 +109,7 @@ def generate_opcode_descriptors(excel_file, output_file):
         # Write the header includes and additional necessary headers
         f.write('#include "parser_typedefs.h"\n')
         f.write('#include "parser.h"\n')
+        f.write('#include "LMS7002M_filter_cal.h"\n')
         #f.write('#include "Geric_Parameter.h" // Ensure Geric_Parameter is defined\n')
         #f.write('#include "opcode_constants.h" // Ensure opcode constants are defined\n\n')
         
@@ -147,7 +150,7 @@ def generate_opcode_descriptors(excel_file, output_file):
                 f.write("        .QT_Label = \"{0}\",\n".format(qt_label))
                 f.write("        .num_params = {0},\n".format(num_params))
                 # Set .args to NULL with a comment showing the non-None parameter types.
-                f.write("        .args = NULL; // " + comment_hint + "\n")
+                f.write("        .args = NULL, // " + comment_hint + "\n")
                 f.write("        .callback = (void*){0}\n".format(callback))
                 f.write("    },\n")
             
@@ -255,16 +258,17 @@ def generate_execute_opcode(excel_file, output_file):
         # Generate switch cases for each unique number of parameters
         for num_params, group in sorted(typedef_groups, key=lambda x: x[0]):
             f.write(f"        case {num_params}: {{\n")
-            f.write("          switch (opcode): { \n")
+            f.write("          switch (opcode) { \n")
             for idx, row in group.iterrows():
                 typedef_name = row["Group Name"] + "_callback"
                 opcode = [f"0x{x.strip()}" for x in row["HEX OPCODE"].split(",")]
                 callbackNames = row["Callback"]
                 formatted_callbacks = "/"+"*"*180+"\n\t\t\t* " + "\n\t\t\t* ".join(x.strip() for x in callbackNames.split(",")) + "\n\t\t\t"+"*"*180+"/"
 
-                str_opcode = ", ".join(opcode)
+               # str_opcode = ", ".join(opcode)
                 f.write(f"            {formatted_callbacks}\n")
-                f.write(f"            case {str_opcode}:\n")
+                for str_opcode in opcode:
+                    f.write(f"            case {str_opcode}:\n")
                 
 
                 param_casts = []

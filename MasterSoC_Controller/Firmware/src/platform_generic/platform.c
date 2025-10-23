@@ -122,7 +122,7 @@ int32_t spi_read_API(uint8_t *data,
     unsigned char tx[2] = {rx[0], rx[1]};
     spi_write_then_read(NULL, tx, 2, rx, bytes_number);
 
-    printf("Hola, estas en la funcion de spi_read_API\n");
+   // printf("Hola, estas en la funcion de spi_read_API\n");
 	return 0;
 }
 
@@ -139,7 +139,7 @@ int spi_write_API(const unsigned char *txbuf, unsigned n_tx)
 	}*/
     spi_write_then_read(NULL, tx, n_tx, NULL, 0);
 
-	printf("Hola, estas en la funcion de spi_write_API\n");
+	//printf("Hola, estas en la funcion de spi_write_API\n");
 	return 0;
 }
 /***************************************************************************//**

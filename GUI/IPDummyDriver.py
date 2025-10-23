@@ -164,13 +164,14 @@ class IPDummyDriver:
 class IPDIWrapperController:
     def __init__(
         self,
-        connector: str = "/dev/ttyACM0",
+        #connector: str = "/dev/ttyACM0",
+        connector: str = "COM10",
         addr: int = 1,
         port: int = 0,
         csv_file: str = file_path,
         aip_mem_size: int = 8,
         *,
-        auto_init: bool = True,
+        auto_init: bool = False,
         seed: int = 1,
         log_level: int = logging.INFO,
     ) -> None:

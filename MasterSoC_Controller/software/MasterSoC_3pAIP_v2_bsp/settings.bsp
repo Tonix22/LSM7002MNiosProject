@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>15-oct-2025 10:51:58</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1760543518674</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>21-oct-2025 18:05:19</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1761087919350</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\WorkspaceDDigital\LSM7002MNiosProject\MasterSoC_Controller\software\MasterSoC_3pAIP_v2_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\master_nios_multiple_slave.sopcinfo</SopcDesignFile>

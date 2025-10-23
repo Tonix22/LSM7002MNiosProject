@@ -9,7 +9,7 @@
  * prototypes used for parameter parsing and command processing in the LMS7002M system.
  */
 
-#include "LMS7002M.h"
+#include "LMS7002M/LMS7002M.h"
 #include "util.h"
 
 /**
@@ -177,6 +177,8 @@ typedef struct {
     Geric_Parameter* args; /* Array of parameter types */
     void *callback;               /* Callback function pointer */
 } OpcodeDescriptor;
+
+OpcodeDescriptor* getOpcodeDescriptor(uint32_t opcode);
 
 // Prototype for an opcode callback function (currently commented out).
 // void opcode_callback(struct ad9361_rf_phy *phy);

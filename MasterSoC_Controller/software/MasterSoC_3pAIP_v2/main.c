@@ -191,21 +191,13 @@ int main(void)
 
     int ret = 0;
     double actualRate = 0.0;
-    //ret = LMS7002M_set_lo_freq(lms, LMS_TX, REF_FREQ, 2.500e9, &actualRate);
+    ret = LMS7002M_set_lo_freq(lms, LMS_TX, REF_FREQ, 2.500e9, &actualRate);
 
-    uint32_t opcode;
-	uint32_t parameter_1;
-	uint32_t parameter_2;
-	uint32_t parameter_3;
-	uint32_t parameter_4;
 
     printf("Waiting to start\n");
 	while(1){
 		if(start_state != 0){
-				ID00004003_readData(AIP_UP_0_BASE, data, 4,0);
-			    opcode = data[0];
-			    parameter_1 = data[1];
-			    parameter_2 = data[2];
+				ID00004003_readData(AIP_UP_0_BASE, data, 5,0);
 
 				printf("\n The opcode in memory[0]: %lx\n", data[0]);
 				printf("\n The data in memory[1]: %lx\n", data[1]);
@@ -213,34 +205,6 @@ int main(void)
                 printf("\n The data in memory[3]: %lx\n", data[3]);
                 printf("\n The data in memory[4]: %lx\n", data[4]);
 
-				switch(opcode){
-					case 0: spidev_interface_transact(parameter_1, parameter_2);
-						break;
-					case 1:
-					ID00001001_readData(DUMMY_0, dataFlits, DUMMY_MEM_SIZE, 0);
-
-				    printf("Data in Dummy 0:\n");
-
-				    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-				    {
-				        printf("Data[%i]: %x ", i, dataFlits[i]);
-				    }
-				    printf("\n");
-						break;
-					case 2:
-						 ID00001001_readData(DUMMY_1, dataFlits, DUMMY_MEM_SIZE, 0);
-
-						    printf("Data in Dummy 1:\n");
-
-						    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-						    {
-						        printf("Data[%i]: %x ", i, dataFlits[i]);
-						    }
-						    printf("\n");
-					default: printf("\n Valor no valido\n");
-						break;
-
-				};
 				//spidev_interface_transact(0xA1A10000, 1);
 				//LMS7002M_set_nco_freq(NULL, 0, 0, 0.0);
 

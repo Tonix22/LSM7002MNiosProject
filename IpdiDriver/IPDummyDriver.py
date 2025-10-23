@@ -160,7 +160,8 @@ class IPDummyDriver:
 class IPDIWrapperController:
     def __init__(
         self,
-        connector: str = "/dev/ttyACM0",
+        #connector: str = "/dev/ttyACM0",
+        connector: str = "COM10",
         addr: int = 1,
         port: int = 0,
         csv_file: str = "ID0000200F_config.csv",
