@@ -21,14 +21,9 @@ module ipm_ipMasterSoC_3pAIP
 	 output wire                       MOSI,
 	 output wire                       SCLK,
 	 output wire                       SS_n,	 
-	 output wire [9:0]                 leds,
-	 
-	 // mux_spi
-	 input wire                        sel_switch,
-	 output wire                       sel_mux_spi
+	 output wire [9:0]                 leds
 
 );
-	assign sel_mux_spi = sel_switch;
 
     wire                  w_reset;
     wire [DATA_WIDTH-1:0] w_DataIPtoMCU;

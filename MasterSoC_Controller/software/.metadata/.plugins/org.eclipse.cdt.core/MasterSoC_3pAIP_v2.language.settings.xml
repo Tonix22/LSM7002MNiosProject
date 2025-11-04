@@ -1415,6 +1415,8 @@
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/platform_generic"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/LMS7002M_lib"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/include"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/Broker"/>
+						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src"/>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>

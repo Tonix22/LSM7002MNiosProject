@@ -128,6 +128,8 @@ void LMS7002M_sxx_apply_tune_state(LMS7002M_t *self, const LMS7002M_sxx_tune_sta
 int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const double fref, const double fout, double *factual)
 {
     //LMS7_logf(LMS7_INFO, "SXX tune %f MHz (fref=%f MHz) begin", fout/1e6, fref/1e6);
+    printf("SXX tune %f Hz begin\n", fref);
+    printf("Direction: %d\n", direction);
 
     LMS7002M_set_mac_dir(self, direction);
 
@@ -174,7 +176,7 @@ int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const
             CSW_VCO_best = self->regs->reg_0x0121_csw_vco;
         }
     }
-
+    printf("El vco es : %d \n", SEL_VCO_best);
     //failed to tune any VCO
     if (SEL_VCO_best == -1)
     {

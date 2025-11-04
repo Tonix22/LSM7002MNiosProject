@@ -3,46 +3,6 @@
 #include "LMS7002M_filter_cal.h"
 /* Auto-generated file: Grouped OpcodeDescriptor arrays and global all_descriptors array */
 
-/* Opcode descriptors for group AFE_ENABLE_NUM */
-OpcodeDescriptor AFE_ENABLE_NUM_opcodes[] = {
-    {
-        .opcode = 0xA,
-        .QT_Label = "Enable",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const bool
-        .callback = (void*)LMS7002M_afe_enable
-    },
-};
-
-/* Opcode descriptors for group BB_FILER_SET_NUM */
-OpcodeDescriptor BB_FILER_SET_NUM_opcodes[] = {
-    {
-        .opcode = 0x16,
-        .QT_Label = "Calibrate",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
-        .callback = (void*)LMS7002M_tbb_set_filter_bw
-    },
-    {
-        .opcode = 0x36,
-        .QT_Label = "Calibrate",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
-        .callback = (void*)LMS7002M_rbb_set_filter_bw
-    },
-};
-
-/* Opcode descriptors for group CONFIGURE_LML_PORT_NUM */
-OpcodeDescriptor CONFIGURE_LML_PORT_NUM_opcodes[] = {
-    {
-        .opcode = 0x5,
-        .QT_Label = "loopback",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_port_t, const LMS7002M_dir_t, const int
-        .callback = (void*)LMS7002M_configure_lml_port
-    },
-};
-
 /* Opcode descriptors for group CREATE_NUM */
 OpcodeDescriptor CREATE_NUM_opcodes[] = {
     {
@@ -51,6 +11,102 @@ OpcodeDescriptor CREATE_NUM_opcodes[] = {
         .num_params = 1,
         .args = NULL, // LMS7002M_spi_transact_t
         .callback = (void*)LMS7002M_create
+    },
+};
+
+/* Opcode descriptors for group ONE_PARAM_LMS7002M_T_NUM */
+OpcodeDescriptor ONE_PARAM_LMS7002M_T_NUM_opcodes[] = {
+    {
+        .opcode = 0x1,
+        .QT_Label = "Regs",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_regs
+    },
+    {
+        .opcode = 0x21,
+        .QT_Label = "Internal",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_destroy
+    },
+    {
+        .opcode = 0x41,
+        .QT_Label = "Regs",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_regs_to_rfic
+    },
+    {
+        .opcode = 0x61,
+        .QT_Label = "Regs",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_rfic_to_regs
+    },
+    {
+        .opcode = 0x81,
+        .QT_Label = "Power",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_reset
+    },
+    {
+        .opcode = 0xA1,
+        .QT_Label = "Power",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_power_down
+    },
+    {
+        .opcode = 0xC1,
+        .QT_Label = "loopback",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_setup_digital_loopback
+    },
+};
+
+/* Opcode descriptors for group SPI_WRITE_NUM */
+OpcodeDescriptor SPI_WRITE_NUM_opcodes[] = {
+    {
+        .opcode = 0x2,
+        .QT_Label = "SPI",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const int, const int
+        .callback = (void*)LMS7002M_spi_write
+    },
+};
+
+/* Opcode descriptors for group SPI_CONFIG_NUM */
+OpcodeDescriptor SPI_CONFIG_NUM_opcodes[] = {
+    {
+        .opcode = 0x3,
+        .QT_Label = "SPI",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const int
+        .callback = (void*)LMS7002M_spi_read
+    },
+    {
+        .opcode = 0x23,
+        .QT_Label = "SPI",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const int
+        .callback = (void*)LMS7002M_regs_spi_write
+    },
+    {
+        .opcode = 0x43,
+        .QT_Label = "SPI",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const int
+        .callback = (void*)LMS7002M_regs_spi_read
+    },
+    {
+        .opcode = 0x63,
+        .QT_Label = "SPI",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const int
+        .callback = (void*)LMS7002M_set_spi_mode
     },
 };
 
@@ -72,14 +128,14 @@ OpcodeDescriptor INI_NUM_opcodes[] = {
     },
 };
 
-/* Opcode descriptors for group LDO_ENABLE_NUM */
-OpcodeDescriptor LDO_ENABLE_NUM_opcodes[] = {
+/* Opcode descriptors for group CONFIGURE_LML_PORT_NUM */
+OpcodeDescriptor CONFIGURE_LML_PORT_NUM_opcodes[] = {
     {
-        .opcode = 0x9,
-        .QT_Label = "Enable",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const bool, const int
-        .callback = (void*)LMS7002M_ldo_enable
+        .opcode = 0x5,
+        .QT_Label = "loopback",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_port_t, const LMS7002M_dir_t, const int
+        .callback = (void*)LMS7002M_configure_lml_port
     },
 };
 
@@ -168,85 +224,36 @@ OpcodeDescriptor ONE_PARAM_LMS7002M_CHAN_NUM_opcodes[] = {
     },
 };
 
-/* Opcode descriptors for group ONE_PARAM_LMS7002M_T_NUM */
-OpcodeDescriptor ONE_PARAM_LMS7002M_T_NUM_opcodes[] = {
+/* Opcode descriptors for group TWO_PARAM_LMS7002M_DIR_INT_NUM */
+OpcodeDescriptor TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes[] = {
     {
-        .opcode = 0x1,
-        .QT_Label = "Regs",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
-        .callback = (void*)LMS7002M_regs
-    },
-    {
-        .opcode = 0x21,
-        .QT_Label = "Internal",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
-        .callback = (void*)LMS7002M_destroy
-    },
-    {
-        .opcode = 0x41,
-        .QT_Label = "Regs",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
-        .callback = (void*)LMS7002M_regs_to_rfic
-    },
-    {
-        .opcode = 0x61,
-        .QT_Label = "Regs",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
-        .callback = (void*)LMS7002M_rfic_to_regs
-    },
-    {
-        .opcode = 0x81,
-        .QT_Label = "Power",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
-        .callback = (void*)LMS7002M_reset
-    },
-    {
-        .opcode = 0xA1,
-        .QT_Label = "Power",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
-        .callback = (void*)LMS7002M_power_down
-    },
-    {
-        .opcode = 0xC1,
-        .QT_Label = "loopback",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
-        .callback = (void*)LMS7002M_setup_digital_loopback
+        .opcode = 0x8,
+        .QT_Label = "IQ",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const int
+        .callback = (void*)LMS7002M_set_diq_mux
     },
 };
 
-/* Opcode descriptors for group READRSSI_NUM */
-OpcodeDescriptor READRSSI_NUM_opcodes[] = {
+/* Opcode descriptors for group LDO_ENABLE_NUM */
+OpcodeDescriptor LDO_ENABLE_NUM_opcodes[] = {
     {
-        .opcode = 0x18,
-        .QT_Label = "RSSI",
-        .num_params = 2,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t
-        .callback = (void*)LMS7002M_rxtsp_read_rssi
+        .opcode = 0x9,
+        .QT_Label = "Enable",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const bool, const int
+        .callback = (void*)LMS7002M_ldo_enable
     },
 };
 
-/* Opcode descriptors for group RXTSP_NUM */
-OpcodeDescriptor RXTSP_NUM_opcodes[] = {
+/* Opcode descriptors for group AFE_ENABLE_NUM */
+OpcodeDescriptor AFE_ENABLE_NUM_opcodes[] = {
     {
-        .opcode = 0x13,
-        .QT_Label = "Calibrate",
+        .opcode = 0xA,
+        .QT_Label = "Enable",
         .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool, const int
-        .callback = (void*)LMS7002M_rxtsp_set_dc_correction
-    },
-    {
-        .opcode = 0x33,
-        .QT_Label = "Calibrate",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool, const int
-        .callback = (void*)LMS7002M_rxtsp_set_iq_correction
+        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const bool
+        .callback = (void*)LMS7002M_afe_enable
     },
 };
 
@@ -258,6 +265,17 @@ OpcodeDescriptor SET_DATA_CLOCK_NUM_opcodes[] = {
         .num_params = 4,
         .args = NULL, // LMS7002M_t *, const double, const double, double *
         .callback = (void*)LMS7002M_set_data_clock
+    },
+};
+
+/* Opcode descriptors for group SET_NCO_FREQ_NUM */
+OpcodeDescriptor SET_NCO_FREQ_NUM_opcodes[] = {
+    {
+        .opcode = 0xC,
+        .QT_Label = "Frequency Tunning",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_set_nco_freq
     },
 };
 
@@ -280,217 +298,6 @@ OpcodeDescriptor SET_LO_FREQ_NUM_opcodes[] = {
         .num_params = 5,
         .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const double, const double, double *
         .callback = (void*)LMS7002M_set_lo_freq
-    },
-};
-
-/* Opcode descriptors for group SET_NCO_FREQ_NUM */
-OpcodeDescriptor SET_NCO_FREQ_NUM_opcodes[] = {
-    {
-        .opcode = 0xC,
-        .QT_Label = "Frequency Tunning",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_set_nco_freq
-    },
-};
-
-/* Opcode descriptors for group SET_PATH_AND_BAND_NUM */
-OpcodeDescriptor SET_PATH_AND_BAND_NUM_opcodes[] = {
-    {
-        .opcode = 0x14,
-        .QT_Label = "Band",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
-        .callback = (void*)LMS7002M_tbb_set_path
-    },
-    {
-        .opcode = 0x34,
-        .QT_Label = "Test",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
-        .callback = (void*)LMS7002M_tbb_set_test_in
-    },
-    {
-        .opcode = 0x54,
-        .QT_Label = "Band",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
-        .callback = (void*)LMS7002M_trf_select_band
-    },
-    {
-        .opcode = 0x74,
-        .QT_Label = "Band",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
-        .callback = (void*)LMS7002M_rbb_set_path
-    },
-    {
-        .opcode = 0x94,
-        .QT_Label = "Enable Channel",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
-        .callback = (void*)LMS7002M_rfe_set_path
-    },
-};
-
-/* Opcode descriptors for group SPI_CONFIG_NUM */
-OpcodeDescriptor SPI_CONFIG_NUM_opcodes[] = {
-    {
-        .opcode = 0x3,
-        .QT_Label = "SPI",
-        .num_params = 2,
-        .args = NULL, // LMS7002M_t *, const int
-        .callback = (void*)LMS7002M_spi_read
-    },
-    {
-        .opcode = 0x23,
-        .QT_Label = "SPI",
-        .num_params = 2,
-        .args = NULL, // LMS7002M_t *, const int
-        .callback = (void*)LMS7002M_regs_spi_write
-    },
-    {
-        .opcode = 0x43,
-        .QT_Label = "SPI",
-        .num_params = 2,
-        .args = NULL, // LMS7002M_t *, const int
-        .callback = (void*)LMS7002M_regs_spi_read
-    },
-    {
-        .opcode = 0x63,
-        .QT_Label = "SPI",
-        .num_params = 2,
-        .args = NULL, // LMS7002M_t *, const int
-        .callback = (void*)LMS7002M_set_spi_mode
-    },
-};
-
-/* Opcode descriptors for group SPI_WRITE_NUM */
-OpcodeDescriptor SPI_WRITE_NUM_opcodes[] = {
-    {
-        .opcode = 0x2,
-        .QT_Label = "SPI",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const int, const int
-        .callback = (void*)LMS7002M_spi_write
-    },
-};
-
-/* Opcode descriptors for group SP_TSG_NUM */
-OpcodeDescriptor SP_TSG_NUM_opcodes[] = {
-    {
-        .opcode = 0x11,
-        .QT_Label = "IQ",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int, const int
-        .callback = (void*)LMS7002M_txtsp_tsg_const
-    },
-    {
-        .opcode = 0x31,
-        .QT_Label = "IQ",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int, const int
-        .callback = (void*)LMS7002M_rxtsp_tsg_const
-    },
-};
-
-/* Opcode descriptors for group TBB_LOOP_BACK_ENABLE_NUM */
-OpcodeDescriptor TBB_LOOP_BACK_ENABLE_NUM_opcodes[] = {
-    {
-        .opcode = 0x15,
-        .QT_Label = "IQ",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int, const bool
-        .callback = (void*)LMS7002M_tbb_enable_loopback
-    },
-};
-
-/* Opcode descriptors for group TRF_RBB_RFE_NUM */
-OpcodeDescriptor TRF_RBB_RFE_NUM_opcodes[] = {
-    {
-        .opcode = 0x17,
-        .QT_Label = "Frequency Tunning",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_txtsp_set_freq
-    },
-    {
-        .opcode = 0x37,
-        .QT_Label = "Frequency Tunning",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_rxtsp_set_freq
-    },
-    {
-        .opcode = 0x57,
-        .QT_Label = "Gain",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_trf_set_pad
-    },
-    {
-        .opcode = 0x77,
-        .QT_Label = "Gain",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_trf_set_loopback_pad
-    },
-    {
-        .opcode = 0x97,
-        .QT_Label = "Gain",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_rbb_set_pga
-    },
-    {
-        .opcode = 0xB7,
-        .QT_Label = "Gain",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_rfe_set_lna
-    },
-    {
-        .opcode = 0xD7,
-        .QT_Label = "Gain",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_rfe_set_loopback_lna
-    },
-    {
-        .opcode = 0xF7,
-        .QT_Label = "Gain",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
-        .callback = (void*)LMS7002M_rfe_set_tia
-    },
-};
-
-/* Opcode descriptors for group TWO_PARAM_CHANT_SIZET_NUM */
-OpcodeDescriptor TWO_PARAM_CHANT_SIZET_NUM_opcodes[] = {
-    {
-        .opcode = 0x10,
-        .QT_Label = "Sampling",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const size_t
-        .callback = (void*)LMS7002M_txtsp_set_interp
-    },
-    {
-        .opcode = 0x30,
-        .QT_Label = "Sampling",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const size_t
-        .callback = (void*)LMS7002M_rxtsp_set_decim
-    },
-};
-
-/* Opcode descriptors for group TWO_PARAM_LMS7002M_DIR_INT_NUM */
-OpcodeDescriptor TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes[] = {
-    {
-        .opcode = 0x8,
-        .QT_Label = "IQ",
-        .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const int
-        .callback = (void*)LMS7002M_set_diq_mux
     },
 };
 
@@ -561,6 +368,42 @@ OpcodeDescriptor TWO_PARAM_LMS_CONST_BOOL_NUM_opcodes[] = {
     },
 };
 
+/* Opcode descriptors for group TWO_PARAM_CHANT_SIZET_NUM */
+OpcodeDescriptor TWO_PARAM_CHANT_SIZET_NUM_opcodes[] = {
+    {
+        .opcode = 0x10,
+        .QT_Label = "Sampling",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const size_t
+        .callback = (void*)LMS7002M_txtsp_set_interp
+    },
+    {
+        .opcode = 0x30,
+        .QT_Label = "Sampling",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const size_t
+        .callback = (void*)LMS7002M_rxtsp_set_decim
+    },
+};
+
+/* Opcode descriptors for group SP_TSG_NUM */
+OpcodeDescriptor SP_TSG_NUM_opcodes[] = {
+    {
+        .opcode = 0x11,
+        .QT_Label = "IQ",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int, const int
+        .callback = (void*)LMS7002M_txtsp_tsg_const
+    },
+    {
+        .opcode = 0x31,
+        .QT_Label = "IQ",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int, const int
+        .callback = (void*)LMS7002M_rxtsp_tsg_const
+    },
+};
+
 /* Opcode descriptors for group TXSTP_CORRECTION_NUM */
 OpcodeDescriptor TXSTP_CORRECTION_NUM_opcodes[] = {
     {
@@ -579,62 +422,219 @@ OpcodeDescriptor TXSTP_CORRECTION_NUM_opcodes[] = {
     },
 };
 
+/* Opcode descriptors for group RXTSP_NUM */
+OpcodeDescriptor RXTSP_NUM_opcodes[] = {
+    {
+        .opcode = 0x13,
+        .QT_Label = "Calibrate",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool, const int
+        .callback = (void*)LMS7002M_rxtsp_set_dc_correction
+    },
+    {
+        .opcode = 0x33,
+        .QT_Label = "Calibrate",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool, const int
+        .callback = (void*)LMS7002M_rxtsp_set_iq_correction
+    },
+};
+
+/* Opcode descriptors for group SET_PATH_AND_BAND_NUM */
+OpcodeDescriptor SET_PATH_AND_BAND_NUM_opcodes[] = {
+    {
+        .opcode = 0x14,
+        .QT_Label = "Band",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
+        .callback = (void*)LMS7002M_tbb_set_path
+    },
+    {
+        .opcode = 0x34,
+        .QT_Label = "Test",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
+        .callback = (void*)LMS7002M_tbb_set_test_in
+    },
+    {
+        .opcode = 0x54,
+        .QT_Label = "Band",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
+        .callback = (void*)LMS7002M_trf_select_band
+    },
+    {
+        .opcode = 0x74,
+        .QT_Label = "Band",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
+        .callback = (void*)LMS7002M_rbb_set_path
+    },
+    {
+        .opcode = 0x94,
+        .QT_Label = "Enable Channel",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int
+        .callback = (void*)LMS7002M_rfe_set_path
+    },
+};
+
+/* Opcode descriptors for group TBB_LOOP_BACK_ENABLE_NUM */
+OpcodeDescriptor TBB_LOOP_BACK_ENABLE_NUM_opcodes[] = {
+    {
+        .opcode = 0x15,
+        .QT_Label = "IQ",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const int, const bool
+        .callback = (void*)LMS7002M_tbb_enable_loopback
+    },
+};
+
+/* Opcode descriptors for group BB_FILER_SET_NUM */
+OpcodeDescriptor BB_FILER_SET_NUM_opcodes[] = {
+    {
+        .opcode = 0x16,
+        .QT_Label = "Calibrate",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
+        .callback = (void*)LMS7002M_tbb_set_filter_bw
+    },
+    {
+        .opcode = 0x36,
+        .QT_Label = "Calibrate",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
+        .callback = (void*)LMS7002M_rbb_set_filter_bw
+    },
+};
+
+/* Opcode descriptors for group TRF_RBB_RFE_NUM */
+OpcodeDescriptor TRF_RBB_RFE_NUM_opcodes[] = {
+    {
+        .opcode = 0x17,
+        .QT_Label = "Frequency Tunning",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_txtsp_set_freq
+    },
+    {
+        .opcode = 0x37,
+        .QT_Label = "Frequency Tunning",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_rxtsp_set_freq
+    },
+    {
+        .opcode = 0x57,
+        .QT_Label = "Gain",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_trf_set_pad
+    },
+    {
+        .opcode = 0x77,
+        .QT_Label = "Gain",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_trf_set_loopback_pad
+    },
+    {
+        .opcode = 0x97,
+        .QT_Label = "Gain",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_rbb_set_pga
+    },
+    {
+        .opcode = 0xB7,
+        .QT_Label = "Gain",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_rfe_set_lna
+    },
+    {
+        .opcode = 0xD7,
+        .QT_Label = "Gain",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_rfe_set_loopback_lna
+    },
+    {
+        .opcode = 0xF7,
+        .QT_Label = "Gain",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)LMS7002M_rfe_set_tia
+    },
+};
+
+/* Opcode descriptors for group READRSSI_NUM */
+OpcodeDescriptor READRSSI_NUM_opcodes[] = {
+    {
+        .opcode = 0x18,
+        .QT_Label = "RSSI",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t
+        .callback = (void*)LMS7002M_rxtsp_read_rssi
+    },
+};
+
 // Create a global array of all OpcodeDescriptor arrays
 OpcodeDescriptor* all_descriptors[] = {
-    AFE_ENABLE_NUM_opcodes,
-    BB_FILER_SET_NUM_opcodes,
-    CONFIGURE_LML_PORT_NUM_opcodes,
     CREATE_NUM_opcodes,
+    ONE_PARAM_LMS7002M_T_NUM_opcodes,
+    SPI_WRITE_NUM_opcodes,
+    SPI_CONFIG_NUM_opcodes,
     INI_NUM_opcodes,
-    LDO_ENABLE_NUM_opcodes,
+    CONFIGURE_LML_PORT_NUM_opcodes,
     ONE_PARAM_CONST_BOOL_NUM_opcodes,
     ONE_PARAM_LMS7002M_CHAN_NUM_opcodes,
-    ONE_PARAM_LMS7002M_T_NUM_opcodes,
-    READRSSI_NUM_opcodes,
-    RXTSP_NUM_opcodes,
+    TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes,
+    LDO_ENABLE_NUM_opcodes,
+    AFE_ENABLE_NUM_opcodes,
     SET_DATA_CLOCK_NUM_opcodes,
+    SET_NCO_FREQ_NUM_opcodes,
     SET_GFIR_TAPS_NUM_opcodes,
     SET_LO_FREQ_NUM_opcodes,
-    SET_NCO_FREQ_NUM_opcodes,
-    SET_PATH_AND_BAND_NUM_opcodes,
-    SPI_CONFIG_NUM_opcodes,
-    SPI_WRITE_NUM_opcodes,
-    SP_TSG_NUM_opcodes,
-    TBB_LOOP_BACK_ENABLE_NUM_opcodes,
-    TRF_RBB_RFE_NUM_opcodes,
-    TWO_PARAM_CHANT_SIZET_NUM_opcodes,
-    TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes,
     TWO_PARAM_LMS_CONST_BOOL_NUM_opcodes,
+    TWO_PARAM_CHANT_SIZET_NUM_opcodes,
+    SP_TSG_NUM_opcodes,
     TXSTP_CORRECTION_NUM_opcodes,
+    RXTSP_NUM_opcodes,
+    SET_PATH_AND_BAND_NUM_opcodes,
+    TBB_LOOP_BACK_ENABLE_NUM_opcodes,
+    BB_FILER_SET_NUM_opcodes,
+    TRF_RBB_RFE_NUM_opcodes,
+    READRSSI_NUM_opcodes,
 };
 
 //Define sizes for each group
 const size_t group_sizes[] = {
-    sizeof(AFE_ENABLE_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(BB_FILER_SET_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(CONFIGURE_LML_PORT_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(CREATE_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(ONE_PARAM_LMS7002M_T_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(SPI_WRITE_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(SPI_CONFIG_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(INI_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(LDO_ENABLE_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(CONFIGURE_LML_PORT_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(ONE_PARAM_CONST_BOOL_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(ONE_PARAM_LMS7002M_CHAN_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(ONE_PARAM_LMS7002M_T_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(READRSSI_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(RXTSP_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(LDO_ENABLE_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(AFE_ENABLE_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(SET_DATA_CLOCK_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(SET_NCO_FREQ_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(SET_GFIR_TAPS_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(SET_LO_FREQ_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(SET_NCO_FREQ_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(SET_PATH_AND_BAND_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(SPI_CONFIG_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(SPI_WRITE_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(SP_TSG_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(TBB_LOOP_BACK_ENABLE_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(TRF_RBB_RFE_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(TWO_PARAM_CHANT_SIZET_NUM_opcodes) / sizeof(OpcodeDescriptor),
-    sizeof(TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(TWO_PARAM_LMS_CONST_BOOL_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(TWO_PARAM_CHANT_SIZET_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(SP_TSG_NUM_opcodes) / sizeof(OpcodeDescriptor),
     sizeof(TXSTP_CORRECTION_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(RXTSP_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(SET_PATH_AND_BAND_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(TBB_LOOP_BACK_ENABLE_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(BB_FILER_SET_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(TRF_RBB_RFE_NUM_opcodes) / sizeof(OpcodeDescriptor),
+    sizeof(READRSSI_NUM_opcodes) / sizeof(OpcodeDescriptor),
 };
 
 /*

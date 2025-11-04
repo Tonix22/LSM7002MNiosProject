@@ -1,24 +1,9 @@
-17:02:14 **** Incremental Build of configuration Nios II for project MasterSoC_3pAIP_v2 ****
+16:08:16 **** Incremental Build of configuration Nios II for project MasterSoC_3pAIP_v2 ****
 make all 
 Info: Building ../MasterSoC_3pAIP_v2_bsp/
 C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../MasterSoC_3pAIP_v2_bsp/
 [BSP build complete]
-Info: Compiling ../../Firmware/src/Broker/parser_opcodes.c to obj/default/parser_opcodes.o
-nios2-elf-gcc -xc -MP -MMD -c -I../../Firmware/src/platform_generic -I../../Firmware/src/LMS7002M_lib -I../../Firmware/include -I../../Firmware/src/Broker -I../MasterSoC_3pAIP_v2_bsp//HAL/inc -I../MasterSoC_3pAIP_v2_bsp/ -I../MasterSoC_3pAIP_v2_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_C_PLUS_PLUS -DALT_NO_CLEAN_EXIT -D'exit(a)=_exit(a)' -DALT_NO_EXIT -DALT_USE_DIRECT_DRIVERS -DALT_NO_INSTRUCTION_EMULATION -DALT_USE_SMALL_DRIVERS -DSMALL_C_LIB -DALT_SINGLE_THREADED    -Os -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/parser_opcodes.o ../../Firmware/src/Broker/parser_opcodes.c
-Info: Linking MasterSoC_3pAIP_v2.elf
-nios2-elf-g++ -lc -lm -lgcc -T'../MasterSoC_3pAIP_v2_bsp//linker.x' -msys-crt0='../MasterSoC_3pAIP_v2_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../MasterSoC_3pAIP_v2_bsp/  -msmallc  -Wl,-Map=MasterSoC_3pAIP_v2.map   -Os -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o MasterSoC_3pAIP_v2.elf obj/default/ID00001001_dummy.o obj/default/ID00004003_masterSOC.o obj/default/aip.o obj/default/main.o obj/default/spi.o obj/default/execute_opcode.o obj/default/parser_opcodes.o obj/default/LMS7002M_afe.o obj/default/LMS7002M_cgen.o obj/default/LMS7002M_filter_cal.o obj/default/LMS7002M_gfir.o obj/default/LMS7002M_impl.o obj/default/LMS7002M_ldo.o obj/default/LMS7002M_lml.o obj/default/LMS7002M_logger.o obj/default/LMS7002M_nco.o obj/default/LMS7002M_rbb.o obj/default/LMS7002M_rfe.o obj/default/LMS7002M_rx_filter_cal.o obj/default/LMS7002M_rxtsp.o obj/default/LMS7002M_sxx.o obj/default/LMS7002M_tbb.o obj/default/LMS7002M_time.o obj/default/LMS7002M_trf.o obj/default/LMS7002M_tx_filter_cal.o obj/default/LMS7002M_txtsp.o obj/default/LMS7002M_vco.o obj/default/LMS7002M_xbuf.o obj/default/platform.o obj/default/util.o -lm -msys-lib=m
-c:/intelfpga_lite/18.1/nios2eds/bin/gnu/h-x86_64-mingw32/bin/../lib/gcc/nios2-elf/5.3.0/../../../../../H-x86_64-mingw32/nios2-elf/lib/mno-hw-mul\libc.a(closer.o): In function `_close_r':
-/build/arc/temp/823101626/ACDS_lwr/ip/sopc/app/gnu/BUILD/gnu/build-newlib.nios2-elf.x86_64-w64-mingw32/nios2-elf/mno-hw-mul/newlib/libc/reent/../../../../../../src/newlib-2.2/newlib/libc/reent/closer.c:53: warning: warning: close is not implemented and will always fail
-c:/intelfpga_lite/18.1/nios2eds/bin/gnu/h-x86_64-mingw32/bin/../lib/gcc/nios2-elf/5.3.0/../../../../../H-x86_64-mingw32/nios2-elf/lib/mno-hw-mul\libc.a(lib_a-lseekr.o): In function `_lseek_r':
-/build/arc/temp/823101626/ACDS_lwr/ip/sopc/app/gnu/BUILD/gnu/build-newlib.nios2-elf.x86_64-w64-mingw32/nios2-elf/mno-hw-mul/newlib/libc/reent/../../../../../../src/newlib-2.2/newlib/libc/reent/lseekr.c:58: warning: warning: lseek is not implemented and will always fail
-c:/intelfpga_lite/18.1/nios2eds/bin/gnu/h-x86_64-mingw32/bin/../lib/gcc/nios2-elf/5.3.0/../../../../../H-x86_64-mingw32/nios2-elf/lib/mno-hw-mul\libc.a(lib_a-openr.o): In function `_open_r':
-/build/arc/temp/823101626/ACDS_lwr/ip/sopc/app/gnu/BUILD/gnu/build-newlib.nios2-elf.x86_64-w64-mingw32/nios2-elf/mno-hw-mul/newlib/libc/reent/../../../../../../src/newlib-2.2/newlib/libc/reent/openr.c:59: warning: warning: open is not implemented and will always fail
-nios2-elf-insert MasterSoC_3pAIP_v2.elf --thread_model hal --cpu_name nios2_gen2_0 --qsys true --simulation_enabled false --stderr_dev jtag_uart_0 --stdin_dev jtag_uart_0 --stdout_dev jtag_uart_0 --sopc_system_name master_nios_multiple_slave --quartus_project_dir "C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller" --sopcinfo C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/software/MasterSoC_3pAIP_v2_bsp/../../master_nios_multiple_slave.sopcinfo
-Info: (MasterSoC_3pAIP_v2.elf) 176 KBytes program size (code + initialized data).
-Info:                          70 KBytes free for stack + heap.
-Info: Creating MasterSoC_3pAIP_v2.objdump
-nios2-elf-objdump --disassemble --syms --all-header --source MasterSoC_3pAIP_v2.elf >MasterSoC_3pAIP_v2.objdump
 [MasterSoC_3pAIP_v2 build complete]
 
-17:02:22 Build Finished (took 7s.952ms)
+16:08:18 Build Finished (took 1s.457ms)
 

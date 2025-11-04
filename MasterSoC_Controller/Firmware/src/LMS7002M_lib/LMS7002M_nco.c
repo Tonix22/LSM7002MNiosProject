@@ -16,7 +16,7 @@
 
 void LMS7002M_set_nco_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const LMS7002M_chan_t channel, const double freqRel)
 {
-    printf("Test de funcion");
+    printf("LMS7002M_set_nco_freq: dir=%d chan=%c freqRel=%f\n", direction, channel, freqRel);
     LMS7002M_set_mac_ch(self, channel);
 
     //handle sign flip for RX NCO on newer masks of the RFIC

@@ -150,9 +150,12 @@ typedef struct Geric_Parameter {
         double* d_pointer;    /**< Pointer to a double precision floating point value. */
         size_t size;          /**< Size value (commonly used for lengths or counts). */
         uint32_t bit_32;      /**< 32-bit unsigned integer, often for bit-level operations. */
-        const LMS7002M_chan_t const_chan;
-        const LMS7002M_dir_t const_dir;
-        const LMS7002M_port_t const_port;
+       // const LMS7002M_chan_t const_chan;
+        LMS7002M_chan_t const_chan;
+      // const LMS7002M_dir_t const_dir;
+        LMS7002M_dir_t const_dir;
+        //const LMS7002M_port_t const_port;
+        LMS7002M_port_t const_port;
         const bool const_bool;
         const double const_double;
         double* double_ptr;

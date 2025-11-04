@@ -4,68 +4,34 @@
 #include "sys/alt_irq.h"
 #include <unistd.h>
 #include "aip.h"
-#include "ID00001001_dummy.h"
+//#include "ID00001001_dummy.h"
 
 // **************************************************************
 #include <LMS7002M/LMS7002M.h>
-#include <LMS7002M/LMS7002M_logger.h>
+//#include <LMS7002M/LMS7002M_logger.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
+
+//#include <stdint.h>
+//#include <string.h>
+
 
 #include "platform.h"
-//#include "broker.h"
-//#include "xilinx_user_gpio.h"
+#include "parser.h"
+#include "reinterpret.h"
 
 
-#define SPI_DEVICE_ID				0
-#define REF_FREQ (61.44e6/2)
-
-#define EMIO_OFFSET 54
-#define RESET_EMIO    (EMIO_OFFSET+0)
-#define DIG_RST_EMIO  (EMIO_OFFSET+1)
-#define RXEN_EMIO     (EMIO_OFFSET+2)
-#define TXEN_EMIO     (EMIO_OFFSET+3)
-#define DIO_DIR_CTRL1_EMIO   (EMIO_OFFSET+4)
-#define DIO_DIR_CTRL2_EMIO   (EMIO_OFFSET+5)
-#define IQSEL1_DIR_EMIO      (EMIO_OFFSET+6)
-#define IQSEL2_DIR_EMIO      (EMIO_OFFSET+7)
-
-#define SET_EMIO_OUT_LVL(emio, lvl) \
-    gpio_init(emio); \
-    gpio_direction(emio, 1); \
-    gpio_set_value(emio, lvl);
-
-#define CLEANUP_EMIO(emio) \
-    gpio_direction(emio, 0); \
-
-#define FPGA_REGS 0x43C00000
-
-#define FPGA_REG_RD_SENTINEL 0 //readback a known value
-#define FPGA_REG_RD_RX_CLKS 8 //sanity check clock counter
-#define FPGA_REG_RD_TX_CLKS 12 //sanity check clock counter
-#define FPGA_REG_RD_DATA_A 28 //RXA data for loopback test
-#define FPGA_REG_RD_DATA_B 32 //RXB data for loopback test
-
-#define FPGA_REG_WR_EXT_RST 12 //active high external reset
-//#define FPGA_REG_WR_RX_STORE_OK 8 //can register RX samples (for test)
-#define FPGA_REG_WR_DATA_A 28 //TXA data for loopback test
-#define FPGA_REG_WR_DATA_B 32 //TXB data for loopback test
-#define FPGA_REG_WR_TX_TEST 36
 
 //***************************************************************************************
 
 
-#define DUMMY_0 AIP_0_BASE
-#define DUMMY_1 AIP_1_BASE
-#define DUMMY_2 AIP_2_BASE
-#define DUMMY_MEM_SIZE 8
+#define FLITS_AIP 8
 
 volatile int edge_val = 0;
 volatile int start_state=0;
-void int_isr(void * context);
+//void int_isr(void * context);
 void start_isr(void * context);
-void int_setup();
+//void int_setup();
 void start_setup();
 
 
@@ -74,181 +40,212 @@ int main(void)
 
 	start_state = 0;
     uint32_t dataFlit = 0;
-    uint32_t dataFlits[DUMMY_MEM_SIZE];
+   // uint32_t dataFlits[DUMMY_MEM_SIZE];
 
-    uint32_t data[4];
+    uint32_t data[FLITS_AIP];
 
-    printf("MasterSoC AIP Controller Test Application\n");
-    int_setup();
-    printf("Int Setup Done\n");
+   // int_setup();
     start_setup();
-
-    ID00001001_init(DUMMY_0);
-    ID00001001_init(DUMMY_1);
-    ID00001001_init(DUMMY_2);
-  
-   /* ID00001001_getStatus(DUMMY_0, &dataFlit);
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        dataFlits[i] = 1<<i;
-    }
-
-    ID00001001_writeData(DUMMY_0, dataFlits, DUMMY_MEM_SIZE, 0);
-
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        dataFlits[i] = i;
-    }
-
-    ID00001001_writeData(DUMMY_1, dataFlits, DUMMY_MEM_SIZE, 0);
-
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        dataFlits[i] = 7-i;
-    }
-
-    ID00001001_writeData(DUMMY_2, dataFlits, DUMMY_MEM_SIZE, 0);
-
-    ID00001001_enableDelay(DUMMY_0, 10000);
-
-    ID00001001_startIP(DUMMY_0);
-
-    ID00001001_getStatus(DUMMY_0, &dataFlit);
-
-    ID00001001_waitirq(DUMMY_0);
-
-    ID00001001_getStatus(DUMMY_0, &dataFlit);
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        dataFlits[i] = 0;
-    }*/
-   /* ID00001001_readData(DUMMY_0, dataFlits, DUMMY_MEM_SIZE, 0);
-    
-    printf("Data in Dummy 0:\n");
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        printf("Data[%i]: %x ", i, dataFlits[i]);
-    }
-    printf("\n");
-
-    ID00001001_enableDelay(DUMMY_1, 10000);
-
-    ID00001001_startIP(DUMMY_1);
-
-    ID00001001_getStatus(DUMMY_1, &dataFlit);
-
-    ID00001001_waitirq(DUMMY_1);
-
-   // ID00001001_waitDone(DUMMY_1);
-
-    ID00001001_getStatus(DUMMY_1, &dataFlit);
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        dataFlits[i] = 0;
-    }
-    ID00001001_readData(DUMMY_1, dataFlits, DUMMY_MEM_SIZE, 0);
-  
-    printf("Data in Dummy 1:\n");
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        printf("Data[%i]: %x ", i, dataFlits[i]);
-    }
-    printf("\n");
-
-    ID00001001_enableDelay(DUMMY_2, 10000);
-
-    ID00001001_startIP(DUMMY_2);
-
-    ID00001001_getStatus(DUMMY_2, &dataFlit);
-
-    ID00001001_waitirq(DUMMY_2);
-
-    ID00001001_getStatus(DUMMY_2, &dataFlit);
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        dataFlits[i] = 0;
-    }
-    ID00001001_readData(DUMMY_2, dataFlits, DUMMY_MEM_SIZE, 0);
-    printf("Data in Dummy 2:\n");
-
-    for (uint32_t i = 0; i < DUMMY_MEM_SIZE; i++)
-    {
-        printf("Data[%i]: %x ", i, dataFlits[i]);
-    }
-    printf("\n");*/
 
     LMS7002M_t *lms = LMS7002M_create(spidev_interface_transact);
     LMS7002M_reset(lms);
     LMS7002M_set_spi_mode(lms, 4); //set 4-wire spi before reading back
-
-    int ret = 0;
-    double actualRate = 0.0;
-    ret = LMS7002M_set_lo_freq(lms, LMS_TX, REF_FREQ, 2.500e9, &actualRate);
-
+     
+    uint32_t opcode;
+    size_t buffer_size;
+    Geric_Parameter buffer[5];   
+    double data_pointer;
+    int ret;
+    
+    
 
     printf("Waiting to start\n");
 	while(1){
 		if(start_state != 0){
-				ID00004003_readData(AIP_UP_0_BASE, data, 5,0);
-
-				printf("\n The opcode in memory[0]: %lx\n", data[0]);
+				ID00004003_readData(AIP_UP_0_BASE, data, FLITS_AIP, 0);
+                
+                opcode = data[0];
+				printf("\n The opcode in memory[0]: %lx\n", opcode);
 				printf("\n The data in memory[1]: %lx\n", data[1]);
 				printf("\n The data in memory[2]: %lx\n", data[2]);
                 printf("\n The data in memory[3]: %lx\n", data[3]);
                 printf("\n The data in memory[4]: %lx\n", data[4]);
+                printf("\n The data in memory[5]: %lx\n", data[5]);
+                printf("\n The data in memory[6]: %lx\n", data[6]);
+                printf("\n The data in memory[7]: %lx\n", data[7]);
 
-				//spidev_interface_transact(0xA1A10000, 1);
-				//LMS7002M_set_nco_freq(NULL, 0, 0, 0.0);
-
+               // buffer[0] no esta en uso
+               
+                uint8_t Group_ID = opcode & 31;  
+                
+                switch (Group_ID) {
+                    case CREATE_NUM: 
+                        buffer_size = 1;
+                         // LMS7002M_spi_transact_t
+                        break;
+                    case ONE_PARAM_LMS7002M_T_NUM:
+                        buffer_size = 1;
+                        // LMS7002M_t *
+                        break;
+                    case SPI_WRITE_NUM:
+                        buffer_size = 3;
+                        buffer[1].value.sint = u32_to_int32(data[1]);   // cast to int
+                        buffer[2].value.sint = u32_to_int32(data[2]);
+                        // LMS7002M_t *, const int, const int
+                        break;
+                    case SPI_CONFIG_NUM:
+                        buffer_size = 2;
+                        buffer[1].value.sint = u32_to_int32(data[1]);   // cast to int
+                        // LMS7002M_t *, const int
+                        break;
+                    case INI_NUM:
+                        buffer_size = 2;
+                        buffer[1].value.enum_type = u32_to_char(data[1]);
+                        // LMS7002M_t *, const char *
+                        break;
+                    case CONFIGURE_LML_PORT_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_port = data[1];
+                        buffer[2].value.const_dir = data[2];
+                        buffer[3].value.sint = u32_to_int32(data[3]);
+                         // LMS7002M_t *, const LMS7002M_port_t, const LMS7002M_dir_t, const int
+                        break;
+                    case ONE_PARAM_CONST_BOOL_NUM:
+                        buffer_size = 2;
+                        buffer[1].value.b = data[1];
+                        // LMS7002M_t *, const bool
+                        break;
+                    case ONE_PARAM_LMS7002M_CHAN_NUM:
+                        buffer_size = 2;
+                        buffer[1].value.const_dir = data[1];
+                        // LMS7002M_t *, const LMS7002M_dir_t
+                        break;
+                    case TWO_PARAM_LMS7002M_DIR_INT_NUM:
+                        buffer_size = 3;
+                        buffer[1].value.const_dir = data[1];
+                        buffer[2].value.sint = u32_to_int32(data[2]);
+                        // LMS7002M_t *, const LMS7002M_dir_t, const int
+                        break;
+                    case LDO_ENABLE_NUM:
+                        buffer_size = 3;
+                        buffer[1].value.b = data[1];
+                        buffer[2].value.sint = u32_to_int32(data[2]);
+                        // LMS7002M_t *, const bool, const int
+                        break;
+                    case AFE_ENABLE_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_dir = data[1];
+                        buffer[2].value.const_chan = data[2];
+                        buffer[3].value.b = data[3];
+                        // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const bool
+                        break;
+                    case SET_DATA_CLOCK_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.d = u32_to_double(data[1], data[2]);
+                        buffer[2].value.d = u32_to_double(data[3], data[4]);                   
+                        buffer[3].value.d_pointer = &data_pointer;
+                        u32_to_double_ptr(data[5], data[6], buffer[3].value.d_pointer);
+                        // LMS7002M_t *, const double, const double, double *
+                        break;
+                    case SET_NCO_FREQ_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_dir = data[1];
+                        buffer[2].value.const_chan = data[2];
+                        buffer[3].value.d = u32_to_double(data[3], data[4]);
+                        // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const double
+                        break;
+                    case SET_GFIR_TAPS_NUM:
+                        buffer_size = 1;
+                        // LMS7002M_t *
+                        break;
+                    case SET_LO_FREQ_NUM:
+                        buffer_size = 5;
+                        buffer[1].value.const_dir = data[1];
+                        buffer[2].value.d = u32_to_double(data[2], data[3]);
+                       // buffer[2].value.d = 2000000000.0; // prueba fija de 2 GHz
+                        printf(" el valor double es: %.10f\n", buffer[2].value.d);
+                       // buffer[3].value.d = u32_to_double(data[4], data[5]);
+                       // buffer[4].value.d_pointer = u32_to_double_ptr(data[6], data[7]);
+                      //  printf(" el valor double pointer es: %.10f\n", *buffer[4].value.d_pointer);
+                        // LMS7002M_t *, const LMS7002M_dir_t, const double, const double, double *
+                        break;
+                    case TWO_PARAM_LMS_CONST_BOOL_NUM:
+                        buffer_size = 3;
+                        buffer[1].value.const_dir = data[1];
+                        buffer[2].value.b = data[2];
+                        // LMS7002M_t *, const LMS7002M_dir_t, const bool
+                        break;
+                    case TWO_PARAM_CHANT_SIZET_NUM:
+                        buffer_size = 3;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.size = data[2];
+                        // LMS7002M_t *, const LMS7002M_chan_t, const size_t
+                        break;
+                    case SP_TSG_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.sint = u32_to_int32(data[2]);
+                        buffer[3].value.sint = u32_to_int32(data[3]);
+                       // LMS7002M_t *, const LMS7002M_chan_t, const int, const int
+                        break;
+                    case TXSTP_CORRECTION_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.d = u32_to_double(data[2], data[3]);
+                        buffer[3].value.d = u32_to_double(data[4], data[5]);
+                        // LMS7002M_t *, const LMS7002M_chan_t, const double, const double
+                        break;
+                    case RXTSP_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.b = data[2];
+                        buffer[3].value.sint = u32_to_int32(data[3]);
+                        // LMS7002M_t *, const LMS7002M_chan_t, const bool, const int
+                        break;
+                    case SET_PATH_AND_BAND_NUM:
+                        buffer_size = 3;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.sint = u32_to_int32(data[2]);
+                        // LMS7002M_t *, const LMS7002M_chan_t, const int
+                        break;
+                    case TBB_LOOP_BACK_ENABLE_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.sint = u32_to_int32(data[2]);
+                        buffer[3].value.b = data[3];
+                        // LMS7002M_t *, const LMS7002M_chan_t, const int, const bool
+                        break;
+                    case BB_FILER_SET_NUM:
+                        buffer_size = 4;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.d = u32_to_double(data[2], data[3]);
+                        buffer[3].value.d_pointer = &data_pointer;
+                        u32_to_double_ptr(data[4], data[5], buffer[3].value.d_pointer);
+                        // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
+                        break;
+                    case TRF_RBB_RFE_NUM:
+                        buffer_size = 3;
+                        buffer[1].value.const_chan = data[1];
+                        buffer[2].value.d = u32_to_double(data[2], data[3]);
+                        // LMS7002M_t *, const LMS7002M_chan_t, const double
+                        break;
+                    case READRSSI_NUM:
+                        buffer_size = 2;
+                        buffer[1].value.const_chan = data[1];
+                        // LMS7002M_t *, const LMS7002M_chan_t
+                        break;
+                    default:
+                        printf("Error: Unsupported opcode\n");
+                        break;
+                }
+                
+                ret = executeOpcode(lms, opcode, buffer, buffer_size);
+                LMS7002M_spi_read(lms, 0x001F); //dummy read to ensure spi completion
 		   start_state = 0;
 		}
     }
-
-
     return 0;
 }
-
-
-void int_setup(void) {
-    IOWR_ALTERA_AVALON_PIO_IRQ_MASK(INT_IP_S0_BASE, 0x07);
-    IOWR_ALTERA_AVALON_PIO_EDGE_CAP(INT_IP_S0_BASE, 0x00);
-
-    alt_ic_isr_register(
-        INT_IP_S0_IRQ_INTERRUPT_CONTROLLER_ID,
-        INT_IP_S0_IRQ,
-		int_isr,
-        (void *) INT_IP_S0_BASE,
-        0x00);
-
-}
-
-void int_isr(void * context) {
-    alt_u32 base = (alt_u32)context;
-
-    alt_u32 edge_status = IORD_ALTERA_AVALON_PIO_EDGE_CAP(base);
-
-    if(edge_status) {
-        start_state = 1;
-
-        printf("INT DETECTED!\n");
-
-        for(int i = 0; i < 32; i++) {
-            if(edge_status & (1 << i)) {
-                printf("Line %d activated!\n", i);
-            }
-        }
-        IOWR_ALTERA_AVALON_PIO_EDGE_CAP(base, edge_status);
-    }
-}
-
 
 
 void start_setup(void){

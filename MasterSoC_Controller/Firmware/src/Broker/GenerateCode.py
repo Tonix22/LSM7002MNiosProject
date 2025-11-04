@@ -51,6 +51,20 @@ def prepare_typedef_groups(excel_file):
         axis=1
     )
 
+    # Handle duplicate function names by appending a suffix
+    filas = len(grouped_df["Typedef"])
+    for ind in range(filas):
+        typedef_fila = (grouped_df["Typedef"][ind])
+        parts = typedef_fila.split()
+        name = parts[2].split('(')[0]
+        count = (grouped_df["Typedef"].apply(lambda x: x.split()[2].split('(')[0]) == name).sum()
+
+        is_duplicate = count > 1
+        if is_duplicate: 
+            grouped_df.loc[ind, "Typedef"] = typedef_fila.replace(name, f"{name}_dup_{count-1}", 1)
+
+
+    
     # Group the resulting typedefs by the parameter count (ignoring those with 0 parameters)
     typedef_groups = grouped_df[grouped_df["num_params"] > 0].groupby("num_params")
     
@@ -66,6 +80,7 @@ def generate_typedefs(excel_file, output_file):
     with open(output_file, 'w') as f:
         f.write("/* Auto-generated typedefs grouped by number of parameters */\n\n")
         f.write('#include "LMS7002M/LMS7002M.h"\n\n')
+    
         # Process groups in order of increasing parameter count
         for num_params, group in sorted(typedef_groups, key=lambda x: x[0]):
             f.write(f"// Typedefs for functions with {num_params} parameter(s)\n")
@@ -100,7 +115,7 @@ def generate_opcode_descriptors(excel_file, output_file):
             return
     
     # Group the DataFrame by "Group Name"
-    groups = df.groupby("Group Name")
+    groups = df.groupby("Group Name", sort=False)
     
     # Collect info for each group for the final aggregated array.
     group_info_list = []
