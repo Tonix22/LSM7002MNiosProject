@@ -165,7 +165,7 @@ class IPDIWrapperController:
     def __init__(
         self,
         #connector: str = "/dev/ttyACM0",
-        connector: str = "COM10",
+        connector: str = "COM7",
         addr: int = 1,
         port: int = 0,
         csv_file: str = file_path,

@@ -54,7 +54,8 @@ int spi_write_then_read(struct spi_device *spi, const unsigned char *txbuf,
 	}
 	spi_read(buffer, n_tx + n_rx);
 	for (byte = n_tx; byte < n_tx + n_rx; byte++) {
-		rxbuf[byte - n_tx] = buffer[byte];
+		//rxbuf[byte - n_tx] = buffer[byte];
+		rxbuf[byte] = buffer[byte];
 	}
 
 	return 0;

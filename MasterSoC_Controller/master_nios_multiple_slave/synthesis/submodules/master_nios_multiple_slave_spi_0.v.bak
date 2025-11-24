@@ -282,7 +282,7 @@ wire             write_tx_holding;
     end
 
 
-  // 'state' counts from 0 to 25.
+  // 'state' counts from 0 to 17.
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
@@ -292,8 +292,8 @@ wire             write_tx_holding;
         end
       else if (transmitting & slowclock)
         begin
-          stateZero <= state == 25;
-          if (state == 25)
+          stateZero <= state == 17;
+          if (state == 17)
               state <= 0;
           else 
             state <= state + 1;
@@ -314,14 +314,11 @@ wire             write_tx_holding;
 
   // Enable write to shift register.
   assign write_shift_reg = tx_holding_primed & ~transmitting;
-  
-  reg [2:0] cnt;
 
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
         begin
-		    cnt <= 0;
           shift_reg <= 0;
           rx_holding_reg <= 0;
           EOP <= 0;
@@ -371,7 +368,7 @@ wire             write_tx_holding;
             end
           if (slowclock)
             begin
-              if (state == 25)
+              if (state == 17)
                 begin
                   transmitting <= 0;
                   RRDY <= 1;
@@ -381,34 +378,11 @@ wire             write_tx_holding;
                       ROE <= 1;
                 end
               else if (state != 0)
-							if (transmitting) begin
-								 cnt <= cnt + 1;
-
-								 if (cnt == 2) begin
-									  cnt <= 0;
-								 end
-
-								 // 2 ciclos en alto, 1 ciclo en bajo
-								 if (cnt == 0 || cnt == 1)
-									  SCLK_reg <= 1;   // alto
-								 else
-									  SCLK_reg <= 0;   // bajo
-									  
-								if (cnt == 2) begin
-								shift_reg <= {shift_reg[6:0], ds_MISO};
-							   end	  
-
-							end else begin
-								 cnt <= 0;
-								 SCLK_reg <= 0;
-							end
-							
-
-						//end
-                     // SCLK_reg <= ~SCLK_reg;
-           //  if (SCLK_reg ^ 0 ^ 0)
-            //      if (1)
-             //         shift_reg <= {shift_reg[6 : 0], ds_MISO};
+                  if (transmitting)
+                      SCLK_reg <= ~SCLK_reg;
+              if (SCLK_reg ^ 0 ^ 0)
+                  if (1)
+                      shift_reg <= {shift_reg[6 : 0], ds_MISO};
             end
         end
     end

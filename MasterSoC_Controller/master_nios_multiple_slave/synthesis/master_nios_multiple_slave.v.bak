@@ -151,9 +151,7 @@ module master_nios_multiple_slave (
 	wire         rst_controller_reset_out_reset_req;                          // rst_controller:reset_req -> [nios2_gen2_0:reset_req, rst_translator:reset_req_in]
 	wire         nios2_gen2_0_debug_reset_request_reset;                      // nios2_gen2_0:debug_reset_request -> rst_controller:reset_in1
 	wire         rst_controller_001_reset_out_reset;                          // rst_controller_001:reset_out -> [int_IP_s0:reset_n, jtag_uart_0:rst_n, mm_interconnect_0:jtag_uart_0_reset_reset_bridge_in_reset_reset, spi_0:reset_n, timer_0:reset_n, uart_0:reset_n]
-	
-	
-	
+
 	avalon_aip_avalon_interface aip_0 (
 		.address              (mm_interconnect_0_aip_0_avalon_slave_0_address),    //        avalon_slave_0.address
 		.chipselect           (mm_interconnect_0_aip_0_avalon_slave_0_chipselect), //                      .chipselect

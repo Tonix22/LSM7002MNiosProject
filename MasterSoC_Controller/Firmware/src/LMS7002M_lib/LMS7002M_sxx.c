@@ -128,8 +128,6 @@ void LMS7002M_sxx_apply_tune_state(LMS7002M_t *self, const LMS7002M_sxx_tune_sta
 int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const double fref, const double fout, double *factual)
 {
     //LMS7_logf(LMS7_INFO, "SXX tune %f MHz (fref=%f MHz) begin", fout/1e6, fref/1e6);
-    printf("SXX tune %f Hz begin\n", fref);
-    printf("Direction: %d\n", direction);
 
     LMS7002M_set_mac_dir(self, direction);
 
@@ -169,14 +167,14 @@ int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const
             &self->regs->reg_0x0121_csw_vco, 0x0121,
             &self->regs->reg_0x0123_vco_cmpho,
             &self->regs->reg_0x0123_vco_cmplo, 0x0123) != 0) continue;
-
+        
         if (CSW_VCO_best == -1 || abs(self->regs->reg_0x0121_csw_vco-128) < abs(CSW_VCO_best-128))
         {
             SEL_VCO_best = SEL_VCO_i;
             CSW_VCO_best = self->regs->reg_0x0121_csw_vco;
         }
     }
-    printf("El vco es : %d \n", SEL_VCO_best);
+    
     //failed to tune any VCO
     if (SEL_VCO_best == -1)
     {
@@ -205,7 +203,6 @@ int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const
 
     //calculate the actual rate
     if (factual != NULL) *factual = (1 << s->EN_DIV2) * fref * ((s->Nint+4) + (s->Nfrac/((double)(1 << 20)))) / s->fdiv;
-
     return 0; //OK
 }
 

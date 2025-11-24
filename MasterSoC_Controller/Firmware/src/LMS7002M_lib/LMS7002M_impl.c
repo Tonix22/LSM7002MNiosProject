@@ -52,15 +52,16 @@ void LMS7002M_destroy(LMS7002M_t *self)
 void LMS7002M_spi_write(LMS7002M_t *self, const int addr, const int value)
 {
     uint32_t data = (((uint32_t)1) << 31) | (((uint32_t)addr) << 16) | (value & 0xffff);
-    printf("El datawrite es : 0x%08x \n", data);
+    printf("%08x \n", data);
     self->spi_transact(data, false/*no readback*/);
 }
 
 int LMS7002M_spi_read(LMS7002M_t *self, const int addr)
 {
     uint32_t data = (((uint32_t)addr) << 16);
-    int return_int = self->spi_transact(data, true/*readback*/) & 0xffff;
-    printf("El dataread es : 0x%08x \n", data);
+    int return_int = self->spi_transact(data, true/*readback*/);
+    printf("%08x \n", return_int);
+    return_int = return_int & 0xffff;
     return return_int;
 }
 

@@ -24,8 +24,8 @@
 
 //***************************************************************************************
 
-
 #define FLITS_AIP 8
+#define REF_FREQ (61.44e6/2)
 
 volatile int edge_val = 0;
 volatile int start_state=0;
@@ -37,7 +37,6 @@ void start_setup();
 
 int main(void)
 {
-
 	start_state = 0;
     uint32_t dataFlit = 0;
    // uint32_t dataFlits[DUMMY_MEM_SIZE];
@@ -47,16 +46,65 @@ int main(void)
    // int_setup();
     start_setup();
 
+    // ********* INICIALIZACION *****************************
+
+   int ret = 0;
+   
     LMS7002M_t *lms = LMS7002M_create(spidev_interface_transact);
+    
     LMS7002M_reset(lms);
     LMS7002M_set_spi_mode(lms, 4); //set 4-wire spi before reading back
-     
+    /********************************
+     **********LMS STATUS************
+     ********************************/
+
+    //read info register
+  //  LMS7002M_regs_spi_read(lms, 0x002f);
+    //printf("rev 0x%x\n", LMS7002M_regs(lms)->reg_0x002f_rev);
+    //printf("ver 0x%x\n", LMS7002M_regs(lms)->reg_0x002f_ver);
+
+    /********************************
+     ********* TURN ON CLK **********
+     ********************************/
+  //  while (!start_state);
+  //  start_state = 0;
+    //turn the clocks on
+    // double actualRate = 0.0;
+    // ret = LMS7002M_set_data_clock(lms, REF_FREQ, 61.44e6, &actualRate);
+    // if (ret != 0)
+    // {
+    //     printf("clock tune failure %d\n", ret);
+    // }
+ //   while (!start_state);
+  //  start_state = 0;
+    //configure data port directions and data clock rates
+   // LMS7002M_configure_lml_port(lms, LMS_PORT1, LMS_TX, 2);
+   // LMS7002M_configure_lml_port(lms, LMS_PORT2, LMS_RX, 2);
+
+
+    /********************************
+    **********ENABLE COMPONENTS******
+    *********************************/
+   // while (!start_state);
+    // start_state = 0;
+    // LMS7002M_afe_enable(lms, LMS_TX, LMS_CHA, true);
+    // LMS7002M_afe_enable(lms, LMS_TX, LMS_CHB, true);
+    // LMS7002M_afe_enable(lms, LMS_RX, LMS_CHA, true);
+    // LMS7002M_afe_enable(lms, LMS_RX, LMS_CHB, true);
+    // LMS7002M_rxtsp_enable(lms, LMS_CHAB, true);
+    // LMS7002M_txtsp_enable(lms, LMS_CHAB, true);
+    // LMS7002M_rbb_enable(lms, LMS_CHAB, true);
+    // LMS7002M_tbb_enable(lms, LMS_CHAB, true);
+    // LMS7002M_rfe_enable(lms, LMS_CHAB, true);
+    // LMS7002M_trf_enable(lms, LMS_CHAB, true);
+    // LMS7002M_sxx_enable(lms, LMS_RX, true);
+    // LMS7002M_sxx_enable(lms, LMS_TX, true);
+
+   
     uint32_t opcode;
     size_t buffer_size;
     Geric_Parameter buffer[5];   
-    double data_pointer;
-    int ret;
-    
+    double data_pointer;    
     
 
     printf("Waiting to start\n");
@@ -65,14 +113,14 @@ int main(void)
 				ID00004003_readData(AIP_UP_0_BASE, data, FLITS_AIP, 0);
                 
                 opcode = data[0];
-				printf("\n The opcode in memory[0]: %lx\n", opcode);
-				printf("\n The data in memory[1]: %lx\n", data[1]);
-				printf("\n The data in memory[2]: %lx\n", data[2]);
-                printf("\n The data in memory[3]: %lx\n", data[3]);
-                printf("\n The data in memory[4]: %lx\n", data[4]);
-                printf("\n The data in memory[5]: %lx\n", data[5]);
-                printf("\n The data in memory[6]: %lx\n", data[6]);
-                printf("\n The data in memory[7]: %lx\n", data[7]);
+				// printf("\n The opcode in memory[0]: %lx\n", opcode);
+				// printf("\n The data in memory[1]: %lx\n", data[1]);
+				// printf("\n The data in memory[2]: %lx\n", data[2]);
+                // printf("\n The data in memory[3]: %lx\n", data[3]);
+                // printf("\n The data in memory[4]: %lx\n", data[4]);
+                // printf("\n The data in memory[5]: %lx\n", data[5]);
+                // printf("\n The data in memory[6]: %lx\n", data[6]);
+                // printf("\n The data in memory[7]: %lx\n", data[7]);
 
                // buffer[0] no esta en uso
                
@@ -161,10 +209,12 @@ int main(void)
                     case SET_LO_FREQ_NUM:
                         buffer_size = 5;
                         buffer[1].value.const_dir = data[1];
-                        buffer[2].value.d = u32_to_double(data[2], data[3]);
-                       // buffer[2].value.d = 2000000000.0; // prueba fija de 2 GHz
-                        printf(" el valor double es: %.10f\n", buffer[2].value.d);
-                       // buffer[3].value.d = u32_to_double(data[4], data[5]);
+                       // buffer[2].value.d = u32_to_double(data[2], data[3]);
+                        buffer[2].value.d = 30720000.0;
+                       // printf(" el valor double es: %.10f\n", buffer[2].value.d);
+                        buffer[3].value.d = u32_to_double(data[4], data[5]);
+                        double factual;
+                        buffer[4].value.d_pointer = &factual;
                        // buffer[4].value.d_pointer = u32_to_double_ptr(data[6], data[7]);
                       //  printf(" el valor double pointer es: %.10f\n", *buffer[4].value.d_pointer);
                         // LMS7002M_t *, const LMS7002M_dir_t, const double, const double, double *
@@ -240,7 +290,18 @@ int main(void)
                 }
                 
                 ret = executeOpcode(lms, opcode, buffer, buffer_size);
-                LMS7002M_spi_read(lms, 0x001F); //dummy read to ensure spi completion
+                //int i = LMS7002M_spi_read(lms, 0x0123);
+               // LMS7002M_spi_write (lms, 0x0020, 0xFFFE); 
+               // LMS7002M_spi_write (lms, 0x011C, 0xA941);
+              //  LMS7002M_spi_write (lms, 0x011E, 0x0984);
+              //  LMS7002M_spi_write (lms, 0x011D, 0x0000);
+              //  LMS7002M_spi_write (lms, 0x011F, 0x3600);
+              //  LMS7002M_spi_write (lms, 0x0121, 0x8638);
+                // LMS7002M_spi_read(lms, 0x0121);
+                // LMS7002M_spi_read(lms, 0x0120);
+              //  LMS7002M_spi_read(lms, 0x0123);
+                // LMS7002M_spi_read(lms, 0x011C);
+
 		   start_state = 0;
 		}
     }

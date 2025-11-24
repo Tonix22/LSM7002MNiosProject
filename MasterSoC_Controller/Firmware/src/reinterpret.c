@@ -5,7 +5,6 @@ double u32_to_double(uint32_t w_high, uint32_t w_low) {
     u = (((u) << 32) & 0xFFFFFFFF00000000) | (w_low & 0x00000000FFFFFFFF);
     double d;
     memcpy(&d, &u, sizeof(double)); 
-    printf(" el valor double es: %.10f\n", d);
     return d;
 }
 

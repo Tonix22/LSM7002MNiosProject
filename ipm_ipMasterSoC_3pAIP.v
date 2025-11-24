@@ -28,6 +28,7 @@ module ipm_ipMasterSoC_3pAIP
 	 output wire                       sel_mux_spi
 
 );
+
 	assign sel_mux_spi = sel_switch;
 
     wire                  w_reset;

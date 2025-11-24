@@ -33,6 +33,7 @@ void LMS7002M_reset(LMS7002M_t *self)
     LMS7002M_regs_spi_write(self, 0x002E);//must write
 }
 
+
 void LMS7002M_reset_lml_fifo(LMS7002M_t *self, const LMS7002M_dir_t direction)
 {
     //LML is in global register space
