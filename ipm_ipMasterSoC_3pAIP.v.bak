@@ -20,7 +20,7 @@ module ipm_ipMasterSoC_3pAIP
     input  wire                       MISO,
 	 output wire                       MOSI,
 	 output wire                       SCLK,
-	 output wire                       SS_n,	 
+	 output wire [1:0]                 SS_n,	 
 	 output wire [9:0]                 leds
 
 );

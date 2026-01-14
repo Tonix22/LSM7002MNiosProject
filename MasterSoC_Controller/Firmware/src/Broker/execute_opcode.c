@@ -59,6 +59,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			* LMS7002M_regs_to_rfic
 			* LMS7002M_reset
 			* LMS7002M_rfic_to_regs
+			* LMS7002M_set_work_mode
 			* LMS7002M_setup_digital_loopback
 			************************************************************************************************************************************************************************************/
             case 0x1:
@@ -68,6 +69,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
             case 0x81:
             case 0xA1:
             case 0xC1:
+            case 0xE1:
               ((one_param_lms7002m_t_num_callback*)descriptor->callback)(lms);
               break;
 
@@ -89,7 +91,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			* LMS7002M_spi_read
 			************************************************************************************************************************************************************************************/
             case 0x3:
-              ((spi_config_num_callback*)descriptor->callback)(lms, buffer[1].value.const_int);
+              ((spi_config_num_callback_dup_1*)descriptor->callback)(lms, buffer[1].value.const_int);
               break;
 
             /************************************************************************************************************************************************************************************
@@ -98,7 +100,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			************************************************************************************************************************************************************************************/
             case 0xA7:
             case 0xC7:
-              ((one_param_lms7002m_chan_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan);
+              ((one_param_lms7002m_chan_num_callback_dup_2*)descriptor->callback)(lms, buffer[1].value.const_chan);
               break;
 
             /************************************************************************************************************************************************************************************
@@ -114,7 +116,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			************************************************************************************************************************************************************************************/
             case 0x27:
             case 0x7:
-              ((one_param_lms7002m_chan_num_callback*)descriptor->callback)(lms, buffer[1].value.const_dir);
+              ((one_param_lms7002m_chan_num_callback_dup_1*)descriptor->callback)(lms, buffer[1].value.const_dir);
               break;
 
             /************************************************************************************************************************************************************************************
@@ -171,14 +173,14 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
             case 0xB7:
             case 0xD7:
             case 0xF7:
-              ((trf_rbb_rfe_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_double);
+              ((trf_rbb_rfe_num_callback_dup_1*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_double);
               break;
 
             /************************************************************************************************************************************************************************************
 			* LMS7002M_sxx_enable
 			************************************************************************************************************************************************************************************/
             case 0xF:
-              ((two_param_lms_const_bool_num_callback*)descriptor->callback)(lms, buffer[1].value.const_dir, buffer[2].value.const_bool);
+              ((two_param_lms_const_bool_num_callback_dup_1*)descriptor->callback)(lms, buffer[1].value.const_dir, buffer[2].value.const_bool);
               break;
 
             /************************************************************************************************************************************************************************************

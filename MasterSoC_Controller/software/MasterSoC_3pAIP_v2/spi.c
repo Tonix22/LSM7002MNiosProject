@@ -5,11 +5,11 @@
 
 
 
-int32_t spi_read(uint8_t *data, uint8_t bytes_number) {
+int32_t spi_read(uint8_t *data, uint8_t bytes_number, uint8_t slave) {
 	uint32_t cnt = 0;
 
 	/* Enable Slave Select mask. */
-	IOWR_ALTERA_AVALON_SPI_SLAVE_SEL(SPI_0_BASE, 1);
+	IOWR_ALTERA_AVALON_SPI_SLAVE_SEL(SPI_0_BASE, slave + 1);
 	/* Set the SSO bit (force chip select). */
 	IOWR_ALTERA_AVALON_SPI_CONTROL(SPI_0_BASE,ALTERA_AVALON_SPI_CONTROL_SSO_MSK);
 	/* Discard any stale data, in case previous communication was interrupted. */
@@ -44,7 +44,7 @@ int32_t spi_read(uint8_t *data, uint8_t bytes_number) {
 
 
 int spi_write_then_read(struct spi_device *spi, const unsigned char *txbuf,
-		unsigned n_tx, unsigned char *rxbuf, unsigned n_rx) {
+		unsigned n_tx, unsigned char *rxbuf, unsigned n_rx, uint8_t slave) {
 	uint8_t buffer[20] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 	uint8_t byte;
@@ -52,7 +52,7 @@ int spi_write_then_read(struct spi_device *spi, const unsigned char *txbuf,
 	for (byte = 0; byte < n_tx; byte++) {
 		buffer[byte] = (unsigned char) txbuf[byte];
 	}
-	spi_read(buffer, n_tx + n_rx);
+	spi_read(buffer, n_tx + n_rx, slave);
 	for (byte = n_tx; byte < n_tx + n_rx; byte++) {
 	//	rxbuf[byte - n_tx] = buffer[byte];
 		rxbuf[byte] = buffer[byte];

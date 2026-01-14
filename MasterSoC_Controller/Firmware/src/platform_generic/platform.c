@@ -64,12 +64,15 @@ uint32_t spidev_interface_transact(const uint32_t data, const bool readback)
 	
 	unsigned char txbuf[4];
     unsigned char rxbuf[4];
+
+	uint8_t slave_7002 = 0;
+
 	if(readback) // read
 	{	
 		rxbuf[0] = (data >> 24) & 0xFF; 
 		rxbuf[1] = (data >> 16) & 0xFF;
-	
-		spi_read_API(rxbuf,2);
+
+		spi_read_API(rxbuf, 2, slave_7002);
 		return \
         (((uint32_t)rxbuf[0]) << 24) |
         (((uint32_t)rxbuf[1]) << 16) |
@@ -81,7 +84,7 @@ uint32_t spidev_interface_transact(const uint32_t data, const bool readback)
 		txbuf[1] = (data >> 16);
 		txbuf[2] = (data >> 8);
 		txbuf[3] = (data >> 0);
-		spi_write_API(txbuf,4);
+		spi_write_API(txbuf, 4, slave_7002);
 	}
 	
     return 0;
@@ -110,7 +113,7 @@ int32_t spi_init(uint32_t device_id,
  * @brief spi_read_API
 *******************************************************************************/
 int32_t spi_read_API(uint8_t *data,
-				 uint8_t bytes_number)
+				 uint8_t bytes_number, uint8_t slave)
 {
 	unsigned char *rx = data;
 	/*for(int i=0; i < bytes_number ; i++,rx++)
@@ -120,13 +123,13 @@ int32_t spi_read_API(uint8_t *data,
 		spi_deselect_device(SPI0_BASE, 0);
 	}*/
     unsigned char tx[2] = {rx[0], rx[1]};
-    spi_write_then_read(NULL, tx, 2, rx, bytes_number);
+    spi_write_then_read(NULL, tx, 2, rx, bytes_number, slave);
 
    // printf("Hola, estas en la funcion de spi_read_API\n");
 	return 0;
 }
 
-int spi_write_API(const unsigned char *txbuf, unsigned n_tx)
+int spi_write_API(const unsigned char *txbuf, unsigned n_tx, uint8_t slave)
 {
 	const unsigned char *tx = txbuf;
 	
@@ -137,7 +140,7 @@ int spi_write_API(const unsigned char *txbuf, unsigned n_tx)
 		spi_txbyte(SPI0_BASE, *tx);
 		spi_deselect_device(SPI0_BASE, 0);
 	}*/
-    spi_write_then_read(NULL, tx, n_tx, NULL, 0);
+    spi_write_then_read(NULL, tx, n_tx, NULL, 0, slave);
 
 	//printf("Hola, estas en la funcion de spi_write_API\n");
 	return 0;

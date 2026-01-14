@@ -1,6 +1,7 @@
 #include "parser_typedefs.h"
 #include "parser.h"
 #include "LMS7002M_filter_cal.h"
+#include "LMS7002M_set_work_mode.h"
 /* Auto-generated file: Grouped OpcodeDescriptor arrays and global all_descriptors array */
 
 /* Opcode descriptors for group CREATE_NUM */
@@ -64,6 +65,13 @@ OpcodeDescriptor ONE_PARAM_LMS7002M_T_NUM_opcodes[] = {
         .num_params = 1,
         .args = NULL, // LMS7002M_t *
         .callback = (void*)LMS7002M_setup_digital_loopback
+    },
+    {
+        .opcode = 0xE1,
+        .QT_Label = "WORK MODE",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_set_work_mode
     },
 };
 

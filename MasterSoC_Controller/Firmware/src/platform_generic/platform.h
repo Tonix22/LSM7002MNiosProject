@@ -142,8 +142,8 @@ int32_t spi_init(uint32_t device_id,
 				 uint8_t  clk_pha,
 				 uint8_t  clk_pol);
 int32_t spi_read_API(uint8_t *data,
-				 uint8_t bytes_number);
-int spi_write_API(const unsigned char *txbuf, unsigned n_tx);
+				 uint8_t bytes_number, uint8_t slave);
+int spi_write_API(const unsigned char *txbuf, unsigned n_tx, uint8_t slave);
 /*int spi_write_then_read(struct spi_device *spi,
 		const unsigned char *txbuf, unsigned n_tx,
 		unsigned char *rxbuf, unsigned n_rx);*/

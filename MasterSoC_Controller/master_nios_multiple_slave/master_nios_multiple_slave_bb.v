@@ -83,7 +83,7 @@ module master_nios_multiple_slave (
 	input		spi_MISO;
 	output		spi_MOSI;
 	output		spi_SCLK;
-	output		spi_SS_n;
+	output	[1:0]	spi_SS_n;
 	input		start_up_0_export;
 	input		uart_rxd;
 	output		uart_txd;

@@ -1,4 +1,4 @@
-//Legal Notice: (C)2025 Altera Corporation. All rights reserved.  Your
+//Legal Notice: (C)2026 Altera Corporation. All rights reserved.  Your
 //use of Altera Corporation's design tools, logic functions and other
 //software and tools, and its AMPP partner logic functions, and any
 //output files any of the foregoing (including device programming or
@@ -30,8 +30,8 @@
 //INPUT_CLOCK: 50000000
 //ISMASTER: 1
 //DATABITS: 8
-//TARGETCLOCK: 50000000
-//NUMSLAVES: 1
+//TARGETCLOCK: 16600000
+//NUMSLAVES: 2
 //CPOL: 0
 //CPHA: 0
 //LSBFIRST: 0
@@ -63,7 +63,7 @@ module master_nios_multiple_slave_spi_0 (
 
   output           MOSI;
   output           SCLK;
-  output           SS_n;
+  output  [  1: 0] SS_n;
   output  [ 15: 0] data_to_cpu;
   output           dataavailable;
   output           endofpacket;
@@ -81,13 +81,14 @@ module master_nios_multiple_slave_spi_0 (
 
 wire             E;
 reg              EOP;
+reg              MISO_reg;
 wire             MOSI;
 reg              ROE;
 reg              RRDY;
 wire             SCLK;
 reg              SCLK_reg;
 reg              SSO_reg;
-wire             SS_n;
+wire    [  1: 0] SS_n;
 wire             TMT;
 reg              TOE;
 wire             TRDY;
@@ -114,6 +115,7 @@ wire             p1_data_rd_strobe;
 wire    [ 15: 0] p1_data_to_cpu;
 wire             p1_data_wr_strobe;
 wire             p1_rd_strobe;
+wire    [  1: 0] p1_slowcount;
 wire             p1_wr_strobe;
 reg              rd_strobe;
 wire             readyfordata;
@@ -121,6 +123,7 @@ reg     [  7: 0] rx_holding_reg;
 reg     [  7: 0] shift_reg;
 wire             slaveselect_wr_strobe;
 wire             slowclock;
+reg     [  1: 0] slowcount;
 wire    [ 10: 0] spi_control;
 reg     [ 15: 0] spi_slave_select_holding_reg;
 reg     [ 15: 0] spi_slave_select_reg;
@@ -252,8 +255,22 @@ wire             write_tx_holding;
     end
 
 
-  // SPI clock is sys_clk/2.
-  assign slowclock = 1;
+  // slowclock is active once every 2 system clock pulses.
+  //assign slowclock = slowcount == 2'h1;
+  assign slowclock = 2'h1;
+
+  assign p1_slowcount = ({2 {(transmitting && !slowclock)}} & (slowcount + 1)) |
+    ({2 {(~((transmitting && !slowclock)))}} & 0);
+
+  // Divide counter for SPI clock.
+  always @(posedge clk or negedge reset_n)
+    begin
+      if (reset_n == 0)
+          slowcount <= 0;
+      else 
+        slowcount <= p1_slowcount;
+    end
+
 
   // End-of-packet value register.
   always @(posedge clk or negedge reset_n)
@@ -282,7 +299,7 @@ wire             write_tx_holding;
     end
 
 
-  // 'state' counts from 0 to 25.
+  // 'state' counts from 0 to 17.
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
@@ -303,7 +320,7 @@ wire             write_tx_holding;
 
   assign enableSS = transmitting & ~stateZero;
   assign MOSI = shift_reg[7];
-  assign SS_n = (enableSS | SSO_reg) ? ~spi_slave_select_reg : {1 {1'b1} };
+  assign SS_n = (enableSS | SSO_reg) ? ~spi_slave_select_reg : {2 {1'b1} };
   assign SCLK = SCLK_reg;
   // As long as there's an empty spot somewhere,
   //it's safe to write data.
@@ -315,13 +332,12 @@ wire             write_tx_holding;
   // Enable write to shift register.
   assign write_shift_reg = tx_holding_primed & ~transmitting;
   
-  reg [2:0] cnt;
+  reg [1:0] sclk_cnt;
 
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
         begin
-		    cnt <= 0;
           shift_reg <= 0;
           rx_holding_reg <= 0;
           EOP <= 0;
@@ -332,6 +348,7 @@ wire             write_tx_holding;
           tx_holding_primed <= 0;
           transmitting <= 0;
           SCLK_reg <= 0;
+          MISO_reg <= 0;
         end
       else 
         begin
@@ -380,35 +397,40 @@ wire             write_tx_holding;
                   if (RRDY)
                       ROE <= 1;
                 end
-              else if (state != 0)
-							if (transmitting) begin
-								 cnt <= cnt + 1;
-
-								 if (cnt == 2) begin
-									  cnt <= 0;
-								 end
-
-								 // 2 ciclos en alto, 1 ciclo en bajo
-								 if (cnt == 0 || cnt == 1)
-									  SCLK_reg <= 1;   // alto
-								 else
-									  SCLK_reg <= 0;   // bajo
-									  
-								if (cnt == 2) begin
+//              else if (state != 0)
+//                  if (transmitting)
+//                      SCLK_reg <= ~SCLK_reg;
+                else if (state != 0) begin 
+						if (transmitting) begin 
+							if (sclk_cnt == 2'd2) 
+								sclk_cnt <= 2'd0; 
+							else 
+								sclk_cnt <= sclk_cnt + 1'b1; 
+							
+							
+							if (sclk_cnt == 2'd0 || sclk_cnt == 2'd1) 
+								SCLK_reg <= 1'b1; 
+							else 
+								SCLK_reg <= 1'b0; 
+								
+							if (sclk_cnt == 2) begin
 								shift_reg <= {shift_reg[6:0], ds_MISO};
-							   end	  
-
-							end else begin
-								 cnt <= 0;
-								 SCLK_reg <= 0;
+							end		
+							end 
+						else begin 
+								sclk_cnt <= 2'd0; 
+								SCLK_reg <= 1'b0; 
+								
+								end 
 							end
 							
-
-						//end
-                     // SCLK_reg <= ~SCLK_reg;
-           //  if (SCLK_reg ^ 0 ^ 0)
-            //      if (1)
-             //         shift_reg <= {shift_reg[6 : 0], ds_MISO};
+//              if (SCLK_reg ^ 0 ^ 0)
+//                begin
+//                  if (1)
+//                      shift_reg <= {shift_reg[6 : 0], MISO_reg};
+//                end
+//              else 
+//                MISO_reg <= ds_MISO;
             end
         end
     end
@@ -417,4 +439,3 @@ wire             write_tx_holding;
   assign ds_MISO = MISO;
 
 endmodule
-

@@ -246,6 +246,10 @@ class MainWindow(tk.Tk):
 
 if __name__ == "__main__":
     ipdiInstance = IPDIWrapperController()
+   # Select = [0x00000010]
+   # print('Write configuration register: CCONFIG')
+   # aip.writeConfReg('CCONFIG', Select, 1, 0)
+   # print(f'Select Data: {[f"{x:08X}" for x in Select]}\n')
     app = MainWindow(ipdiInstance)
     app.mainloop()
     ipdiInstance.finish()

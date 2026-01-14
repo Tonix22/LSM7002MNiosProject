@@ -16,7 +16,7 @@ module ip_master_soc_controller
     input  wire                 MISO,
 	 output wire                 MOSI,
 	 output wire                 SCLK,
-	 output wire                 SS_n,
+	 output wire [1:0]           SS_n,
 	 
 
     // MCU

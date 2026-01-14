@@ -7,7 +7,8 @@ obj/default/parser_opcodes.o: ../../Firmware/src/Broker/parser_opcodes.c \
  ../../Firmware/src/platform_generic/util.h \
  ../../Firmware/src/platform_generic/common.h \
  ../../Firmware/src/platform_generic/config.h \
- ../../Firmware/src/LMS7002M_lib/LMS7002M_filter_cal.h
+ ../../Firmware/src/LMS7002M_lib/LMS7002M_filter_cal.h \
+ ../../Firmware/src/LMS7002M_set_work_mode.h
 
 ../../Firmware/src/Broker/parser_typedefs.h:
 
@@ -26,3 +27,5 @@ obj/default/parser_opcodes.o: ../../Firmware/src/Broker/parser_opcodes.c \
 ../../Firmware/src/platform_generic/config.h:
 
 ../../Firmware/src/LMS7002M_lib/LMS7002M_filter_cal.h:
+
+../../Firmware/src/LMS7002M_set_work_mode.h:

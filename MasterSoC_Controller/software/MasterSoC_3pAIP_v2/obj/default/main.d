@@ -15,7 +15,8 @@ obj/default/main.o: main.c ../MasterSoC_3pAIP_v2_bsp/system.h \
  ../../Firmware/src/platform_generic/config.h \
  ../../Firmware/src/Broker/parser.h \
  ../../Firmware/src/platform_generic/util.h \
- ../../Firmware/src/reinterpret.h
+ ../../Firmware/src/reinterpret.h \
+ ../../Firmware/src/LMS7002M_set_work_mode.h
 
 ../MasterSoC_3pAIP_v2_bsp/system.h:
 
@@ -54,3 +55,5 @@ aip.h:
 ../../Firmware/src/platform_generic/util.h:
 
 ../../Firmware/src/reinterpret.h:
+
+../../Firmware/src/LMS7002M_set_work_mode.h:

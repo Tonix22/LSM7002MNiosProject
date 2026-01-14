@@ -53,6 +53,7 @@ def prepare_typedef_groups(excel_file):
 
     # Handle duplicate function names by appending a suffix
     filas = len(grouped_df["Typedef"])
+    names = []
     for ind in range(filas):
         typedef_fila = (grouped_df["Typedef"][ind])
         parts = typedef_fila.split()
@@ -62,20 +63,24 @@ def prepare_typedef_groups(excel_file):
         is_duplicate = count > 1
         if is_duplicate: 
             grouped_df.loc[ind, "Typedef"] = typedef_fila.replace(name, f"{name}_dup_{count-1}", 1)
-
+        
+        typedef_fila = (grouped_df["Typedef"][ind])
+        parts = typedef_fila.split()
+        name = parts[2].split('(')[0]
+        names.append(name)
 
     
     # Group the resulting typedefs by the parameter count (ignoring those with 0 parameters)
     typedef_groups = grouped_df[grouped_df["num_params"] > 0].groupby("num_params")
     
-    return typedef_groups
+    return typedef_groups, names
 
 def generate_typedefs(excel_file, output_file):
     """
     Generates typedefs and writes them to the output file.
     """
     # Prepare typedef_groups
-    typedef_groups = prepare_typedef_groups(excel_file)
+    typedef_groups, _ = prepare_typedef_groups(excel_file)
     
     with open(output_file, 'w') as f:
         f.write("/* Auto-generated typedefs grouped by number of parameters */\n\n")
@@ -125,6 +130,7 @@ def generate_opcode_descriptors(excel_file, output_file):
         f.write('#include "parser_typedefs.h"\n')
         f.write('#include "parser.h"\n')
         f.write('#include "LMS7002M_filter_cal.h"\n')
+        f.write('#include "LMS7002M_set_work_mode.h"\n')
         #f.write('#include "Geric_Parameter.h" // Ensure Geric_Parameter is defined\n')
         #f.write('#include "opcode_constants.h" // Ensure opcode constants are defined\n\n')
         
@@ -230,7 +236,9 @@ def generate_execute_opcode(excel_file, output_file):
     Generates the executeOpcode function based on the Excel file.
     """
     # Prepare typedef_groups using the existing function
-    typedef_groups = prepare_typedef_groups(excel_file)
+    names = []
+    typedef_groups, names = prepare_typedef_groups(excel_file)
+   
 
     # Open the output file for writing the auto-generated C code
     with open(output_file, 'w') as f:
@@ -275,7 +283,8 @@ def generate_execute_opcode(excel_file, output_file):
             f.write(f"        case {num_params}: {{\n")
             f.write("          switch (opcode) { \n")
             for idx, row in group.iterrows():
-                typedef_name = row["Group Name"] + "_callback"
+              #  typedef_name = row["Group Name"] + "_callback"
+                typedef_name = names[idx]
                 opcode = [f"0x{x.strip()}" for x in row["HEX OPCODE"].split(",")]
                 callbackNames = row["Callback"]
                 formatted_callbacks = "/"+"*"*180+"\n\t\t\t* " + "\n\t\t\t* ".join(x.strip() for x in callbackNames.split(",")) + "\n\t\t\t"+"*"*180+"/"
