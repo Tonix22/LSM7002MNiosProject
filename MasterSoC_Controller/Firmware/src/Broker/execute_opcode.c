@@ -46,13 +46,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
               break;
 
             /************************************************************************************************************************************************************************************
-			* LMS7002M_set_gfir_taps
-			************************************************************************************************************************************************************************************/
-            case 0xD:
-              ((set_gfir_taps_num_callback*)descriptor->callback)(lms);
-              break;
-
-            /************************************************************************************************************************************************************************************
+			* LMS7002M_RESET
 			* LMS7002M_destroy
 			* LMS7002M_power_down
 			* LMS7002M_regs
@@ -63,6 +57,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			* LMS7002M_setup_digital_loopback
 			************************************************************************************************************************************************************************************/
             case 0x1:
+            case 0x101:
             case 0x21:
             case 0x41:
             case 0x61:
@@ -120,15 +115,25 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
               break;
 
             /************************************************************************************************************************************************************************************
+			* LMS7002M_CORE_LDO_ENABLE
+			* LMS7002M_RXEN
+			* LMS7002M_TXEN
+			* LMS7002M_TXNRX1
+			* LMS7002M_TXNRX2
 			* LMS7002M_invert_fclk
 			* LMS7002M_sxt_to_sxr
 			* LMS7002M_xbuf_enable_bias
 			* LMS7002M_xbuf_share_tx
 			************************************************************************************************************************************************************************************/
+            case 0x106:
             case 0x26:
             case 0x46:
             case 0x6:
             case 0x66:
+            case 0x86:
+            case 0xA6:
+            case 0xC6:
+            case 0xE6:
               ((one_param_const_bool_num_callback*)descriptor->callback)(lms, buffer[1].value.const_bool);
               break;
 
@@ -187,7 +192,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			* LMS7002M_set_diq_mux
 			************************************************************************************************************************************************************************************/
             case 0x8:
-              ((two_param_lms7002m_dir_int_num_callback*)descriptor->callback)(lms, buffer[1].value.const_dir, buffer[2].value.const_int);
+              ((two_param_lms7002m_dir_int_num_callback*)descriptor->callback)(lms, buffer[1].value.const_dir, buffer[2].value.const_int_arr4);
               break;
 
             /************************************************************************************************************************************************************************************
@@ -205,6 +210,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
               break;
 
             /************************************************************************************************************************************************************************************
+			* LMS7002M_enable_external_loopback
 			* LMS7002M_rbb_enable
 			* LMS7002M_rbb_set_test_out
 			* LMS7002M_rfe_enable
@@ -215,6 +221,7 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			* LMS7002M_txtsp_enable
 			************************************************************************************************************************************************************************************/
             case 0x10F:
+            case 0x12F:
             case 0x2F:
             case 0x4F:
             case 0x6F:
@@ -223,6 +230,15 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
             case 0xCF:
             case 0xEF:
               ((two_param_lms_const_bool_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_bool);
+              break;
+
+            /************************************************************************************************************************************************************************************
+			* LMS7002M_rxtsp_set_decim
+			* LMS7002M_txtsp_set_interp
+			************************************************************************************************************************************************************************************/
+            case 0x10:
+            case 0x30:
+              ((two_param_chant_sizet_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.size);
               break;
 
             /************************************************************************************************************************************************************************************
@@ -249,15 +265,6 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
               ((set_path_and_band_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_int);
               break;
 
-            /************************************************************************************************************************************************************************************
-			* LMS7002M_rxtsp_set_decim
-			* LMS7002M_txtsp_set_interp
-			************************************************************************************************************************************************************************************/
-            case 0x10:
-            case 0x30:
-              ((two_param_chant_sizet_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, NULL);
-              break;
-
             } 
             break;
         }
@@ -273,9 +280,11 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
             /************************************************************************************************************************************************************************************
 			* LMS7002M_rbb_set_filter_bw
 			* LMS7002M_tbb_set_filter_bw
+			* TuneTxFilter_8051
 			************************************************************************************************************************************************************************************/
             case 0x16:
             case 0x36:
+            case 0x56:
               ((bb_filer_set_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_double, buffer[3].value.double_ptr);
               break;
 
@@ -318,19 +327,19 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 
             /************************************************************************************************************************************************************************************
 			* LMS7002M_rxtsp_set_dc_correction
-			* LMS7002M_rxtsp_set_iq_correction
 			************************************************************************************************************************************************************************************/
             case 0x13:
-            case 0x33:
               ((rxtsp_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_bool, buffer[3].value.const_int);
               break;
 
             /************************************************************************************************************************************************************************************
+			* LMS7002M_rxtsp_set_iq_correction
 			* LMS7002M_txtsp_set_dc_correction
 			* LMS7002M_txtsp_set_iq_correction
 			************************************************************************************************************************************************************************************/
             case 0x12:
             case 0x32:
+            case 0x52:
               ((txstp_correction_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_double, buffer[3].value.const_double);
               break;
 
@@ -344,6 +353,18 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			************************************************************************************************************************************************************************************/
             case 0xE:
               ((set_lo_freq_num_callback*)descriptor->callback)(lms, buffer[1].value.const_dir, buffer[2].value.const_double, buffer[3].value.const_double, buffer[4].value.double_ptr);
+              break;
+
+            } 
+            break;
+        }
+        case 6: {
+          switch (opcode) { 
+            /************************************************************************************************************************************************************************************
+			* LMS7002M_set_gfir_taps
+			************************************************************************************************************************************************************************************/
+            case 0xD:
+              ((set_gfir_taps_num_callback*)descriptor->callback)(lms, buffer[1].value.const_dir, buffer[2].value.const_chan, buffer[3].value.const_int, buffer[4].value.short_p, buffer[5].value.size);
               break;
 
             } 

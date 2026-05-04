@@ -380,6 +380,8 @@ int LMS7002M_rbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
     ////////////////////////////////////////////////////////////////////
     // Save register map
     ////////////////////////////////////////////////////////////////////
+    LMS7002M_rfic_to_regs(self);
+
     LMS7002M_regs_t saved_map[2];
     memcpy(saved_map, self->_regs, sizeof(saved_map));
 

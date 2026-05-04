@@ -22,7 +22,7 @@ void LMS7002M_ldo_enable(LMS7002M_t *self, const bool enable, const int group)
 
     const int val = enable?1:0;
 
-    self->regs->reg_0x0092_en_ldo_dig= val;
+    self->regs->reg_0x0092_en_ldo_dig= val; 
     self->regs->reg_0x0092_en_ldo_diggn= val;
     self->regs->reg_0x0092_en_ldo_digsxr= val;
     self->regs->reg_0x0092_en_ldo_digsxt= val;
@@ -37,7 +37,7 @@ void LMS7002M_ldo_enable(LMS7002M_t *self, const bool enable, const int group)
     self->regs->reg_0x0092_en_ldo_tbb= val;
     self->regs->reg_0x0092_en_ldo_tia12= val;
     self->regs->reg_0x0092_en_ldo_tia14= val;
-    self->regs->reg_0x0092_en_g_ldo= val;
+    self->regs->reg_0x0092_en_g_ldo= val;      
 
     self->regs->reg_0x0093_en_ldo_afe= val;
     self->regs->reg_0x0093_en_ldo_cpgn= val;
@@ -50,7 +50,7 @@ void LMS7002M_ldo_enable(LMS7002M_t *self, const bool enable, const int group)
     self->regs->reg_0x0093_en_ldo_vcosxt= val;
     self->regs->reg_0x0093_en_ldo_cpsxt= val;
 
-    self->regs->reg_0x00a6_en_g_ldop = 1;
+    self->regs->reg_0x00a6_en_g_ldop = 1;     
     self->regs->reg_0x00a6_pd_ldo_digip1 = enable?0:1;
     self->regs->reg_0x00a6_pd_ldo_digip2 = enable?0:1;
     self->regs->reg_0x00a6_pd_ldo_spibuf = enable?0:1;

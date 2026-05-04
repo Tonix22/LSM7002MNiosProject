@@ -6,7 +6,8 @@ obj/default/LMS7002M_tx_filter_cal.o: \
  ../../Firmware/include/LMS7002M/LMS7002M_regs.h \
  ../../Firmware/src/LMS7002M_lib/LMS7002M_filter_cal.h \
  ../../Firmware/include/LMS7002M/LMS7002M_logger.h \
- ../../Firmware/include/LMS7002M/LMS7002M_time.h
+ ../../Firmware/include/LMS7002M/LMS7002M_time.h \
+ ../../Firmware/src/Tune_Filter_8051.h
 
 ../../Firmware/src/LMS7002M_lib/LMS7002M_impl.h:
 
@@ -21,3 +22,5 @@ obj/default/LMS7002M_tx_filter_cal.o: \
 ../../Firmware/include/LMS7002M/LMS7002M_logger.h:
 
 ../../Firmware/include/LMS7002M/LMS7002M_time.h:
+
+../../Firmware/src/Tune_Filter_8051.h:

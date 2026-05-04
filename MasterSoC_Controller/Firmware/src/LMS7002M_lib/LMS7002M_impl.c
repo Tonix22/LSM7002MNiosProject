@@ -35,7 +35,7 @@ LMS7002M_t *LMS7002M_create(LMS7002M_spi_transact_t transact)
     self->cgen_freq = 0.0;
     self->sxr_freq = 0.0;
     self->sxt_freq = 0.0;
-    self->cgen_fref = 0.0;
+    self->cgen_fref = 30720000; //0.0;
     self->sxr_fref = 0.0;
     self->sxt_fref = 0.0;
     return self;
@@ -83,7 +83,7 @@ void LMS7002M_regs_spi_read(LMS7002M_t *self, const int addr)
 }
 
 LMS7002M_regs_t *LMS7002M_regs(LMS7002M_t *self)
-{
+{  
     return self->regs;
 }
 

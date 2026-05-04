@@ -41,8 +41,9 @@ void LMS7002M_txtsp_enable(LMS7002M_t *self, const LMS7002M_chan_t channel, cons
 
 void LMS7002M_txtsp_set_interp(LMS7002M_t *self, const LMS7002M_chan_t channel, const size_t interp)
 {
+    
     LMS7002M_set_mac_ch(self, channel);
-
+    
     if (interp == 1) self->regs->reg_0x0203_hbi_ovr = REG_0X0203_HBI_OVR_BYPASS;
     if (interp == 2) self->regs->reg_0x0203_hbi_ovr = 0;
     if (interp == 4) self->regs->reg_0x0203_hbi_ovr = 1;

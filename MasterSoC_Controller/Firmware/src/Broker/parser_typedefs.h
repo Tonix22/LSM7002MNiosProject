@@ -4,7 +4,6 @@
 
 // Typedefs for functions with 1 parameter(s)
 typedef LMS7002M_t* create_num_callback(LMS7002M_spi_transact_t);
-typedef int set_gfir_taps_num_callback(LMS7002M_t *);
 typedef void one_param_lms7002m_t_num_callback(LMS7002M_t *);
 
 // Typedefs for functions with 2 parameter(s)
@@ -18,15 +17,15 @@ typedef void spi_config_num_callback(LMS7002M_t *,  const int );
 typedef void one_param_lms7002m_chan_num_callback(LMS7002M_t *, const LMS7002M_chan_t);
 
 // Typedefs for functions with 3 parameter(s)
-typedef double trf_rbb_rfe_num_callback_dup_1(LMS7002M_t *, const LMS7002M_chan_t,  const double );
+typedef double trf_rbb_rfe_num_callback_dup_1(LMS7002M_t *, const LMS7002M_chan_t, const double);
 typedef void two_param_lms_const_bool_num_callback_dup_1(LMS7002M_t *,  const LMS7002M_dir_t ,  const bool );
-typedef void two_param_lms7002m_dir_int_num_callback(LMS7002M_t *,  const LMS7002M_dir_t ,  const int );
+typedef void two_param_lms7002m_dir_int_num_callback(LMS7002M_t *,  const LMS7002M_dir_t ,  const int_arr4 );
 typedef void ldo_enable_num_callback(LMS7002M_t *,  const bool ,  const int );
 typedef void spi_write_num_callback(LMS7002M_t *,  const int ,  const int );
 typedef void two_param_lms_const_bool_num_callback(LMS7002M_t *, const LMS7002M_chan_t,  const bool );
-typedef void trf_rbb_rfe_num_callback(LMS7002M_t *, const LMS7002M_chan_t,  const double );
-typedef void set_path_and_band_num_callback(LMS7002M_t *, const LMS7002M_chan_t,  const int );
 typedef void two_param_chant_sizet_num_callback(LMS7002M_t *, const LMS7002M_chan_t,  const size_t );
+typedef void trf_rbb_rfe_num_callback(LMS7002M_t *, const LMS7002M_chan_t, const double);
+typedef void set_path_and_band_num_callback(LMS7002M_t *, const LMS7002M_chan_t, const int);
 
 // Typedefs for functions with 4 parameter(s)
 typedef int set_data_clock_num_callback(LMS7002M_t *,  const double ,  const double ,  double *);
@@ -41,4 +40,7 @@ typedef void txstp_correction_num_callback(LMS7002M_t *, const LMS7002M_chan_t, 
 
 // Typedefs for functions with 5 parameter(s)
 typedef int set_lo_freq_num_callback(LMS7002M_t *,  const LMS7002M_dir_t ,  const double ,  const double ,  double *);
+
+// Typedefs for functions with 6 parameter(s)
+typedef int set_gfir_taps_num_callback(LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const int, const short, const size_t);
 

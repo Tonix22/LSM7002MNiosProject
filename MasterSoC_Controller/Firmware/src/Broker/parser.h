@@ -141,7 +141,8 @@ typedef struct Geric_Parameter {
         bool b;               /**< Boolean value. */
         char enum_type;       /**< Enumerated type value (stored as a char). */
         int sint;             /**< Signed integer value. */
-        const int const_int;  /**< Constant integer value. */
+        //const int const_int;  /**< Constant integer value. */
+        int const_int;  /**< Constant integer value. */
         unsigned int uint;    /**< Unsigned integer value. */
         const char* string;         /**< Pointer to a null-terminated string. */
         short* short_p;       /**< Pointer to a short integer. */
@@ -159,6 +160,7 @@ typedef struct Geric_Parameter {
         const bool const_bool;
         const double const_double;
         double* double_ptr;
+        int const_int_arr4[4];  
     } value;                  /**< Union to hold the actual parameter value. */
 } Geric_Parameter;
 

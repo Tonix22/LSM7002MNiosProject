@@ -19,12 +19,14 @@ int LMS7002M_set_gfir_taps(
     const LMS7002M_chan_t channel,
     const int which,
     const short *taps,
-    const size_t ntaps)
-{
+    const size_t ntaps) {
+
     LMS7002M_set_mac_ch(self, channel);
 
     //bypass the filter for null/empty filter taps
     const bool bypass = (taps == NULL) || (ntaps == 0);
+    printf("byp %d y ntpas %d\n", bypass, ntaps);
+
     if (direction == LMS_RX)
     {
         if (which == 1) self->regs->reg_0x040c_gfir1_byp = bypass?1:0;

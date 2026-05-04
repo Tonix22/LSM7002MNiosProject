@@ -37,7 +37,7 @@ int32_t ID00004003_startIP(uint32_t port)
 }
 
 int32_t ID00004003_writeData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
-{
+{   
     aip_writeMem(port, MDATAOUT, data, size, offset);
 
     return 0;

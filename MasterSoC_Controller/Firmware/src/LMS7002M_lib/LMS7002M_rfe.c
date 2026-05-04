@@ -126,15 +126,15 @@ double LMS7002M_rfe_set_loopback_lna(LMS7002M_t *self, const LMS7002M_chan_t cha
     LMS7002M_set_mac_ch(self, channel);
 
     if (val >= 0) self->regs->reg_0x0113_g_rxloopb_rfe = 15, val = 0;
-    else if (val >= -0.5) self->regs->reg_0x0113_g_rxloopb_rfe = 14, val = -0.5;
+    else if (val >= -0.6) self->regs->reg_0x0113_g_rxloopb_rfe = 14, val = -0.5;
     else if (val >= -1) self->regs->reg_0x0113_g_rxloopb_rfe = 13, val = -1;
-    else if (val >= -1.6) self->regs->reg_0x0113_g_rxloopb_rfe = 12, val = -1.6;
-    else if (val >= -2.4) self->regs->reg_0x0113_g_rxloopb_rfe = 11, val = -2.4;
+    else if (val >= -1.7) self->regs->reg_0x0113_g_rxloopb_rfe = 12, val = -1.6;
+    else if (val >= -2.5) self->regs->reg_0x0113_g_rxloopb_rfe = 11, val = -2.4;
     else if (val >= -3) self->regs->reg_0x0113_g_rxloopb_rfe = 10, val = -3;
     else if (val >= -4) self->regs->reg_0x0113_g_rxloopb_rfe = 9, val = -4;
     else if (val >= -5) self->regs->reg_0x0113_g_rxloopb_rfe = 8, val = -5;
-    else if (val >= -6.2) self->regs->reg_0x0113_g_rxloopb_rfe = 7, val = -6.2;
-    else if (val >= -7.5) self->regs->reg_0x0113_g_rxloopb_rfe = 6, val = -7.5;
+    else if (val >= -6.3) self->regs->reg_0x0113_g_rxloopb_rfe = 7, val = -6.2;
+    else if (val >= -7.6) self->regs->reg_0x0113_g_rxloopb_rfe = 6, val = -7.5;
     else if (val >= -9) self->regs->reg_0x0113_g_rxloopb_rfe = 5, val = -9;
     else if (val >= -11) self->regs->reg_0x0113_g_rxloopb_rfe = 4, val = -11;
     else if (val >= -14) self->regs->reg_0x0113_g_rxloopb_rfe = 3, val = -14;

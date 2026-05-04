@@ -6,6 +6,7 @@ import struct
 import math
 from IPDummyDriver import IPDIWrapperController
 import struct
+import time
 
 # Build the file path relative to this script's location
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -33,6 +34,14 @@ for qt_label, group in cleaned_data.groupby('QT Label'):
             "Description": description,
             "Parameters": params
         })
+
+def load_taps_txt(path):
+    import re
+    with open(path, "r", encoding="utf-8") as f:
+        txt = f.read()
+    nums = re.findall(r'[-+]?\d+', txt)   
+    taps = [int(n) for n in nums]
+    return taps
 
 class MainWindow(tk.Tk):
     def __init__(self,ipdiInstance):
@@ -127,7 +136,7 @@ class MainWindow(tk.Tk):
         a 4 bytes con padding a la IZQUIERDA. Se escribe en palabras de 4 bytes.
         """
         stream = []
-
+       
         # 1) OPCODE (int32 BE)
         stream += self._to_bytes_be(int(opcode))  # 4 bytes ya
 
@@ -149,6 +158,8 @@ class MainWindow(tk.Tk):
         print(hex_words)
         print(u32_words)
         ipdiInstance.writeData(u32_words)
+        time.sleep(1)
+        print("Data read from output memory:", ipdiInstance.readData(10))
 
     def show_details(self, event):
         # Remove any previous widgets from the parameter frame
@@ -174,18 +185,58 @@ class MainWindow(tk.Tk):
             self.param_entries = {}
             for idx, (param, param_type) in enumerate(api_info.get('Parameters', {}).items()):
                 ttk.Label(self.param_frame, text=f"{param} ({param_type}):").grid(row=idx, column=0, sticky="w", padx=5)
-                # If the type contains 'double', use a slider as before.
+
                 if 'double' in param_type:
-                    slider = ttk.Scale(self.param_frame, from_=0, to=1000, orient='horizontal')
-                    slider.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
-                    value_label = ttk.Label(self.param_frame, text="000.00")
-                    slider.config(command=lambda val, l=slider, lbl=value_label: lbl.config(text=f"{float(val):.2f}".zfill(6)))
-                    value_label.grid(row=idx, column=2, padx=10, pady=5, sticky='ew')
-                    ttk.Label(self.param_frame, text="Escala:").grid(row=idx, column=3, padx=5)
-                    unit = ttk.Combobox(self.param_frame, values=['', 'K', 'M', 'G'], width=4)
-                    unit.grid(row=idx, column=4, padx=5)
-                    unit.current(0)
-                    self.param_entries[param] = (slider, unit, "slider")
+                    if api_name == "LMS7002M_rxtsp_set_iq_correction" or api_name == "LMS7002M_txtsp_set_iq_correction"  or api_name == "LMS7002M_txtsp_set_dc_correction" or api_name == "LMS7002M_set_nco_freq" or api_name == "LMS7002M_txtsp_set_freq" or api_name == "LMS7002M_rxtsp_set_freq":
+                         entry = ttk.Entry(self.param_frame)
+                         entry.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
+                         self.param_entries[param] = (entry, "double_freq", "freq_rel")
+                         
+                    elif qt_label == "Gain" and param == "P2_t":  
+                        if api_name == "LMS7002M_trf_set_loopback_pad":
+                            options = ["0", "-13.9", "-20.8", "-24"]
+                        elif api_name == "LMS7002M_rbb_set_pga":
+                            options = [str(x) for x in range(-12, 20, 1)]
+                        elif api_name == "LMS7002M_rfe_set_lna":
+                            options = ["0", "3", "6", "9", "12", "15", "18", "21", "24", "25", "26", "27", "28", "29", "30"]    
+                        elif api_name == "LMS7002M_rfe_set_loopback_lna":
+                            options = ["0", "16", "23", "26", "29", "31", "32.5", "33.8", "35", "36", "37", "37.6", "38.4", "39", "39.5", "40"]
+                        elif api_name == "LMS7002M_rfe_set_tia":
+                            options = ["0", "9", "12"]
+                        else:    
+                            options = [str(x) for x in range(0, -32, -1)]  # 0, -1, -2, ... -31
+                        combo = ttk.Combobox(self.param_frame, values=options, state="readonly")
+                        combo.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
+                        combo.current(0)  # "0"
+                        self.param_entries[param] = (combo, "gain_db", "gain_double")
+                    else:
+                        slider = ttk.Scale(self.param_frame, from_=0, to=1000, orient='horizontal')
+                        slider.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
+                        value_label = ttk.Label(self.param_frame, text="000.00")
+                        slider.config(command=lambda val, l=slider, lbl=value_label: lbl.config(text=f"{float(val):.2f}".zfill(6)))
+                        value_label.grid(row=idx, column=2, padx=10, pady=5, sticky='ew')
+                        ttk.Label(self.param_frame, text="Escala:").grid(row=idx, column=3, padx=5)
+                        unit = ttk.Combobox(self.param_frame, values=['', 'K', 'M', 'G'], width=4)
+                        unit.grid(row=idx, column=4, padx=5)
+                        unit.current(0)
+                        self.param_entries[param] = (slider, unit, "slider")
+
+                 # Si el parámetro es size_t, usar combobox numérico
+                elif "size_t" in param_type and qt_label == "Sampling":
+                    options = ["1", "2", "4", "8", "16", "32"]
+                    combo = ttk.Combobox(self.param_frame, values=options, state="readonly")
+                    combo.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
+                    combo.current(0)
+                    self.param_entries[param] = (combo, "size_t", "enum")
+
+                elif "const bool" in param_type.strip():
+                    options = ["0", "1"]
+                    combo = ttk.Combobox(self.param_frame, values=options, state="readonly")
+                    combo.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
+                    combo.current(0)
+                    self.param_entries[param] = (combo, " const bool ", "enum")    
+    
+    
                 # If the parameter type contains one of our enum types, create a combobox with the corresponding options.
                 elif any(enum_key in param_type for enum_key in enum_mappings):
                     matching_enum = None
@@ -200,11 +251,18 @@ class MainWindow(tk.Tk):
                         combo.current(0)
                         # Store the combobox along with the matching enum type key and a flag "enum"
                         self.param_entries[param] = (combo, matching_enum, "enum")
+
                 else:
                     # For any other type, use a standard entry widget.
                     entry = ttk.Entry(self.param_frame)
                     entry.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
-                    self.param_entries[param] = entry
+                   
+                    if (param_type.strip() == "const short" or param_type.strip() == "const size_t" or param_type.strip() == "const int" or param_type.strip() == "cons int_arr4") and qt_label != "SPI":
+                      #  entry.insert(0, "1")
+                        self.param_entries[param] = (entry, "const int", "int_entry")
+                    else:
+                        self.param_entries[param] = entry
+       
 
             self.param_frame.columnconfigure(1, weight=1)
 
@@ -231,16 +289,67 @@ class MainWindow(tk.Tk):
                         val = slider.get()
                         multiplier = {'': 1, 'K': 1e3, 'M': 1e6, 'G': 1e9}.get(unit.get(), 1)
                         params[param] = round(val * multiplier, 2)
+                    elif widget_info[-1] == "gain_double" or widget_info[-1] == "freq_rel":   
+                        combo, p_type, _ = widget_info
+                        val = combo.get()
+                        params[param] = float(val)
+
+                    # elif widget_info[-1] == "freq_rel":   
+                    #     combo, p_type, _ = widget_info
+                    #     val = combo.get()
+                    #     print(f"val is {val}")
+                    #     params[param] = float(val)
+                    #     print(f"val param is {params[param]}")    
+
                     # For enum combobox widgets
                     elif widget_info[-1] == "enum":
                         combo, p_type, _ = widget_info
                         selected = combo.get()
-                        params[param] = enum_mappings[p_type][selected]
+                        if p_type == "size_t" or p_type == " const bool ":
+
+                            params[param] = int(selected, 10)   # <-- binario
+                        else:
+                            params[param] = enum_mappings[p_type][selected]
+                    elif widget_info[-1] == "int_entry":
+                        entry, p_type, _ = widget_info
+                        txt = entry.get().strip()
+
+                        if txt == "":
+                            params[param] = 0
+                        else:
+                            params[param] = int(txt, 10)          
                 else:
-                    # For standard entry widgets
-                    params[param] = widget_info.get()
+                    raw = widget_info.get().strip()
+                    if qt_label == "SPI":
+                        # Interpretar SIEMPRE como HEX
+                        # Permite: "FF", "0xFF", "ff"
+                        try:
+                            if raw.lower().startswith("0x"):
+                                params[param] = int(raw, 16)
+                            else:
+                                params[param] = int(raw, 16)
+                        except ValueError:
+                            raise ValueError(f"Valor SPI inválido (hex): {raw}")
+                    else:
+                        # Comportamiento normal (string)                
+                        params[param] = raw
+                        
+            if api_name == "LMS7002M_set_gfir_taps":
+                path = "../GFIR_COEFF/gfir_coeff.txt"
+                taps = load_taps_txt(path)
+                print("Coeficientes GFIR cargados:") 
+                for i, coef in enumerate(taps): 
+                    print(f"taps[{i}] = {coef}")
+               # params["coeff"] = ", ".join(map(str, taps))
+                coeff_dict = {f"coeff{i}": val for i, val in enumerate(taps)}
+                params.update(coeff_dict)
+
+                                                        
+                   # For standard entry widgets
+                   # params[param] = widget_info.get()
             print(f"Opcode: 0x{api_info['Opcode']}, Parameters: {params}")
-            opcode = int(f"0x{api_info['Opcode']}",16)
+            opcode = int(f"0x{api_info['Opcode']}", 16)
+
             self.send_params_in_4byte_words_big_endian(opcode,params)
 
 
@@ -250,6 +359,13 @@ if __name__ == "__main__":
    # print('Write configuration register: CCONFIG')
    # aip.writeConfReg('CCONFIG', Select, 1, 0)
    # print(f'Select Data: {[f"{x:08X}" for x in Select]}\n')
+  #  app = MainWindow(ipdiInstance)
+  #  print("Data read from output memory:", ipdiInstance.readData(10))
+  #  app.mainloop()
+    
     app = MainWindow(ipdiInstance)
+    
     app.mainloop()
+    
+
     ipdiInstance.finish()

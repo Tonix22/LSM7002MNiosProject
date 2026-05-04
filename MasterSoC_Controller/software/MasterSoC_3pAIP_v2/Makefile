@@ -9,6 +9,7 @@ ALT_INCLUDE_DIRS += ../../Firmware/src/LMS7002M_lib
 ALT_INCLUDE_DIRS += ../../Firmware/include
 ALT_INCLUDE_DIRS += ../../Firmware/src/Broker
 ALT_INCLUDE_DIRS += ../../Firmware/src
+ALT_INCLUDE_DIRS += ../../AIP_GPIO/firmware
 
 # List of library directories for -L linker option (-L added when used).
 # Includes the BSP.
@@ -150,17 +151,18 @@ ALT_SRC_DIRS += ../../Firmware/src/platform_generic
 ALT_SRC_DIRS += ../../Firmware/src/LMS7002M_lib
 ALT_SRC_DIRS += ../../Firmware/src/Broker
 ALT_SRC_DIRS += ../../Firmware/src
+ALT_SRC_DIRS += ../../AIP_GPIO/firmware
 
 
 # Paths to C, C++, and assembly source files.
 C_SRCS += ID00004003_masterSOC.c
 C_SRCS += aip.c
 C_SRCS += spi.c
-C_SRCS += ID00001001_dummy.c
 C_SRCS += main.c
 C_SRCS += $(C_SRCS_DIRS)
 CXX_SRCS :=
 ASM_SRCS :=
+#C_SRCS += ID00001001_dummy.c
 #C_SRCS += $(wildcard $(addsuffix /*.c,$(ALT_SRC_DIRS)))
 C_SRCS_DIRS := $(foreach d,$(ALT_SRC_DIRS),$(wildcard $(call adjust-path-mixed,$(d))/*.c))
 

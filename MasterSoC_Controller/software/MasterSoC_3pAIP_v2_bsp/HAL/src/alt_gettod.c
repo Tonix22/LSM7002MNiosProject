@@ -38,6 +38,14 @@
 #include "alt_types.h"
 #include "os/alt_syscall.h"
 
+//#include <stdint.h>
+//#include <stdio.h>
+
+ #include "system.h"
+ 
+   //      #include "altera_avalon_timer_regs.h"
+//#include "sys/alt_timestamp.h"
+
 /*
  * Macro defining the number of micoseconds in a second.
  */
@@ -76,50 +84,80 @@ int ALT_GETTIMEOFDAY (struct timeval  *ptimeval, struct timezone *ptimezone)
 {
 #endif
   
-  alt_u32 nticks = alt_nticks (); 
-  alt_u32 tick_rate = alt_ticks_per_second ();
 
-  /* 
+    alt_u64 nticks = alt_timestamp();
+    alt_u32 tick_rate = alt_timestamp_freq();
+
+    /* 
    * Check to see if the system clock is running. This is indicated by a 
    * non-zero system clock rate. If the system clock is not running, an error
    * is generated and the contents of "ptimeval" and "ptimezone" are not
    * updated.
    */
 
-  if (tick_rate)
-  {
-    ptimeval->tv_sec  = alt_resettime.tv_sec  + nticks/tick_rate;
-    ptimeval->tv_usec = alt_resettime.tv_usec +
-     (alt_u32)(((alt_u64)nticks*(ALT_US/tick_rate))%ALT_US);
-      
-    while(ptimeval->tv_usec < 0) {
-      if (ptimeval->tv_sec <= 0)
-      {
-          ptimeval->tv_sec = 0;
-          ptimeval->tv_usec = 0;
-          break;
-      }
-      else
-      {
-          ptimeval->tv_sec--;
-          ptimeval->tv_usec += ALT_US;
-      }
-    }
-    
-    while(ptimeval->tv_usec >= ALT_US) {
-      ptimeval->tv_sec++;
-      ptimeval->tv_usec -= ALT_US;
-    }
-      
-    if (ptimezone)
-    { 
-      ptimezone->tz_minuteswest = alt_timezone.tz_minuteswest;
-      ptimezone->tz_dsttime     = alt_timezone.tz_dsttime;
+    if (tick_rate)
+    {
+        ptimeval->tv_sec  = alt_resettime.tv_sec + (nticks / tick_rate);
+        ptimeval->tv_usec = alt_resettime.tv_usec +
+            (alt_u32)(((alt_u64)(nticks % tick_rate) * ALT_US) / tick_rate);
+
+        while (ptimeval->tv_usec >= ALT_US) {
+            ptimeval->tv_sec++;
+            ptimeval->tv_usec -= ALT_US;
+        }
+
+        if (ptimezone)
+        {
+            ptimezone->tz_minuteswest = alt_timezone.tz_minuteswest;
+            ptimezone->tz_dsttime     = alt_timezone.tz_dsttime;
+        }
+
+        return 0;
     }
 
-    return 0;
-  }
-
-  return -ENOTSUP;
+    return -ENOTSUP;
 }
+
+
+
+
+
+//   if (tick_rate)
+//   {
+//     ptimeval->tv_sec  = alt_resettime.tv_sec  + nticks/tick_rate;
+//     ptimeval->tv_usec = alt_resettime.tv_usec +
+//      (alt_u32)(((alt_u64)nticks*(ALT_US/tick_rate))%ALT_US);
+//     // printf("tv_sec: %u, tv_usec: %u\n", ptimeval->tv_sec, ptimeval->tv_usec);
+      
+//     while(ptimeval->tv_usec < 0) {
+//       if (ptimeval->tv_sec <= 0)
+//       {
+//           ptimeval->tv_sec = 0;
+//           ptimeval->tv_usec = 0;
+//         //  printf("Error: time value underflow\n");
+//           break;
+//       }
+//       else
+//       {
+//           ptimeval->tv_sec--;
+//           ptimeval->tv_usec += ALT_US;
+//       }
+//     }
+    
+//     while(ptimeval->tv_usec >= ALT_US) {
+//       ptimeval->tv_sec++;
+//       ptimeval->tv_usec -= ALT_US;
+//     }
+      
+//     if (ptimezone)
+//     { 
+//       ptimezone->tz_minuteswest = alt_timezone.tz_minuteswest;
+//       ptimezone->tz_dsttime     = alt_timezone.tz_dsttime;
+//     }
+
+//     return 0;
+//   }
+
+//   return -ENOTSUP;
+// }
 

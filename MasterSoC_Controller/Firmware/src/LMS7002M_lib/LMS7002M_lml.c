@@ -17,7 +17,7 @@ void LMS7002M_set_spi_mode(LMS7002M_t *self, const int numWires)
 {
     //LML is in global register space
     LMS7002M_set_mac_ch(self, LMS_CHAB);
-
+    
     if (numWires == 3) self->regs->reg_0x0021_spimode = REG_0X0021_SPIMODE_3WIRE;
     if (numWires == 4) self->regs->reg_0x0021_spimode = REG_0X0021_SPIMODE_4WIRE;
     LMS7002M_regs_spi_write(self, 0x0021);
@@ -31,6 +31,18 @@ void LMS7002M_reset(LMS7002M_t *self)
     LMS7002M_spi_write(self, 0x0020, 0x0);
     LMS7002M_regs_spi_write(self, 0x0020);
     LMS7002M_regs_spi_write(self, 0x002E);//must write
+
+    uint32_t dataZ = 0;
+    uint32_t dataO = 1;
+    #define GPIO_PORT 0x45000
+    ID0000100A_wrGPIO_OUTDATA(GPIO_PORT,&dataZ,1,0);
+    ID0000100A_startIP(GPIO_PORT);
+    for (int rep = 10; rep > 0; rep--)
+		{
+			__asm__ volatile ("nop");//asm volatile("");
+		}
+    ID0000100A_wrGPIO_OUTDATA(GPIO_PORT,&dataO,1,0);  
+    ID0000100A_startIP(GPIO_PORT);  
 }
 
 

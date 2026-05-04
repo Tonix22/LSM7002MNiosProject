@@ -52,7 +52,8 @@ void LMS7002M_trf_enable_loopback(LMS7002M_t *self, const LMS7002M_chan_t channe
 double LMS7002M_trf_set_pad(LMS7002M_t *self, const LMS7002M_chan_t channel, const double gain)
 {
     const double pmax = 0;
-    double loss = pmax-gain;
+    double loss = pmax-gain;   
+
 
     //different scaling realm
     if (loss > 10) loss = (loss+10)/2;
@@ -78,10 +79,10 @@ double LMS7002M_trf_set_loopback_pad(LMS7002M_t *self, const LMS7002M_chan_t cha
     //there are 4 discrete gain values, use the midpoints
     double actual = 0.0;
     int val = 0;
-    if      (gain >= (-1.4-0)/2)   val = 0, actual = 0.0;
-    else if (gain >= (-1.4-3.3)/2) val = 1, actual = -1.4;
-    else if (gain >= (-3.3-4.3)/2) val = 2, actual = -3.3;
-    else                           val = 3, actual = -4.3;
+    if      (gain >= -1.0)    val = 0, actual = 0.0;
+    else if (gain >= -14.0)   val = 1, actual = -1.4;
+    else if (gain >= -21.0)   val = 2, actual = -3.3;
+    else                      val = 3, actual = -4.3;
 
     LMS7002M_set_mac_ch(self, channel);
     self->regs->reg_0x0101_l_loopb_txpad_trf = val;

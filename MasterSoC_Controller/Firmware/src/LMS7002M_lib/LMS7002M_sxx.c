@@ -128,6 +128,7 @@ void LMS7002M_sxx_apply_tune_state(LMS7002M_t *self, const LMS7002M_sxx_tune_sta
 int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const double fref, const double fout, double *factual)
 {
     //LMS7_logf(LMS7_INFO, "SXX tune %f MHz (fref=%f MHz) begin", fout/1e6, fref/1e6);
+    printf("SXX tune %f MHz (fref=%f MHz) begin\n", fout/1e6, fref/1e6);
 
     LMS7002M_set_mac_dir(self, direction);
 

@@ -20,7 +20,7 @@ class IPDummyDriver:
         self.__pyaip = pyaip_init(connector, nic_addr, port, csv_file)
 
         if self.__pyaip is None:
-            logging.debug(error)
+            logging.debug("error")
 
         ## Array of strings with information read
         self.dataRX = []
@@ -80,7 +80,7 @@ class IPDummyDriver:
     # @param self Object pointer
     # @param size Amount of data to read
     def readData(self, size):
-        data = self.__pyaip.readMem('MDATAOUT', size, 0)
+        data = self.__pyaip.readMem('MMEMOUT', size, 0)
         logging.debug("Data obtained from Mem Data Out")
         return data
 
@@ -169,7 +169,7 @@ class IPDIWrapperController:
         addr: int = 1,
         port: int = 0,
         csv_file: str = file_path,
-        aip_mem_size: int = 8,
+        aip_mem_size: int = 128,
         *,
         auto_init: bool = False,
         seed: int = 1,
@@ -242,7 +242,17 @@ class IPDIWrapperController:
     def status(self):
         assert self._driver is not None, "Driver not initialized"
         return self._driver.status()
-
+    
+    def readData(self, size):
+        #self._driver.disableINT()
+        #self._driver.resetPICORV32()
+        data = self._driver.readData(size)
+        #self._driver.assertPICORV32()
+        #self._driver.startIP()
+        #self._driver.status()
+        #logging.debug("Data obtained from Mem Data Out")
+        return data
+    
     def writeData(self, data) -> None:
         data_list = data if isinstance(data, list) else [data]
         self._driver.disableINT()

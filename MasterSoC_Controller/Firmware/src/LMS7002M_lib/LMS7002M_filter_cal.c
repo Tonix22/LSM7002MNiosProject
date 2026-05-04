@@ -20,8 +20,9 @@ static long long cal_rssi_sleep_ticks(void)
 }
 
 uint16_t cal_read_rssi(LMS7002M_t *self, const LMS7002M_chan_t channel)
-{
+{ 
     LMS7_sleep_for(cal_rssi_sleep_ticks());
+
     return LMS7002M_rxtsp_read_rssi(self, channel);
 }
 
@@ -40,9 +41,9 @@ void set_addrs_to_default(LMS7002M_t *self, const LMS7002M_chan_t channel, const
 int cal_gain_selection(LMS7002M_t *self, const LMS7002M_chan_t channel)
 {
     while (true)
-    {
-        const int rssi_value_50k = cal_read_rssi(self, channel);
-        if (rssi_value_50k < 0x8400) break;
+    {   const int rssi_value_50k = cal_read_rssi(self, channel);
+        
+        if (rssi_value_50k > 0x8400) break;
 
         LMS7002M_regs(self)->reg_0x0108_cg_iamp_tbb++;
         if (LMS7002M_regs(self)->reg_0x0108_cg_iamp_tbb > 63)
@@ -66,3 +67,4 @@ int cal_setup_cgen(LMS7002M_t *self, const double bw)
     while ((int)(cgen_freq/1e6) == (int)(bw/16e6)) cgen_freq -= 10e6;
     return LMS7002M_set_data_clock(self, self->cgen_fref, cgen_freq, NULL);
 }
+

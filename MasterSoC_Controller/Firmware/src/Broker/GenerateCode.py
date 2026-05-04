@@ -131,6 +131,9 @@ def generate_opcode_descriptors(excel_file, output_file):
         f.write('#include "parser.h"\n')
         f.write('#include "LMS7002M_filter_cal.h"\n')
         f.write('#include "LMS7002M_set_work_mode.h"\n')
+        f.write('#include "LMS7002M_enable_external_loopback.h"\n')
+        f.write('#include "LMS7002M_RFIC_ENABLES.h"\n')
+        f.write('#include "Tune_Filter_8051.h"\n')
         #f.write('#include "Geric_Parameter.h" // Ensure Geric_Parameter is defined\n')
         #f.write('#include "opcode_constants.h" // Ensure opcode constants are defined\n\n')
         
@@ -308,10 +311,16 @@ def generate_execute_opcode(excel_file, output_file):
                         param_casts.append(f"buffer[{i}].value.b")
                     elif param_type == "size_t":
                         param_casts.append(f"buffer[{i}].value.size")
+                    elif param_type == "const size_t":
+                        param_casts.append(f"buffer[{i}].value.size")    
                     elif param_type == "const char *":
                         param_casts.append(f"buffer[{i}].value.string")
                     elif param_type == "const int":
                         param_casts.append(f"buffer[{i}].value.const_int")
+                    elif param_type == "const int_arr4":
+                        param_casts.append(f"buffer[{i}].value.const_int_arr4") 
+                    elif param_type == "const short":
+                        param_casts.append(f"buffer[{i}].value.short_p")        
                     elif param_type == "const LMS7002M_chan_t":
                         param_casts.append(f"buffer[{i}].value.const_chan")
                     elif param_type == "const LMS7002M_dir_t":

@@ -2,6 +2,9 @@
 #include "parser.h"
 #include "LMS7002M_filter_cal.h"
 #include "LMS7002M_set_work_mode.h"
+#include "LMS7002M_enable_external_loopback.h"
+#include "LMS7002M_RFIC_ENABLES.h"
+#include "Tune_Filter_8051.h"
 /* Auto-generated file: Grouped OpcodeDescriptor arrays and global all_descriptors array */
 
 /* Opcode descriptors for group CREATE_NUM */
@@ -72,6 +75,13 @@ OpcodeDescriptor ONE_PARAM_LMS7002M_T_NUM_opcodes[] = {
         .num_params = 1,
         .args = NULL, // LMS7002M_t *
         .callback = (void*)LMS7002M_set_work_mode
+    },
+    {
+        .opcode = 0x101,
+        .QT_Label = "RFIC_ENABLE",
+        .num_params = 1,
+        .args = NULL, // LMS7002M_t *
+        .callback = (void*)LMS7002M_RESET
     },
 };
 
@@ -177,6 +187,41 @@ OpcodeDescriptor ONE_PARAM_CONST_BOOL_NUM_opcodes[] = {
         .args = NULL, // LMS7002M_t *, const bool
         .callback = (void*)LMS7002M_sxt_to_sxr
     },
+    {
+        .opcode = 0x86,
+        .QT_Label = "RFIC_ENABLE",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const bool
+        .callback = (void*)LMS7002M_CORE_LDO_ENABLE
+    },
+    {
+        .opcode = 0xA6,
+        .QT_Label = "RFIC_ENABLE",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const bool
+        .callback = (void*)LMS7002M_RXEN
+    },
+    {
+        .opcode = 0xC6,
+        .QT_Label = "RFIC_ENABLE",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const bool
+        .callback = (void*)LMS7002M_TXEN
+    },
+    {
+        .opcode = 0xE6,
+        .QT_Label = "RFIC_ENABLE",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const bool
+        .callback = (void*)LMS7002M_TXNRX1
+    },
+    {
+        .opcode = 0x106,
+        .QT_Label = "RFIC_ENABLE",
+        .num_params = 2,
+        .args = NULL, // LMS7002M_t *, const bool
+        .callback = (void*)LMS7002M_TXNRX2
+    },
 };
 
 /* Opcode descriptors for group ONE_PARAM_LMS7002M_CHAN_NUM */
@@ -238,7 +283,7 @@ OpcodeDescriptor TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes[] = {
         .opcode = 0x8,
         .QT_Label = "IQ",
         .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const int
+        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const int_arr4
         .callback = (void*)LMS7002M_set_diq_mux
     },
 };
@@ -292,8 +337,8 @@ OpcodeDescriptor SET_GFIR_TAPS_NUM_opcodes[] = {
     {
         .opcode = 0xD,
         .QT_Label = "FIR",
-        .num_params = 1,
-        .args = NULL, // LMS7002M_t *
+        .num_params = 6,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const int, const short, const size_t
         .callback = (void*)LMS7002M_set_gfir_taps
     },
 };
@@ -374,6 +419,13 @@ OpcodeDescriptor TWO_PARAM_LMS_CONST_BOOL_NUM_opcodes[] = {
         .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool
         .callback = (void*)LMS7002M_rfe_enable
     },
+    {
+        .opcode = 0x12F,
+        .QT_Label = "RFIC_ENABLE",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool
+        .callback = (void*)LMS7002M_enable_external_loopback
+    },
 };
 
 /* Opcode descriptors for group TWO_PARAM_CHANT_SIZET_NUM */
@@ -428,6 +480,13 @@ OpcodeDescriptor TXSTP_CORRECTION_NUM_opcodes[] = {
         .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, const double
         .callback = (void*)LMS7002M_txtsp_set_iq_correction
     },
+    {
+        .opcode = 0x52,
+        .QT_Label = "Calibrate",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, const double
+        .callback = (void*)LMS7002M_rxtsp_set_iq_correction
+    },
 };
 
 /* Opcode descriptors for group RXTSP_NUM */
@@ -438,13 +497,6 @@ OpcodeDescriptor RXTSP_NUM_opcodes[] = {
         .num_params = 4,
         .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool, const int
         .callback = (void*)LMS7002M_rxtsp_set_dc_correction
-    },
-    {
-        .opcode = 0x33,
-        .QT_Label = "Calibrate",
-        .num_params = 4,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const bool, const int
-        .callback = (void*)LMS7002M_rxtsp_set_iq_correction
     },
 };
 
@@ -513,6 +565,13 @@ OpcodeDescriptor BB_FILER_SET_NUM_opcodes[] = {
         .num_params = 4,
         .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
         .callback = (void*)LMS7002M_rbb_set_filter_bw
+    },
+    {
+        .opcode = 0x56,
+        .QT_Label = "Calibrate",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
+        .callback = (void*)TuneTxFilter_8051
     },
 };
 
