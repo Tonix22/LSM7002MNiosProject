@@ -13,7 +13,8 @@ obj/default/parser_opcodes.o: ../../Firmware/src/Broker/parser_opcodes.c \
  ../../Firmware/src/LMS7002M_RFIC_ENABLES.h \
  ../../Firmware/src/Tune_Filter_8051.h \
  ../../Firmware/src/LMS7002M_lib/LMS7002M_impl.h \
- ../../Firmware/include/LMS7002M/LMS7002M_time.h
+ ../../Firmware/include/LMS7002M/LMS7002M_time.h \
+ ../../Firmware/src/Calibrations.h ../../Firmware/src/Tune_Filter_8051.h
 
 ../../Firmware/src/Broker/parser_typedefs.h:
 
@@ -44,3 +45,7 @@ obj/default/parser_opcodes.o: ../../Firmware/src/Broker/parser_opcodes.c \
 ../../Firmware/src/LMS7002M_lib/LMS7002M_impl.h:
 
 ../../Firmware/include/LMS7002M/LMS7002M_time.h:
+
+../../Firmware/src/Calibrations.h:
+
+../../Firmware/src/Tune_Filter_8051.h:

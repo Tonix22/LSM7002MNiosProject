@@ -49,7 +49,7 @@ void LMS7_sleep_until(long long ticks)
             ticks = (LMS7_time_tps())/1000; 
         }
          long long left = ticks - now;
-         printf("LMS7_sleep_until: now = %lld ticks, target = %lld ticks, left = %lld ticks\n", now, ticks, left);
+       //  printf("LMS7_sleep_until: now = %lld ticks, target = %lld ticks, left = %lld ticks\n", now, ticks, left);
     
         if (left < 0) break; //time expired -> done here
 

@@ -52,24 +52,23 @@ void start_setup();
 
 
 int main(void)
-{ alt_timestamp_start();
+{ 
     int ts_status;
     unsigned int ts_freq;
     alt_timestamp_type ts0, ts1;
     struct timeval tv0, tv1;
     long long lms_t0, lms_t1;
     int i;
-    printf("Hello from Nios II!\n");
 
-    for (i = 0; i < 10; i++)
-    {
-        lms_t0 = LMS7_time_now();
-        printf("Current time: %lld ticks\n", lms_t0);
-        LMS7_sleep_for(LMS7_time_tps()/100);   // 10 ms
-        lms_t1 = LMS7_time_now();
+    // for (i = 0; i < 10; i++)
+    // {
+    //     lms_t0 = LMS7_time_now();
+    //     printf("Current time: %lld ticks\n", lms_t0);
+    //     LMS7_sleep_for(LMS7_time_tps()/100);   // 10 ms
+    //     lms_t1 = LMS7_time_now();
 
-        printf("[%d] delta 10ms = %lld\n", i, lms_t1 - lms_t0);
-    }
+    //     printf("[%d] delta 10ms = %lld\n", i, lms_t1 - lms_t0);
+    // }
 
 	start_state = 0;
     uint32_t dataFlit = 0;
@@ -99,9 +98,31 @@ int main(void)
 
 
     //  test
-    LMS7002M_set_lo_freq(lms, 0, 30720000, 1e9, NULL); 
+    LMS7002M_set_lo_freq(lms, LMS_TX, 30720000.0, 1e9, NULL); 
     LMS7002M_set_work_mode(lms);
-    LMS7002M_set_data_clock(lms, 30720000, 60e6, NULL); 
+    LMS7002M_set_data_clock(lms, 30720000.0, 240e6, NULL); 
+
+
+    // config rx para test
+    LMS7002M_set_lo_freq(lms, LMS_RX, 30720000.0, 1e9, NULL);
+    LMS7002M_rfe_enable(lms, LMS_CHA, 1);
+    LMS7002M_rxtsp_enable(lms, LMS_CHA, 1);
+    LMS7002M_rxtsp_set_decim(lms, LMS_CHA, 2);
+    LMS7002M_rxtsp_set_dc_correction(lms, LMS_CHA, 1, 0);
+    LMS7002M_configure_lml_port(lms, LMS_PORT1, LMS_TX, 1);    
+    LMS7002M_configure_lml_port(lms, LMS_PORT2, LMS_RX, 1);
+    LMS7002M_rfe_set_path(lms, LMS_CHA, 72);
+
+    
+    lms->regs->reg_0x0086_en_adcclkh_clkgn = 0;
+    LMS7002M_regs_spi_write(lms, 0x0086);
+
+
+    lms->regs->reg_0x0089_clkh_ov_clkl_cgen = 2;
+    LMS7002M_regs_spi_write(lms, 0x0089);
+
+    alt_timestamp_start();
+
     
    // set_work_mode(lms);
 
@@ -116,25 +137,6 @@ int main(void)
 	while(1){
 		if(start_state != 0){
             unsigned char txbuf[4];
-
-//             // if (sw == 0){
-           
-              txbuf[0] = 0x80;
-              txbuf[1] = 0x17;
-              txbuf[2] = 0x11;
-              txbuf[3] = 0x33;
-//             // sw = 1; 
-//             // printf("sw a 1\n");   }
-            // else {
-            // txbuf[0] = 0x80;
-            // txbuf[1] = 0x17;
-            // txbuf[2] = 0x11;
-            // txbuf[3] = 0x44;
-            // sw = 0;
-            // printf("sw a 0\n");
-            // }
-
-            // spi_write_API(txbuf, 4, 1);
 
 				ID00004003_readData(AIP_UP_0_BASE, data, FLITS_AIP, 0);
                 
@@ -325,76 +327,6 @@ int main(void)
                 printf("Nuevo opcode enviado\n");
                 ret = executeOpcode(lms, opcode, buffer, buffer_size);
                 printf("ret = %d\n", ret);
-                //int i = LMS7002M_spi_read(lms, 0x0123);
-//                 LMS7002M_spi_read(lms, 0x0105);
-//                LMS7002M_spi_read(lms, 0x0106);
-//                LMS7002M_spi_read(lms, 0x0107);
-//                LMS7002M_spi_read(lms, 0x0109);
-//                LMS7002M_spi_read(lms, 0x010A);
-
-// LMS7002M_spi_write (lms, 0x0006, 0x0001); 
-//LMS7002M_spi_write (lms, 0x0002, 0x0002);
-//                LMS7002M_spi_write (lms, 0x0000, 0x0000); 
-//                int i = LMS7002M_spi_read(lms, 0x0002);
-//               int val = 0x0008 | i ;
-//                LMS7002M_spi_write (lms, 0x0002, val); 
-//                LMS7002M_spi_write (lms, 0x0002, i);
-
-//                 LMS7002M_spi_write (lms, 0x0000, 0x0000); 
-//                 i = LMS7002M_spi_read(lms, 0x0002);
-//                val = 0x0008 | i ;
-//                LMS7002M_spi_write (lms, 0x0002, val);
-//                LMS7002M_spi_write (lms, 0x0002, i);
-
-//                 LMS7002M_spi_write (lms, 0x0000, 0x0005); 
-//                 i = LMS7002M_spi_read(lms, 0x0002);
-//                val = 0x0008 | i ;
-//                LMS7002M_spi_write (lms, 0x0002, val);
-//                LMS7002M_spi_write (lms, 0x0002, i);
-
-//                 LMS7002M_spi_write (lms, 0x0000, 0x0003); 
-//                i = LMS7002M_spi_read(lms, 0x0002);
-//               val = 0x000C | i ;
-//                LMS7002M_spi_write (lms, 0x0002, val);
-//                LMS7002M_spi_write (lms, 0x0002, i);
-// i = 0x0000;
-//                while (i == 0x0000){
-//                i = LMS7002M_spi_read(lms, 0x0001);
-//                }
-//                 while (i == 0x00FF){
-//                i = LMS7002M_spi_read(lms, 0x0001);
-//                }
-               
-
-
-//                 LMS7002M_spi_write (lms, 0x0000, 0x0006); 
-//                 i = LMS7002M_spi_read(lms, 0x0002);
-//               val = 0x000C | i ;
-//                LMS7002M_spi_write (lms, 0x0002, val);
-//                LMS7002M_spi_write (lms, 0x0002, i);
-
-//               i = 0x0000;
-//                while (i == 0x0000){
-//                i = LMS7002M_spi_read(lms, 0x0001);
-//                }
-//                 while (i == 0x00FF){
-//                i = LMS7002M_spi_read(lms, 0x0001);
-//                }
-
-//                LMS7002M_spi_write (lms, 0x0006, 0x0000); 
-
-//                LMS7002M_spi_read(lms, 0x0105);
-//                LMS7002M_spi_read(lms, 0x0106);
-//                LMS7002M_spi_read(lms, 0x0107);
-//                LMS7002M_spi_read(lms, 0x0109);
-//                LMS7002M_spi_read(lms, 0x010A);
-                
-              
-              //                                                                                                                                                                                                                         
-                // LMS7002M_spi_read(lms, 0x0121);
-                // LMS7002M_spi_read(lms, 0x0120);
-              //  LMS7002M_spi_read(lms, 0x0123);
-              //   LMS7002M_spi_read(lms, 0x011C);
 
 		   start_state = 0;
 		}

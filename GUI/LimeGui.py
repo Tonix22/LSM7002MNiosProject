@@ -187,7 +187,12 @@ class MainWindow(tk.Tk):
                 ttk.Label(self.param_frame, text=f"{param} ({param_type}):").grid(row=idx, column=0, sticky="w", padx=5)
 
                 if 'double' in param_type:
-                    if api_name == "LMS7002M_rxtsp_set_iq_correction" or api_name == "LMS7002M_txtsp_set_iq_correction"  or api_name == "LMS7002M_txtsp_set_dc_correction" or api_name == "LMS7002M_set_nco_freq" or api_name == "LMS7002M_txtsp_set_freq" or api_name == "LMS7002M_rxtsp_set_freq":
+                    if  (param_type.strip() == "const double"):
+                        entry = ttk.Entry(self.param_frame)
+                        entry.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
+                        self.param_entries[param] = (entry, "const double", "double_entry")
+                        
+                    elif api_name == "LMS7002M_rxtsp_set_iq_correction" or api_name == "LMS7002M_txtsp_set_iq_correction"  or api_name == "LMS7002M_txtsp_set_dc_correction" or api_name == "LMS7002M_set_nco_freq" or api_name == "LMS7002M_txtsp_set_freq" or api_name == "LMS7002M_rxtsp_set_freq":
                          entry = ttk.Entry(self.param_frame)
                          entry.grid(row=idx, column=1, padx=5, pady=2, sticky='ew')
                          self.param_entries[param] = (entry, "double_freq", "freq_rel")
@@ -289,7 +294,7 @@ class MainWindow(tk.Tk):
                         val = slider.get()
                         multiplier = {'': 1, 'K': 1e3, 'M': 1e6, 'G': 1e9}.get(unit.get(), 1)
                         params[param] = round(val * multiplier, 2)
-                    elif widget_info[-1] == "gain_double" or widget_info[-1] == "freq_rel":   
+                    elif widget_info[-1] == "gain_double" or widget_info[-1] == "freq_rel" or widget_info[-1] == "double_entry":   
                         combo, p_type, _ = widget_info
                         val = combo.get()
                         params[param] = float(val)

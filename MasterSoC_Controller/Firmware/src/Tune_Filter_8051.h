@@ -42,6 +42,7 @@ static const float_type TxLPF_RF_LimitMidHigh = 50e6;
 static const float_type TxLPF_RF_LimitHigh = 130e6;
 
 int TuneTxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_type tx_lpf_freq_RF, double *bwactual);
+int TuneRxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_type rx_lpf_freq_RF, double *bwactual);
 uint8_t ReadMCUProgramID(LMS7002M_t *self);
 void RunProcedure(LMS7002M_t *self, uint8_t id);
 int WaitForMCU( LMS7002M_t *self, uint32_t timeout_ms);

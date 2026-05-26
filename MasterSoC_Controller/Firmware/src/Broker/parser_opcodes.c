@@ -5,6 +5,7 @@
 #include "LMS7002M_enable_external_loopback.h"
 #include "LMS7002M_RFIC_ENABLES.h"
 #include "Tune_Filter_8051.h"
+#include "Calibrations.h"
 /* Auto-generated file: Grouped OpcodeDescriptor arrays and global all_descriptors array */
 
 /* Opcode descriptors for group CREATE_NUM */
@@ -573,6 +574,13 @@ OpcodeDescriptor BB_FILER_SET_NUM_opcodes[] = {
         .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
         .callback = (void*)TuneTxFilter_8051
     },
+    {
+        .opcode = 0x76,
+        .QT_Label = "Calibrate",
+        .num_params = 4,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double, double *
+        .callback = (void*)TuneRxFilter_8051
+    },
 };
 
 /* Opcode descriptors for group TRF_RBB_RFE_NUM */
@@ -632,6 +640,13 @@ OpcodeDescriptor TRF_RBB_RFE_NUM_opcodes[] = {
         .num_params = 3,
         .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
         .callback = (void*)LMS7002M_rfe_set_tia
+    },
+    {
+        .opcode = 0x117,
+        .QT_Label = "Calibrate",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)CalibrateAll
     },
 };
 

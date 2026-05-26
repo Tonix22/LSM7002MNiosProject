@@ -341,7 +341,6 @@ int LMS7002M_tbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
 {
     LMS7002M_set_mac_ch(self, channel);
     int status = 0;
-    bw = 5.5e6; //for testing only, override requested BW
 
     //ranges to work around filter tuning issues
     //LPFLAD does not calibrate near extreme ranges
@@ -369,6 +368,8 @@ int LMS7002M_tbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
     // Clocking configuration
     ////////////////////////////////////////////////////////////////////
     status = cal_setup_cgen(self, bw);
+    printf("status cal_setup_cgen: %d\n", status);
+    printf("bw: %f\n", bw);
     
     if (status != 0)
     {

@@ -26,9 +26,12 @@ static int setup_rx_cal_tone(LMS7002M_t *self, const LMS7002M_chan_t channel, co
     LMS7002M_sxt_to_sxr(self, false);
     int status = 0;
     LMS7002M_set_mac_ch(self, channel);
+   // printf("sxt_freq: %f MHz\n", self->sxt_freq/1e6);
     const double sxr_freq = self->sxt_freq-bw;
     double sxr_freq_actual = 0;
+  //  printf("sxr_freq: %f MHz\n", sxr_freq/1e6);
     status = LMS7002M_set_lo_freq(self, LMS_RX, self->sxr_fref, sxr_freq, &sxr_freq_actual);
+   // printf("SXr frequency actual: %f MHz\n", sxr_freq_actual/1e6);
     LMS7002M_set_mac_ch(self, channel);
     if (status != 0)
     {
@@ -55,7 +58,7 @@ static int rx_cal_loop(
     //--- cgen already set prior ---//
 
     //--- gain selection ---//
-    const int rssi_value_50k = cal_gain_selection(self, channel);
+    const int rssi_value_50k = cal_gain_selection(self, channel); //* pow(10, (-0.0018 * (2*bw)/1e6)/20);
 
     //--- setup calibration tone ---//
     int status = setup_rx_cal_tone(self, channel, bw);
@@ -70,19 +73,34 @@ static int rx_cal_loop(
         if (iter++ == MAX_CAL_LOOP_ITERS)
         {
             //LMS7_logf(LMS7_ERROR, "failed to converge when calibrating %s", reg_name);
+            printf("fallo max iter\n");
             return -1;
         }
-
+        printf("iter: %d, rssi_value: %d, rssi_value_50k: %d, adjust: %d\n", iter, rssi_value, rssi_value_50k, adjust);
+    
         *reg_ptr += adjust;
+        printf("reg_ptr to %d\n", *reg_ptr);
+        printf("rcc_ctl_lpfl_rbb: %d\n", LMS7002M_regs(self)->reg_0x0117_rcc_ctl_lpfl_rbb);
+        printf("c_ctl_lpfl_rbb: %d\n", LMS7002M_regs(self)->reg_0x0117_c_ctl_lpfl_rbb);
+        printf ("reg_addr: 0x%04x\n", reg_addr);
         LMS7002M_regs_spi_write(self, reg_addr);
         rssi_value = cal_read_rssi(self, channel);
-        if (rssi_value > rssi_value_50k*0.7071 && adjust < 0) break;
-        if (rssi_value < rssi_value_50k*0.7071 && adjust > 0) break;
-        if (*reg_ptr == 0 || *reg_ptr == reg_max)
-        {
-            //LMS7_logf(LMS7_ERROR, "failed to cal %s -> %d", reg_name, *reg_ptr);
-            return -1;
-        }
+        if (rssi_value > rssi_value_50k*0.7071 && adjust < 0) 
+            {printf("break 1\n");
+                break;}
+        if (rssi_value < rssi_value_50k*0.7071 && adjust > 0) 
+           {printf("break 2\n"); 
+            break;}
+
+        if (*reg_ptr <= 0) *reg_ptr = 0; 
+        if (*reg_ptr >= reg_max) *reg_ptr = reg_max;     
+        // if (*reg_ptr == 0 || *reg_ptr == reg_max)
+        // {
+        //     //LMS7_logf(LMS7_ERROR, "failed to cal %s -> %d", reg_name, *reg_ptr);
+        //     printf("fallo reg ptr\n");
+        //     return -1;
+        // }
+    
     }
     //LMS7_logf(LMS7_DEBUG, "%s = %d", reg_name, *reg_ptr);
     return 0;
@@ -258,6 +276,9 @@ static int rx_cal_tia_rfe(LMS7002M_t *self, const LMS7002M_chan_t channel, const
     status = rx_cal_loop(self, channel, bw,
         &LMS7002M_regs(self)->reg_0x0112_cfb_tia_rfe,
         0x0112, 4095, "cfb_tia_rfe");
+//LMS7002M_regs(self)->reg_0x0112_cfb_tia_rfe = 533;
+//LMS7002M_regs(self)->reg_0x0112_ccomp_tia_rfe = 6;
+LMS7002M_regs_spi_write(self, 0x0112);
 
     done:
     return status;
@@ -282,12 +303,14 @@ static int rx_cal_rbb_lpfl(LMS7002M_t *self, const LMS7002M_chan_t channel, cons
     //--- c_ctl_lpfl_rbb, rcc_ctl_lpfl_rbb ---//
     LMS7002M_regs(self)->reg_0x0117_c_ctl_lpfl_rbb = (int)(2160e6/bw - 103);
     int rcc_ctl_lpfl_rbb = 0;
-    if      (bw > 15e6)  rcc_ctl_lpfl_rbb = 5;
-    else if (bw > 10e6)  rcc_ctl_lpfl_rbb = 4;
-    else if (bw > 5e6)   rcc_ctl_lpfl_rbb = 3;
-    else if (bw > 3e6)   rcc_ctl_lpfl_rbb = 2;
-    else if (bw > 1.4e6) rcc_ctl_lpfl_rbb = 1;
+    if      (2*bw > 15e6)  rcc_ctl_lpfl_rbb = 5;
+    else if (2*bw > 10e6)  rcc_ctl_lpfl_rbb = 4;
+    else if (2*bw > 5e6)   rcc_ctl_lpfl_rbb = 3;
+    else if (2*bw > 3e6)   rcc_ctl_lpfl_rbb = 2;
+    else if (2*bw > 1.4e6) rcc_ctl_lpfl_rbb = 1;
     else                 rcc_ctl_lpfl_rbb = 0;
+
+    
     LMS7002M_regs(self)->reg_0x0117_rcc_ctl_lpfl_rbb = rcc_ctl_lpfl_rbb;
     LMS7002M_regs_spi_write(self, 0x0117);
 
@@ -358,7 +381,9 @@ int LMS7002M_rbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
     LMS7002M_set_mac_ch(self, channel);
     int status = 0;
     if (bw < 0.5) bw = 0.5; //low-band starts at 0.5
-    const int path = (bw < 20e6)?LMS7002M_RBB_LBF:LMS7002M_RBB_HBF;
+    const int path = (bw <= 20e6)?LMS7002M_RBB_LBF:LMS7002M_RBB_HBF;
+
+    printf("calibrating rx filter for channel %d, bw: %f MHz\n", channel, bw/1e6);
 
     //check for initialized reference frequencies
     if (self->cgen_fref == 0.0)
@@ -395,25 +420,29 @@ int LMS7002M_rbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
         goto done;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    // Load initial calibration state
-    ////////////////////////////////////////////////////////////////////
-    status = rx_cal_init(self, channel);
-    if (status != 0)
-    {
-        //LMS7_logf(LMS7_ERROR, "rx_cal_init() failed");
-        goto done;
-    }
+    // ////////////////////////////////////////////////////////////////////
+    // // Load initial calibration state
+    // ////////////////////////////////////////////////////////////////////
+    // status = rx_cal_init(self, channel);
+    // if (status != 0)
+    // {
+    //     //LMS7_logf(LMS7_ERROR, "rx_cal_init() failed");
+    //     goto done;
+    // }
 
-    ////////////////////////////////////////////////////////////////////
-    // RFE TIA calibration
-    ////////////////////////////////////////////////////////////////////
-    status = rx_cal_tia_rfe(self, channel, bw);
-    if (status != 0)
-    {
-        //LMS7_logf(LMS7_ERROR, "rx_cal_tia_rfe() failed");
-        goto done;
-    }
+    // ////////////////////////////////////////////////////////////////////
+    // // RFE TIA calibration
+    // ////////////////////////////////////////////////////////////////////
+    // status = rx_cal_tia_rfe(self, channel, bw);
+    // LMS7002M_set_mac_ch(self, channel);
+    // const int cfb_tia_rfe = LMS7002M_regs(self)->reg_0x0112_cfb_tia_rfe;
+    // const int ccomp_tia_rfe = LMS7002M_regs(self)->reg_0x0112_ccomp_tia_rfe;
+    // const int rcomp_tia_rfe = LMS7002M_regs(self)->reg_0x0114_rcomp_tia_rfe;
+    // if (status != 0)
+    // {
+    //     //LMS7_logf(LMS7_ERROR, "rx_cal_tia_rfe() failed");
+    //     goto done;
+    // }
 
     ////////////////////////////////////////////////////////////////////
     // Initialize calibration again for LPF
@@ -428,13 +457,42 @@ int LMS7002M_rbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
     ////////////////////////////////////////////////////////////////////
     // RBB LPF calibration
     ////////////////////////////////////////////////////////////////////
-    if (path == LMS7002M_RBB_LBF) status = rx_cal_rbb_lpfl(self, channel, bw);
+    if (path == LMS7002M_RBB_LBF) status = rx_cal_rbb_lpfl(self, channel, bw/2);
     if (path == LMS7002M_RBB_HBF) status = rx_cal_rbb_lpfh(self, channel, bw);
     if (status != 0)
     {
         //LMS7_logf(LMS7_ERROR, "rx_cal_rbb_lpf() failed");
         goto done;
     }
+   const int rcc_ctl_lpfl_rbb = LMS7002M_regs(self)->reg_0x0117_rcc_ctl_lpfl_rbb;
+    const int c_ctl_lpfl_rbb = LMS7002M_regs(self)->reg_0x0117_c_ctl_lpfl_rbb;
+    const int rcc_ctl_lpfh_rbb = LMS7002M_regs(self)->reg_0x0116_rcc_ctl_lpfh_rbb;
+    const int c_ctl_lpfh_rbb = LMS7002M_regs(self)->reg_0x0116_c_ctl_lpfh_rbb;
+
+////////////////////////////////////////////////////////////////////
+    // Load initial calibration state
+    ////////////////////////////////////////////////////////////////////
+    status = rx_cal_init(self, channel);
+    if (status != 0)
+    {
+        //LMS7_logf(LMS7_ERROR, "rx_cal_init() failed");
+        goto done;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    // RFE TIA calibration
+    ////////////////////////////////////////////////////////////////////
+    status = rx_cal_tia_rfe(self, channel, bw);
+    LMS7002M_set_mac_ch(self, channel);
+    const int cfb_tia_rfe = LMS7002M_regs(self)->reg_0x0112_cfb_tia_rfe;
+    const int ccomp_tia_rfe = LMS7002M_regs(self)->reg_0x0112_ccomp_tia_rfe;
+    const int rcomp_tia_rfe = LMS7002M_regs(self)->reg_0x0114_rcomp_tia_rfe;
+    if (status != 0)
+    {
+        //LMS7_logf(LMS7_ERROR, "rx_cal_tia_rfe() failed");
+        goto done;
+    }
+
 
     done:
 
@@ -442,13 +500,22 @@ int LMS7002M_rbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
     // stash tia + rbb calibration results
     ////////////////////////////////////////////////////////////////////
     LMS7002M_set_mac_ch(self, channel);
-    const int cfb_tia_rfe = LMS7002M_regs(self)->reg_0x0112_cfb_tia_rfe;
-    const int ccomp_tia_rfe = LMS7002M_regs(self)->reg_0x0112_ccomp_tia_rfe;
-    const int rcomp_tia_rfe = LMS7002M_regs(self)->reg_0x0114_rcomp_tia_rfe;
-    const int rcc_ctl_lpfl_rbb = LMS7002M_regs(self)->reg_0x0117_rcc_ctl_lpfl_rbb;
-    const int c_ctl_lpfl_rbb = LMS7002M_regs(self)->reg_0x0117_c_ctl_lpfl_rbb;
-    const int rcc_ctl_lpfh_rbb = LMS7002M_regs(self)->reg_0x0116_rcc_ctl_lpfh_rbb;
-    const int c_ctl_lpfh_rbb = LMS7002M_regs(self)->reg_0x0116_c_ctl_lpfh_rbb;
+    // const int cfb_tia_rfe = LMS7002M_regs(self)->reg_0x0112_cfb_tia_rfe;
+    // const int ccomp_tia_rfe = LMS7002M_regs(self)->reg_0x0112_ccomp_tia_rfe;
+    // const int rcomp_tia_rfe = LMS7002M_regs(self)->reg_0x0114_rcomp_tia_rfe;
+    // const int rcc_ctl_lpfl_rbb = LMS7002M_regs(self)->reg_0x0117_rcc_ctl_lpfl_rbb;
+    // const int c_ctl_lpfl_rbb = LMS7002M_regs(self)->reg_0x0117_c_ctl_lpfl_rbb;
+    // const int rcc_ctl_lpfh_rbb = LMS7002M_regs(self)->reg_0x0116_rcc_ctl_lpfh_rbb;
+    // const int c_ctl_lpfh_rbb = LMS7002M_regs(self)->reg_0x0116_c_ctl_lpfh_rbb;
+
+    printf ("cfb_tia_rfe: %d\n", cfb_tia_rfe);
+    printf ("ccomp_tia_rfe: %d\n", ccomp_tia_rfe);
+    printf ("rcomp_tia_rfe: %d\n", rcomp_tia_rfe);
+    printf ("rcc_ctl_lpfl_rbb: %d\n", rcc_ctl_lpfl_rbb);
+    printf ("c_ctl_lpfl_rbb: %d\n", c_ctl_lpfl_rbb);
+    printf ("rcc_ctl_lpfh_rbb: %d\n", rcc_ctl_lpfh_rbb);
+    printf ("c_ctl_lpfh_rbb: %d\n", c_ctl_lpfh_rbb);
+
 
     ////////////////////////////////////////////////////////////////////
     // restore original register values

@@ -242,9 +242,11 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
               break;
 
             /************************************************************************************************************************************************************************************
+			* CalibrateAll
 			* LMS7002M_rxtsp_set_freq
 			* LMS7002M_txtsp_set_freq
 			************************************************************************************************************************************************************************************/
+            case 0x117:
             case 0x17:
             case 0x37:
               ((trf_rbb_rfe_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_double);
@@ -280,11 +282,13 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
             /************************************************************************************************************************************************************************************
 			* LMS7002M_rbb_set_filter_bw
 			* LMS7002M_tbb_set_filter_bw
+			* TuneRxFilter_8051
 			* TuneTxFilter_8051
 			************************************************************************************************************************************************************************************/
             case 0x16:
             case 0x36:
             case 0x56:
+            case 0x76:
               ((bb_filer_set_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_double, buffer[3].value.double_ptr);
               break;
 

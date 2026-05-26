@@ -56,7 +56,7 @@ module ipm_ipMasterSoC_3pAIP
 );
 wire MISO_master;
 
-	assign sel_mux_spi = sel_switch;
+	assign sel_mux_spi = 1'b0;// sel_switch;
 	assign uart_lime = MISO_master;
 	
 	wire MISO_fpgacfg;

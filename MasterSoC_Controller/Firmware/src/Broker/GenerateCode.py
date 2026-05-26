@@ -134,6 +134,7 @@ def generate_opcode_descriptors(excel_file, output_file):
         f.write('#include "LMS7002M_enable_external_loopback.h"\n')
         f.write('#include "LMS7002M_RFIC_ENABLES.h"\n')
         f.write('#include "Tune_Filter_8051.h"\n')
+        f.write('#include "Calibrations.h"\n')
         #f.write('#include "Geric_Parameter.h" // Ensure Geric_Parameter is defined\n')
         #f.write('#include "opcode_constants.h" // Ensure opcode constants are defined\n\n')
         

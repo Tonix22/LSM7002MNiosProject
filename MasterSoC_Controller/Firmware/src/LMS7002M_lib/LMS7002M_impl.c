@@ -36,14 +36,14 @@ LMS7002M_t *LMS7002M_create(LMS7002M_spi_transact_t transact)
     self->sxr_freq = 0.0;
     self->sxt_freq = 0.0;
     self->cgen_fref = 30720000; //0.0;
-    self->sxr_fref = 0.0;
-    self->sxt_fref = 0.0;
+    self->sxr_fref = 30720000;//0.0;
+    self->sxt_fref = 30720000;//0.0;
     return self;
 }
 
 void LMS7002M_destroy(LMS7002M_t *self)
 {
-    //free(self);
+    free(self);
 }
 
 /***********************************************************************

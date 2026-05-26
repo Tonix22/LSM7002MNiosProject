@@ -4,14 +4,102 @@
 #include <stdbool.h>
 #include "mcu_program_lms7_dc_iq_calibration_bin.h"
 
-static int opt_gain_tbb[2] = {1, 1};
 
+
+int TuneRxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_type rx_lpf_freq_RF, double *bwactual)
+{
+    int status;
+   
+
+    // int ind ; //GetActiveChannelIndex()%2;
+    // if (channel == LMS_CHA)
+    //     ind = 0;
+    // else if(channel == LMS_CHB)
+    //     ind = 1;
+    // else 
+    //     ind = 0; //default to channel A
+
+    LMS7002M_set_mac_ch(self, channel);
+    printf("TuneRxFilter_8051: channel %c, requested BW %f MHz\n", channel, rx_lpf_freq_RF/1e6);
+    
+    if (rx_lpf_freq_RF < RxLPF_RF_LimitLow) {
+        rx_lpf_freq_RF = RxLPF_RF_LimitLow;
+        printf ("LPF set to %.3f MHz (requested %0.3f MHz [out of range])", RxLPF_RF_LimitLow/1e6, rx_lpf_freq_RF/1e6);
+    }
+    if (rx_lpf_freq_RF > RxLPF_RF_LimitHigh) {
+        rx_lpf_freq_RF = RxLPF_RF_LimitHigh;
+        printf ("LPF set to %.3f MHz (requested %0.3f MHz [out of range])", RxLPF_RF_LimitHigh/1e6, rx_lpf_freq_RF/1e6);
+    }
+
+    
+    uint8_t g_tia = Get_SPI_Reg_bits(self, 0x0113, 1, 0);
+
+    if(g_tia == 1 && rx_lpf_freq_RF < 4e6)
+    {
+        rx_lpf_freq_RF = 4e6;
+       // Log(LOG_WARNING, "Rx LPF min bandwidth is 4MHz when TIA gain is set to -12 dB");
+    }
+
+
+     if(ReadMCUProgramID(self) != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
+    {
+        if((status = Program_MCU(self, mcu_program_lms7_dc_iq_calibration_bin, SRAM, 1024*16)))
+            return -1;
+    }
+
+    //set reference clock parameter inside MCU
+    long refClk =  self->cgen_fref;   //GetReferenceClk_SX(false);
+    SetParameter(self, MCU_REF_CLK, refClk);
+    
+    //set bandwidth for MCU to read from register, value is integer stored in MHz
+    SetParameter(self, MCU_BW, rx_lpf_freq_RF);
+    RunProcedure(self, 5);
+
+    status = WaitForMCU(self, 1000);
+    if(status != 0)
+    {
+       // lime::error("Tune Rx Filter: MCU error %i (%s)", status, MCU_BD::MCUStatusMessage(status));
+        return -1;
+    }
+    //sync registers to cache
+    // std::vector<uint16_t> regsToSync = {0x0112, 0x0117, 0x011A, 0x0116, 0x0118, 0x0114, 0x0019, 0x0115};
+    // for(const auto addr : regsToSync)
+    //     this->SPI_read(addr, true);
+
+    LMS7002M_regs_spi_read(self, 0x0112);
+    LMS7002M_regs_spi_read(self, 0x0117);
+    LMS7002M_regs_spi_read(self, 0x011A);
+    LMS7002M_regs_spi_read(self, 0x0116);
+    LMS7002M_regs_spi_read(self, 0x0118);
+    LMS7002M_regs_spi_read(self, 0x0114);
+    LMS7002M_regs_spi_read(self, 0x0019);
+    LMS7002M_regs_spi_read(self, 0x0115);    
+
+    return status;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+static int opt_gain_tbb[2] = {-1, -1};
 
 
 int TuneTxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_type tx_lpf_freq_RF, double *bwactual)
 {
     int status;
-    tx_lpf_freq_RF = 5.5e6; //for testing only, override requested BW
+   // tx_lpf_freq_RF = 5.5e6; //for testing only, override requested BW
 
     int ind ; //GetActiveChannelIndex()%2;
     if (channel == LMS_CHA)
@@ -630,25 +718,25 @@ void set_addrs_to_defaultFilter(LMS7002M_t *self, const LMS7002M_chan_t channel,
 
 static inline int LMS7002M_regs_default_tofilter(const int addr)
 {
-    if (addr == 0x0020) return 0xffff;
-    if (addr == 0x0021) return 0xe9f;
-    if (addr == 0x0022) return 0x7df;
-    if (addr == 0x0023) return 0x5559;
-    if (addr == 0x0024) return 0xe4e4;
-    if (addr == 0x0025) return 0x101;
-    if (addr == 0x0026) return 0x101;
-    if (addr == 0x0027) return 0xe4e4;
-    if (addr == 0x0028) return 0x101;
-    if (addr == 0x0029) return 0x101;
-    if (addr == 0x002A) return 0x86;
-    if (addr == 0x002B) return 0x10;
-    if (addr == 0x002C) return 0xffff;
-    if (addr == 0x002E) return 0x0;
-    if (addr == 0x002F) return 0x3840;
-    if (addr == 0x0081) return 0x0;
-    if (addr == 0x0082) return 0x800b;
-    if (addr == 0x0084) return 0x400;
-    if (addr == 0x0085) return 0x1;
+    // if (addr == 0x0020) return 0xffff;
+    // if (addr == 0x0021) return 0xe9f;
+    // if (addr == 0x0022) return 0x7df;
+    // if (addr == 0x0023) return 0x5559;
+    // if (addr == 0x0024) return 0xe4e4;
+    // if (addr == 0x0025) return 0x101;
+    // if (addr == 0x0026) return 0x101;
+    // if (addr == 0x0027) return 0xe4e4;
+    // if (addr == 0x0028) return 0x101;
+    // if (addr == 0x0029) return 0x101;
+    // if (addr == 0x002A) return 0x86;
+    // if (addr == 0x002B) return 0x10;
+    // if (addr == 0x002C) return 0xffff;
+    // if (addr == 0x002E) return 0x0;
+    // if (addr == 0x002F) return 0x3840;
+    // if (addr == 0x0081) return 0x0;
+    // if (addr == 0x0082) return 0x800b;
+    // if (addr == 0x0084) return 0x400;
+    // if (addr == 0x0085) return 0x1;
 
     if (addr == 0x0086) return 0x4901;  // yes
     if (addr == 0x0087) return 0x400;
@@ -658,55 +746,55 @@ static inline int LMS7002M_regs_default_tofilter(const int addr)
     if (addr == 0x008B) return 0x2100;
     if (addr == 0x008C) return 0x67b;
 
-    if (addr == 0x008D) return 0x0;
-    if (addr == 0x0092) return 0x1;
-    if (addr == 0x0093) return 0x0;
-    if (addr == 0x0094) return 0x0;
-    if (addr == 0x0095) return 0x0;
-    if (addr == 0x0096) return 0x0;
-    if (addr == 0x0097) return 0x0;
-    if (addr == 0x0098) return 0x0;
-    if (addr == 0x0099) return 0x6565;
-    if (addr == 0x009A) return 0x658c;
-    if (addr == 0x009B) return 0x6565;
-    if (addr == 0x009C) return 0x658c;
-    if (addr == 0x009D) return 0x6565;
-    if (addr == 0x009E) return 0x658c;
-    if (addr == 0x009F) return 0x658c;
-    if (addr == 0x00A0) return 0x6565;
-    if (addr == 0x00A1) return 0x6565;
-    if (addr == 0x00A2) return 0x6565;
-    if (addr == 0x00A3) return 0x6565;
-    if (addr == 0x00A4) return 0x6565;
-    if (addr == 0x00A5) return 0x6565;
-    if (addr == 0x00A6) return 0xf;
-    if (addr == 0x00A7) return 0x6565;
-    if (addr == 0x00a8) return 0x0;
-    if (addr == 0x00aa) return 0x0;
-    if (addr == 0x00ab) return 0x0;
-    if (addr == 0x00ad) return 0x3ff;
-    if (addr == 0x00ae) return 0xf000;
-    if (addr == 0x0100) return 0x3409;
-    if (addr == 0x0101) return 0x7800;
-    if (addr == 0x0102) return 0x3180;
-    if (addr == 0x0103) return 0xa12;
-    if (addr == 0x0104) return 0x88;
-    if (addr == 0x0105) return 0x7;
-    if (addr == 0x0106) return 0x318c;
-    if (addr == 0x0107) return 0x318c;
-    if (addr == 0x0108) return 0x9426;
-    if (addr == 0x0109) return 0x61c1;
-    if (addr == 0x010A) return 0x104c;
-    if (addr == 0x010b) return 0x0;
-    if (addr == 0x010C) return 0x88fd;
-    if (addr == 0x010D) return 0x9e;
-    if (addr == 0x010E) return 0x2040;
-    if (addr == 0x010F) return 0x3042;
-    if (addr == 0x0110) return 0xbf4;
-    if (addr == 0x0111) return 0x83;
-    if (addr == 0x0112) return 0xc0e6;
-    if (addr == 0x0113) return 0x3c3;
-    if (addr == 0x0114) return 0x8d;
+    // if (addr == 0x008D) return 0x0;
+    // if (addr == 0x0092) return 0x1;
+    // if (addr == 0x0093) return 0x0;
+    // if (addr == 0x0094) return 0x0;
+    // if (addr == 0x0095) return 0x0;
+    // if (addr == 0x0096) return 0x0;
+    // if (addr == 0x0097) return 0x0;
+    // if (addr == 0x0098) return 0x0;
+    // if (addr == 0x0099) return 0x6565;
+    // if (addr == 0x009A) return 0x658c;
+    // if (addr == 0x009B) return 0x6565;
+    // if (addr == 0x009C) return 0x658c;
+    // if (addr == 0x009D) return 0x6565;
+    // if (addr == 0x009E) return 0x658c;
+    // if (addr == 0x009F) return 0x658c;
+    // if (addr == 0x00A0) return 0x6565;
+    // if (addr == 0x00A1) return 0x6565;
+    // if (addr == 0x00A2) return 0x6565;
+    // if (addr == 0x00A3) return 0x6565;
+    // if (addr == 0x00A4) return 0x6565;
+    // if (addr == 0x00A5) return 0x6565;
+    // if (addr == 0x00A6) return 0xf;
+    // if (addr == 0x00A7) return 0x6565;
+    // if (addr == 0x00a8) return 0x0;
+    // if (addr == 0x00aa) return 0x0;
+    // if (addr == 0x00ab) return 0x0;
+    // if (addr == 0x00ad) return 0x3ff;
+    // if (addr == 0x00ae) return 0xf000;
+    // if (addr == 0x0100) return 0x3409;
+    // if (addr == 0x0101) return 0x7800;
+    // if (addr == 0x0102) return 0x3180;
+    // if (addr == 0x0103) return 0xa12;
+    // if (addr == 0x0104) return 0x88;
+    // if (addr == 0x0105) return 0x7;
+    // if (addr == 0x0106) return 0x318c;
+    // if (addr == 0x0107) return 0x318c;
+    // if (addr == 0x0108) return 0x9426;
+    // if (addr == 0x0109) return 0x61c1;
+    // if (addr == 0x010A) return 0x104c;
+    // if (addr == 0x010b) return 0x0;
+    // if (addr == 0x010C) return 0x88fd;
+    // if (addr == 0x010D) return 0x9e;
+    // if (addr == 0x010E) return 0x2040;
+    // if (addr == 0x010F) return 0x3042;
+    // if (addr == 0x0110) return 0xbf4;
+    // if (addr == 0x0111) return 0x83;
+    // if (addr == 0x0112) return 0xc0e6;
+    // if (addr == 0x0113) return 0x3c3;
+    // if (addr == 0x0114) return 0x8d;
 
     if (addr == 0x0115) return 0x9;  // yes
     if (addr == 0x0116) return 0x8180;
@@ -715,18 +803,18 @@ static inline int LMS7002M_regs_default_tofilter(const int addr)
     if (addr == 0x0119) return 0x528b;
     if (addr == 0x011A) return 0x2e02;
 
-    if (addr == 0x011B) return 0x0;
-    if (addr == 0x011C) return 0xad43;
-    if (addr == 0x011D) return 0x400;
-    if (addr == 0x011E) return 0x780;
-    if (addr == 0x011F) return 0x3640;
-    if (addr == 0x0120) return 0xb9ff;
-    if (addr == 0x0121) return 0x3404;
-    if (addr == 0x0122) return 0x33f;
-    if (addr == 0x0123) return 0x67b;
-    if (addr == 0x0124) return 0x0;
-    if (addr == 0x0125) return 0x9400;
-    if (addr == 0x0126) return 0x12ff;
+    // if (addr == 0x011B) return 0x0;
+    // if (addr == 0x011C) return 0xad43;
+    // if (addr == 0x011D) return 0x400;
+    // if (addr == 0x011E) return 0x780;
+    // if (addr == 0x011F) return 0x3640;
+    // if (addr == 0x0120) return 0xb9ff;
+    // if (addr == 0x0121) return 0x3404;
+    // if (addr == 0x0122) return 0x33f;
+    // if (addr == 0x0123) return 0x67b;
+    // if (addr == 0x0124) return 0x0;
+    // if (addr == 0x0125) return 0x9400;
+    // if (addr == 0x0126) return 0x12ff;
 
     if (addr == 0x0200) return 0x81;  //yes
     if (addr == 0x0201) return 0x7ff;
@@ -826,28 +914,28 @@ static inline int LMS7002M_regs_default_tofilter(const int addr)
     if (addr == 0x0460) return 0x0;
     if (addr == 0x0461) return 0x0;
 
-    if (addr == 0x05c0) return 0x0;
-    if (addr == 0x05c1) return 0x0;
-    if (addr == 0x05c2) return 0x0;
-    if (addr == 0x05c3) return 0x0;
-    if (addr == 0x05c4) return 0x0;
-    if (addr == 0x05c5) return 0x0;
-    if (addr == 0x05c6) return 0x0;
-    if (addr == 0x05c7) return 0x0;
-    if (addr == 0x05c8) return 0x0;
-    if (addr == 0x05c9) return 0x0;
-    if (addr == 0x05ca) return 0x0;
-    if (addr == 0x05cb) return 0x0;
-    if (addr == 0x05cc) return 0x0;
-    if (addr == 0x0600) return 0xf00;
-    if (addr == 0x0601) return 0x0;
-    if (addr == 0x0602) return 0x2000;
-    if (addr == 0x0603) return 0x0;
-    if (addr == 0x0604) return 0x0;
-    if (addr == 0x0605) return 0x0;
-    if (addr == 0x0606) return 0x0;
-    if (addr == 0x0640) return 0xa0;
-    if (addr == 0x0641) return 0x1020;
+    // if (addr == 0x05c0) return 0x0;
+    // if (addr == 0x05c1) return 0x0;
+    // if (addr == 0x05c2) return 0x0;
+    // if (addr == 0x05c3) return 0x0;
+    // if (addr == 0x05c4) return 0x0;
+    // if (addr == 0x05c5) return 0x0;
+    // if (addr == 0x05c6) return 0x0;
+    // if (addr == 0x05c7) return 0x0;
+    // if (addr == 0x05c8) return 0x0;
+    // if (addr == 0x05c9) return 0x0;
+    // if (addr == 0x05ca) return 0x0;
+    // if (addr == 0x05cb) return 0x0;
+    // if (addr == 0x05cc) return 0x0;
+    // if (addr == 0x0600) return 0xf00;
+    // if (addr == 0x0601) return 0x0;
+    // if (addr == 0x0602) return 0x2000;
+    // if (addr == 0x0603) return 0x0;
+    // if (addr == 0x0604) return 0x0;
+    // if (addr == 0x0605) return 0x0;
+    // if (addr == 0x0606) return 0x0;
+    // if (addr == 0x0640) return 0xa0;
+    // if (addr == 0x0641) return 0x1020;
     return -1;
 }
 
