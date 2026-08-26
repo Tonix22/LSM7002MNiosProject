@@ -56,12 +56,12 @@ module ipm_ipMasterSoC_3pAIP
 );
 wire MISO_master;
 
-	assign sel_mux_spi = 1'b0;// sel_switch;
+	assign sel_mux_spi = sel_switch;
 	assign uart_lime = MISO_master;
 	
 	wire MISO_fpgacfg;
  
-	assign MISO_master =  MISO_fpgacfg | MISO_lms7002;  //
+	assign MISO_master = MISO_fpgacfg | MISO_lms7002;  //
 	
 	assign LMS_RESET = LMS1_RESET && GPIO_out[0];
 	
@@ -174,20 +174,6 @@ wire MISO_master;
      
 
 
-//    ID00001001_dummy dummy0(
-//        .clk               ( clk             ),
-//        .rst_a             ( w_reset         ),
-//		  .en_s              ( 1'b1            ),
-//
-//        .data_in           ( w_dataIn_s0     ),
-//        .data_out          ( w_dataOut_s0    ),		  
-//        .write             ( w_write_s0      ),
-//        .read              ( w_read_s0       ),
-//        .start             ( w_start_s0      ),
-//        .conf_dbus         ( w_config_s0     ),
-//		  .int_req           ( w_int_IP[0]     )
-//       
-//    );
 	     
 		  ID0000100A_gpio_module GPIO(
         .clk_in              ( clk             ),
@@ -323,38 +309,7 @@ wire MISO_master;
   
     .from_fpgacfg_CLK_ENA			(CLK_ENA)
 );
-	  
-	 
-//
-//    ID00001001_dummy dummy1(
-//        .clk               ( clk             ),
-//        .rst_a             ( w_reset         ),
-//		  .en_s              ( 1'b1            ),
-//
-//        .data_in           ( w_dataIn_s1     ),
-//        .data_out          ( w_dataOut_s1    ),		  
-//        .write             ( w_write_s1      ),
-//        .read              ( w_read_s1       ),
-//        .start             ( w_start_s1      ),
-//        .conf_dbus         ( w_config_s1     ),
-//		  .int_req           ( w_int_IP[1]     )
-//       
-//    );
-//
-//    ID00001001_dummy dummy2(
-//        .clk               ( clk             ),
-//        .rst_a             ( w_reset         ),
-//		  .en_s              ( 1'b1            ),
-//
-//        .data_in           ( w_dataIn_s2     ),
-//        .data_out          ( w_dataOut_s2    ),		  
-//        .write             ( w_write_s2      ),
-//        .read              ( w_read_s2       ),
-//        .start             ( w_start_s2      ),
-//        .conf_dbus         ( w_config_s2     ),
-//		  .int_req           ( w_int_IP[2]     )
-//       
-//    );	 
+	   
 
 
 

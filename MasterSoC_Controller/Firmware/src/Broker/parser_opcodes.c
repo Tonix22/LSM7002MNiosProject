@@ -284,7 +284,7 @@ OpcodeDescriptor TWO_PARAM_LMS7002M_DIR_INT_NUM_opcodes[] = {
         .opcode = 0x8,
         .QT_Label = "IQ",
         .num_params = 3,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const int_arr4
+        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const int *
         .callback = (void*)LMS7002M_set_diq_mux
     },
 };
@@ -339,7 +339,7 @@ OpcodeDescriptor SET_GFIR_TAPS_NUM_opcodes[] = {
         .opcode = 0xD,
         .QT_Label = "FIR",
         .num_params = 6,
-        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const int, const short, const size_t
+        .args = NULL, // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const int, const short *, const size_t
         .callback = (void*)LMS7002M_set_gfir_taps
     },
 };
@@ -647,6 +647,20 @@ OpcodeDescriptor TRF_RBB_RFE_NUM_opcodes[] = {
         .num_params = 3,
         .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
         .callback = (void*)CalibrateAll
+    },
+    {
+        .opcode = 0x137,
+        .QT_Label = "Calibrate",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)CalibrateTx
+    },
+    {
+        .opcode = 0x157,
+        .QT_Label = "Calibrate",
+        .num_params = 3,
+        .args = NULL, // LMS7002M_t *, const LMS7002M_chan_t, const double
+        .callback = (void*)CalibrateRx
     },
 };
 

@@ -13,6 +13,8 @@ int32_t ID00004003_readData(uint32_t port, uint32_t *data, uint32_t size, uint32
 
 int32_t ID00004003_getStatus(uint32_t port, uint32_t *status);
 
+int32_t ID00004003_setStatus(uint32_t port, uint32_t *data);
+
 int32_t ID00004003_waitDone(uint32_t port);
 
 

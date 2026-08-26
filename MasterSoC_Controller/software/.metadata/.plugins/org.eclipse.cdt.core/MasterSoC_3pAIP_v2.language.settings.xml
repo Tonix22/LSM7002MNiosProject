@@ -1406,6 +1406,9 @@
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/Broker"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/AIP_GPIO/firmware"/>
+						<entry kind="includePath" name="/${ProjName}/">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -1433,6 +1436,9 @@
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/Broker"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/AIP_GPIO/firmware"/>
+						<entry kind="includePath" name="/${ProjName}/">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -1502,6 +1508,9 @@
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/Broker"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/AIP_GPIO/firmware"/>
+						<entry kind="includePath" name="/${ProjName}/">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -1700,6 +1709,9 @@
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src/Broker"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/Firmware/src"/>
 						<entry kind="includePath" name="C:/WorkspaceDDigital/LSM7002MNiosProject/MasterSoC_Controller/AIP_GPIO/firmware"/>
+						<entry kind="includePath" name="/${ProjName}/">
+							<flag value="VALUE_WORKSPACE_PATH"/>
+						</entry>
 						<entry kind="includePath" name="/MasterSoC_3pAIP_v2_bsp/HAL/inc">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>

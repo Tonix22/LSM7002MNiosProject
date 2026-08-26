@@ -10,6 +10,7 @@ ALT_INCLUDE_DIRS += ../../Firmware/include
 ALT_INCLUDE_DIRS += ../../Firmware/src/Broker
 ALT_INCLUDE_DIRS += ../../Firmware/src
 ALT_INCLUDE_DIRS += ../../AIP_GPIO/firmware
+ALT_INCLUDE_DIRS += ../../software/MasterSoC_3pAIP_v2
 
 # List of library directories for -L linker option (-L added when used).
 # Includes the BSP.

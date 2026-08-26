@@ -33,9 +33,6 @@ const double lpfh_high = 60e6;
  {
      LMS7002M_set_mac_ch(self, channel);
 
-// float_type TSPClk = GetReferenceClk_TSP(self, true);     
-//     printf("TSP clock frequency: %f MHz\n", TSPClk/1e6);
-
      const double txtsp_rate = self->cgen_freq;
      
      const double tx_nco_freq = bw;
@@ -79,7 +76,6 @@ static int tx_cal_loop(
         if (iter++ == MAX_CAL_LOOP_ITERS)
         {
             //LMS7_logf(LMS7_ERROR, "failed to converge when calibrating %s", reg_name);
-            printf("fallo max iter\n");
             return -1;
         }
 
@@ -87,9 +83,7 @@ static int tx_cal_loop(
         LMS7002M_regs_spi_write(self, 0x010a);
 
         rssi_value = cal_read_rssi(self, channel);
-        printf("rssi_value: %d\n", rssi_value);
-        printf("rssi_value_50k: %d\n", rssi_value_50k);
-        printf("adjust: %d\n", adjust);
+    
         if (rssi_value > rssi_value_50k*0.7071 && adjust < 0) break;
         if (rssi_value < rssi_value_50k*0.7071 && adjust > 0) break;
         if (LMS7002M_regs(self)->reg_0x010a_ccal_lpflad_tbb != 0 &&
@@ -123,7 +117,6 @@ static int tx_cal_loop(
 
         setup_tx_cal_tone(self, channel, 50e3);
         rssi_value_50k = cal_gain_selection(self, channel);
-        printf("tx_cal_loop: gain selection done, rssi_value_50k = %d\n", rssi_value_50k);
 
         //--- setup calibration tone ---//
         setup_tx_cal_tone(self, channel, bw);
@@ -292,7 +285,6 @@ static int tx_cal_tbb_lpflad(LMS7002M_t *self, const LMS7002M_chan_t channel, co
         0x0109, 255, "rcal_lpflad_tbb");
    
     done:
-    printf("Fin\n");
     return status;
 }
 
@@ -368,8 +360,6 @@ int LMS7002M_tbb_set_filter_bw(LMS7002M_t *self, const LMS7002M_chan_t channel, 
     // Clocking configuration
     ////////////////////////////////////////////////////////////////////
     status = cal_setup_cgen(self, bw);
-    printf("status cal_setup_cgen: %d\n", status);
-    printf("bw: %f\n", bw);
     
     if (status != 0)
     {

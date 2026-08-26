@@ -4,31 +4,20 @@
 #include <stdbool.h>
 #include "mcu_program_lms7_dc_iq_calibration_bin.h"
 
+static inline int LMS7002M_regs_default_tofilter(const int addr);
 
 
 int TuneRxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_type rx_lpf_freq_RF, double *bwactual)
 {
     int status;
-   
-
-    // int ind ; //GetActiveChannelIndex()%2;
-    // if (channel == LMS_CHA)
-    //     ind = 0;
-    // else if(channel == LMS_CHB)
-    //     ind = 1;
-    // else 
-    //     ind = 0; //default to channel A
 
     LMS7002M_set_mac_ch(self, channel);
-    printf("TuneRxFilter_8051: channel %c, requested BW %f MHz\n", channel, rx_lpf_freq_RF/1e6);
     
     if (rx_lpf_freq_RF < RxLPF_RF_LimitLow) {
         rx_lpf_freq_RF = RxLPF_RF_LimitLow;
-        printf ("LPF set to %.3f MHz (requested %0.3f MHz [out of range])", RxLPF_RF_LimitLow/1e6, rx_lpf_freq_RF/1e6);
     }
     if (rx_lpf_freq_RF > RxLPF_RF_LimitHigh) {
         rx_lpf_freq_RF = RxLPF_RF_LimitHigh;
-        printf ("LPF set to %.3f MHz (requested %0.3f MHz [out of range])", RxLPF_RF_LimitHigh/1e6, rx_lpf_freq_RF/1e6);
     }
 
     
@@ -58,14 +47,9 @@ int TuneRxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_typ
     status = WaitForMCU(self, 1000);
     if(status != 0)
     {
-       // lime::error("Tune Rx Filter: MCU error %i (%s)", status, MCU_BD::MCUStatusMessage(status));
         return -1;
     }
     //sync registers to cache
-    // std::vector<uint16_t> regsToSync = {0x0112, 0x0117, 0x011A, 0x0116, 0x0118, 0x0114, 0x0019, 0x0115};
-    // for(const auto addr : regsToSync)
-    //     this->SPI_read(addr, true);
-
     LMS7002M_regs_spi_read(self, 0x0112);
     LMS7002M_regs_spi_read(self, 0x0117);
     LMS7002M_regs_spi_read(self, 0x011A);
@@ -82,24 +66,12 @@ int TuneRxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_typ
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 static int opt_gain_tbb[2] = {-1, -1};
 
 
 int TuneTxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_type tx_lpf_freq_RF, double *bwactual)
 {
     int status;
-   // tx_lpf_freq_RF = 5.5e6; //for testing only, override requested BW
 
     int ind ; //GetActiveChannelIndex()%2;
     if (channel == LMS_CHA)
@@ -110,15 +82,12 @@ int TuneTxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_typ
         ind = 0; //default to channel A
 
     LMS7002M_set_mac_ch(self, channel);
-    printf("TuneTxFilter_8051: channel %c, requested BW %f MHz\n", channel, tx_lpf_freq_RF/1e6);
     
     if (tx_lpf_freq_RF < TxLPF_RF_LimitLow) {
         tx_lpf_freq_RF = TxLPF_RF_LimitLow;
-        printf ("LPF set to %.3f MHz (requested %0.3f MHz [out of range])", TxLPF_RF_LimitLow/1e6, tx_lpf_freq_RF/1e6);
     }
     if (tx_lpf_freq_RF > TxLPF_RF_LimitHigh) {
         tx_lpf_freq_RF = TxLPF_RF_LimitHigh;
-        printf ("LPF set to %.3f MHz (requested %0.3f MHz [out of range])", TxLPF_RF_LimitHigh/1e6, tx_lpf_freq_RF/1e6);
     }
 
     int gain = GetTBBIAMP_dB(self, channel, ind);
@@ -131,17 +100,16 @@ int TuneTxFilter_8051(LMS7002M_t *self, const LMS7002M_chan_t channel, float_typ
         tx_lpf_IF = TxLPF_RF_LimitMidHigh/2;
     }
 
-printf("TuneTxFilter_8051: intermediate frequency for calibration %f MHz\n", tx_lpf_IF/1e6);
     if(ReadMCUProgramID(self) != MCU_ID_CALIBRATIONS_SINGLE_IMAGE)
     {
         if((status = Program_MCU(self, mcu_program_lms7_dc_iq_calibration_bin, SRAM, 1024*16)))
             return -1;
     }
-    printf("MCU programmed with calibration code, program ID: %d\n", ReadMCUProgramID(self));
+    
      opt_gain_tbb[ind] = -1;
 
     //set reference clock parameter inside MCU
-    long refClk =  self->cgen_fref;   //GetReferenceClk_SX(false);
+    long refClk =  self->cgen_fref;   
 
     SetParameter(self, MCU_REF_CLK, refClk);
 
@@ -155,9 +123,6 @@ printf("TuneTxFilter_8051: intermediate frequency for calibration %f MHz\n", tx_
         return -1;
     }
     //sync registers to cache
-    // std::vector<uint16_t> regsToSync = {0x0105, 0x0106, 0x0109, 0x010A, 0x010B};
-    // for(const auto addr : regsToSync)
-    //     this->SPI_read(addr, true);
     LMS7002M_regs_spi_read(self, 0x0105);
     LMS7002M_regs_spi_read(self, 0x0106);
     LMS7002M_regs_spi_read(self, 0x0109);
@@ -180,9 +145,7 @@ void RunProcedure(LMS7002M_t*self, uint8_t id)
     LMS7002M_spi_write(self, 0x0002, x0002reg & ~interupt6);
     //MCU seems to be stuck at this point until any SPI operation is performed
     LMS7002M_spi_read(self, 0x0002); //random spi action
-    printf("RunProcedure: started procedure with ID %d\n", id);
     LMS7_sleep_for(10); //10 us
-    printf("RunProcedure: procedure with ID %d should be running now\n", id);
 }
 
 int WaitForMCU(LMS7002M_t *self, uint32_t timeout_ms)
@@ -192,9 +155,7 @@ int WaitForMCU(LMS7002M_t *self, uint32_t timeout_ms)
     long long t2;
 
     unsigned short value = 0;
-printf("WaitForMCU: waiting for MCU procedure to complete with timeout %d ms\n", timeout_ms);
     LMS7_sleep_for(50); // 50us
-    printf("WaitForMCU: MCU procedure started, polling for completion...\n");
  
     do {
         value = LMS7002M_spi_read(self, 0x0001) & 0xFF;
@@ -203,7 +164,7 @@ printf("WaitForMCU: waiting for MCU procedure to complete with timeout %d ms\n",
         LMS7_sleep_for(1000 * 1);   // sleep 1 ms
         t2 = LMS7_time_now();       
     } while ((t2 - t1) < 1000*timeout_ms); 
-printf("WaitForMCU: done waiting, status value = 0x%02X\n", value);
+
     LMS7002M_spi_write(self, 0x0006, 0); //return SPI control to PC
 
     return value & 0x7F;
@@ -256,7 +217,6 @@ int Program_MCU( LMS7002M_t *self, const uint8_t* buffer, const uint8_t mode, ui
         } while( (!fifoEmpty) && (t2-t1)<timeout);
         
         if(!fifoEmpty){
-           printf("MCU FIFO full\n");
            return -1; }
 
         //write 32 bytes into FIFO
@@ -279,7 +239,6 @@ int Program_MCU( LMS7002M_t *self, const uint8_t* buffer, const uint8_t mode, ui
     
 
     if(!programmed)
-       // return ReportError(ETIMEDOUT, "MCU not programmed");
         return -1;
     return 0;
 }
@@ -303,7 +262,6 @@ void SetParameter( LMS7002M_t *self, MCU_Parameter param, float value)
             LMS7002M_spi_write(self, 0, inputRegs[2-i]);
             LMS7002M_spi_write(self, 0x0002, x0002reg | interupt7);
             LMS7002M_spi_write(self, 0x0002, x0002reg & ~interupt7);
-           // this_thread::sleep_for(chrono::microseconds(5));
             LMS7_sleep_for(5); //sleep 5 us
         }
     }
@@ -318,12 +276,10 @@ void SetParameter( LMS7002M_t *self, MCU_Parameter param, float value)
         LMS7002M_spi_write(self, 0x0002, x0002reg | interupt7);
         LMS7002M_spi_write(self, 0x0002, x0002reg & ~interupt7);
         int status = WaitForMCU(self, 10);
-        // if(status != 0)
-        //     lime::debug("MCU error status 0x%02X\n", status);
+        
         RunProcedure(self, 9);
     }
     if(WaitForMCU(self, 100) != 0)
-        //lime::debug("Failed to set MCU parameter");
         printf("Failed to set MCU parameter\n");
     }
 
@@ -348,8 +304,6 @@ int SetTBBIAMP_dB(LMS7002M_t *self, const LMS7002M_chan_t channel, const float_t
 float_type GetTBBIAMP_dB(LMS7002M_t *self, const LMS7002M_chan_t channel, int ind)
 {
     int g_current = Get_SPI_Reg_bits(self, 0x0108, 15, 10);
-
-    // int ind = this->GetActiveChannelIndex()%2;
 
     if (opt_gain_tbb[ind] <= 0)
     {
@@ -377,7 +331,7 @@ int CalibrateTxGain(LMS7002M_t *self, const LMS7002M_chan_t channel, int ind, fl
     if(status == 0)
     {
         cg_iamp = Get_SPI_Reg_bits(self, 0x0108, 15, 10); //CG_IAMP_TBB
-        //while(GetRSSI() < 0x7FFF)
+        
          while (LMS7002M_rxtsp_read_rssi(self, channel) < 0x7FFF)
         {
             if(++cg_iamp > 63)
@@ -420,8 +374,6 @@ int CalibrateTxGain(LMS7002M_t *self, const LMS7002M_chan_t channel, int ind, fl
 //  LMS7002M_spi_write(self, 0x840F, 0x0000);
 
     LMS7002M_set_mac_ch(self, channel); 
-
-    //int ind = this->GetActiveChannelIndex()%2;
     
     opt_gain_tbb[ind] = cg_iamp > 1 ? cg_iamp-1 : 1;
 
@@ -448,7 +400,6 @@ void Modify_SPI_Reg_bits(LMS7002M_t *self, const uint16_t address, const uint8_t
 int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
 {
     int status;
-   // int ch = Get_SPI_Reg_bits(LMS7param(MAC));
 
     uint16_t value = LMS7002M_spi_read(self, 0x0020);
     if( (value & 3) == 1)
@@ -458,17 +409,9 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     LMS7002M_spi_write(self, 0x0020, value);
 
     //RxTSP
-    // SetDefaults(self, 0x0400, 0x040F);  // RxTSP register address range
-    // SetDefaults(self, 0x0440, 0x0461); // RxNCO register address range
     set_addrs_to_defaultFilter(self, channel, 0x0400, 0x040F);
-//set_addrs_to_default(self, channel, 0x040F, 0x040F);
-    set_addrs_to_defaultFilter(self, channel, 0x0440, 0x0461);
-  //  set_addrs_to_default(self, channel, 0x0461, 0x0461);
 
-    // Modify_SPI_Reg_bits(LMS7param(AGC_MODE_RXTSP), 1);
-    // Modify_SPI_Reg_bits(LMS7param(AGC_AVG_RXTSP), 1);
-  //  Modify_SPI_Reg_bits(LMS7param(HBD_OVR_RXTSP), 1);
- //   Modify_SPI_Reg_bits(LMS7param(CMIX_BYP_RXTSP), 1);
+    set_addrs_to_defaultFilter(self, channel, 0x0440, 0x0461);
 
      //--- RxTSP ---
     LMS7002M_regs_spi_read(self, 0x040a); //read back to update cache
@@ -478,11 +421,7 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     self->regs->reg_0x040a_agc_avg = 1;
     self->regs->reg_0x0403_hbd_ovr = 1;
     self->regs->reg_0x040c_cmix_byp = 1;
-    // LMS7002M_regs(self)->reg_0x040c_gfir3_byp = 1;
-    // LMS7002M_regs(self)->reg_0x040c_gfir2_byp = 1;
-    // LMS7002M_regs(self)->reg_0x040c_gfir1_byp = 1;
     
-    // LMS7002M_regs(self)->reg_0x040c_cmix_gain = 1;
     LMS7002M_regs_spi_write(self, 0x040a);
     LMS7002M_regs_spi_write(self, 0x0403);
     LMS7002M_regs_spi_write(self, 0x040c);
@@ -490,43 +429,30 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     //TBB
     LMS7002M_regs_spi_read(self, 0x0108); //read back to update cache
     LMS7002M_regs_spi_read(self, 0x0105);
-   // Modify_SPI_Reg_bits(LMS7param(CG_IAMP_TBB), 1);
+   
     self->regs->reg_0x0108_cg_iamp_tbb = 1;
-  //  Modify_SPI_Reg_bits(LMS7param(LOOPB_TBB), 3);
     self->regs->reg_0x0105_loopb_tbb = 3;
     LMS7002M_regs_spi_write(self, 0x0108);
     LMS7002M_regs_spi_write(self, 0x0105);
 
     //RFE
     LMS7002M_regs_spi_read(self, 0x010c); //read back to update cache
-   // Modify_SPI_Reg_bits(LMS7param(EN_G_RFE), 0);
+   
     self->regs->reg_0x010c_en_g_rfe = 0;
     LMS7002M_regs_spi_write(self, 0x010c);
-     Modify_SPI_Reg_bits(self, 0x010D, 4, 1, 0xF);  
-    // const uint8_t msb = 4;
-    // const uint8_t lsb = 1;
-    // const uint16_t value = 0xF;
-    // uint16_t spiDataReg = LMS7002M_spi_read(self, 0x010D);
-    // uint16_t spiMask = (~(~0u << (msb - lsb + 1))) << (lsb); // creates bit mask
-    // spiDataReg = (spiDataReg & (~spiMask)) | ((value << lsb) & spiMask);//clear bits
-    // LMS7002M_spi_write(self, 0x010D, spiDataReg);
+    Modify_SPI_Reg_bits(self, 0x010D, 4, 1, 0xF);  
 
     //RBB
-   // SetDefaults(RBB);
     set_addrs_to_defaultFilter(self, channel, 0x0115, 0x011A);
-  //  set_addrs_to_default(self, channel, 0x011A, 0x011A);
 
     LMS7002M_regs_spi_read(self, 0x0115); //read back to update cache
     LMS7002M_regs_spi_read(self, 0x0118);
     LMS7002M_regs_spi_read(self, 0x0119);
     LMS7002M_regs_spi_read(self, 0x011a);
-    //Modify_SPI_Reg_bits(LMS7param(PD_LPFL_RBB), 1);
+    
     self->regs->reg_0x0115_pd_lpfl_rbb = 1;
-   // Modify_SPI_Reg_bits(LMS7param(INPUT_CTL_PGA_RBB), 3);
     self->regs->reg_0x0118_input_ctl_pga_rbb = 3;
-  //  Modify_SPI_Reg_bits(LMS7param(G_PGA_RBB), 12);
     self->regs->reg_0x0119_g_pga_rbb = 12;
-  //  Modify_SPI_Reg_bits(LMS7param(RCC_CTL_PGA_RBB), 23);
     self->regs->reg_0x011a_rcc_ctl_pga_rbb = 23;
     LMS7002M_regs_spi_write(self, 0x0115);
     LMS7002M_regs_spi_write(self, 0x0118);
@@ -535,18 +461,13 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
 
     //TRF
     LMS7002M_regs_spi_read(self, 0x0100); //read back to update cache
-  //  Modify_SPI_Reg_bits(LMS7param(EN_G_TRF), 0);
     self->regs->reg_0x0100_en_g_trf = 0;
     LMS7002M_regs_spi_write(self, 0x0100);
 
     //AFE
-  //  const int isel_dac_afe = (LMS7002M_regs_spi_read(self, 0x0082) && 0xE000) >> 13
     int val = LMS7002M_spi_read(self, 0x0082);
-    const int isel_dac_afe = (val >> 13) & 0x7; //Get_SPI_Reg_bits(LMS7param(ISEL_DAC_AFE));
-   // SetDefaults(AFE);
+    const int isel_dac_afe = (val >> 13) & 0x7; 
     set_addrs_to_defaultFilter(self, channel, 0x0082, 0x0082);
-   // Modify_SPI_Reg_bits(LMS7param(ISEL_DAC_AFE), isel_dac_afe);
-   // LMS7002M_regs(self)->reg_0x0082_isel_dac_afe = isel_dac_afe;
     val = LMS7002M_spi_read(self, 0x0082); //read back to update cache
     val &= ~0xE000;  // clear bits 13-15
     val |= (isel_dac_afe & 0x7) << 13; // set bits 13-15 to isel_dac_afe
@@ -555,19 +476,15 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     
     if(channel == LMS_CHB)
     {
-        // Modify_SPI_Reg_bits(LMS7param(PD_RX_AFE2), 0);
         self->regs->reg_0x0082_pd_rx_afe2 = 0;
-        // Modify_SPI_Reg_bits(LMS7param(PD_TX_AFE2), 0);
         self->regs->reg_0x0082_pd_tx_afe2 = 0;
         LMS7002M_regs_spi_write(self, 0x0082);
     }
 
     //BIAS
     val = LMS7002M_spi_read(self, 0x0084); 
-    const int rp_calib_bias = (val >> 6) & 0x1F; //Get_SPI_Reg_bits(LMS7param(RP_CALIB_BIAS));
-    //SetDefaults(BIAS);
+    const int rp_calib_bias = (val >> 6) & 0x1F; 
     set_addrs_to_defaultFilter(self, channel, 0x0084, 0x0084);
-  //  Modify_SPI_Reg_bits(LMS7param(RP_CALIB_BIAS), rp_calib_bias);
     self->regs->reg_0x0084_rp_calib_bias = rp_calib_bias;
     val = LMS7002M_spi_read(self, 0x0084); 
     val &= ~0x07C0;  // clear bits 6-10
@@ -581,11 +498,9 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     //use configured xbuf settings
 
     //CGEN
-   // SetDefaults(CGEN);
-    set_addrs_to_defaultFilter(self, channel, 0x0086, 0x008C);
-    //set_addrs_to_default(self, channel, 0x008C, 0x008C);    
+    set_addrs_to_defaultFilter(self, channel, 0x0086, 0x008C);  
 
-    status = LMS7002M_set_data_clock(self, 30.72e6, 61.44e6, NULL); //SetFrequencyCGEN(61.44e6);
+    status = LMS7002M_set_data_clock(self, 30.72e6, 61.44e6, NULL); 
     if(status != 0){
         return status;
     }
@@ -593,32 +508,23 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     //SXR
     LMS7002M_regs_spi_read(self, 0x011c);
     LMS7002M_regs_spi_read(self, 0x0020);
-   // Modify_SPI_Reg_bits(LMS7param(MAC), 1);
     self->regs->reg_0x0020_mac = 1;
     LMS7002M_regs_spi_write(self, 0x0020);
-  //  Modify_SPI_Reg_bits(LMS7param(PD_VCO), 1);
     self->regs->reg_0x011c_pd_vco = 1;
     LMS7002M_regs_spi_write(self, 0x011c);
 
-   // Modify_SPI_Reg_bits(LMS7param(MAC), ch);
     LMS7002M_set_mac_ch(self, channel);
 
     //TxTSP
     val = LMS7002M_spi_read(self, 0x0208);
-    const int isinc = (val >> 7) & 0x0001; //Get_SPI_Reg_bits(LMS7param(ISINC_BYP_TXTSP));
-    const int txcmixGainLSB = (val >> 14) & 0x0003; //Get_SPI_Reg_bits(LMS7param(CMIX_GAIN_TXTSP));
-    const int txcmixGainMSB = (val >> 12) & 0x0001; //Get_SPI_Reg_bits(LMS7param(CMIX_GAIN_TXTSP_R3));
-   // reg_0x0208_isinc_byp
-   // SetDefaults(TxTSP);
+    const int isinc = (val >> 7) & 0x0001; 
+    const int txcmixGainLSB = (val >> 14) & 0x0003;
+    const int txcmixGainMSB = (val >> 12) & 0x0001;
+   
     set_addrs_to_defaultFilter(self, channel, 0x0200, 0x020C);
-  //  set_addrs_to_default(self, channel, 0x020C, 0x020C);
-   // SetDefaults(TxNCO);
-   set_addrs_to_defaultFilter(self, channel, 0x0240, 0x0261);
-  // set_addrs_to_default(self, channel, 0x0261, 0x0261);
-
-    //Modify_SPI_Reg_bits(LMS7param(CMIX_GAIN_TXTSP), txcmixGainLSB);
+    set_addrs_to_defaultFilter(self, channel, 0x0240, 0x0261);
+  
     val = LMS7002M_spi_read(self, 0x0208);
-  //  int val_temp = val;
     val &= ~0xD080; // clear bits 14-15, 12, 7
     val |= (txcmixGainLSB & 0x3) << 14; // set bits 14-15 to txcmixGainLSB
     val |= (txcmixGainMSB & 0x1) << 12; // set bit 12 to txcmixGainMSB
@@ -626,14 +532,9 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     LMS7002M_spi_write(self, 0x0208, val);
     LMS7002M_regs_spi_read(self, 0x0208); //read back to update cache
 
-  //  Modify_SPI_Reg_bits(LMS7param(CMIX_GAIN_TXTSP_R3), txcmixGainMSB);
-   // Modify_SPI_Reg_bits(LMS7param(ISINC_BYP_TXTSP), isinc);
     Modify_SPI_Reg_bits(self, 0x0200, 3, 3, 1);
-//LMS7002M_regs_spi_read(self, 0x0200);
-  //  self->regs->reg_0x0200_tsgmode = 1;
+
     Modify_SPI_Reg_bits(self, 0x0200, 2, 2, 1);
-  // self->regs->reg_0x0200_insel = 1;
-  //  LMS7002M_regs_spi_write(self, 0x0200);
 
     int16_t tsgValue = 0x7FFF;
     if(txcmixGainMSB == 0 && txcmixGainLSB == 1)
@@ -642,15 +543,7 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
         tsgValue = 0x5A85;
     else
         tsgValue = 0x7FFF;
-   // LoadDC_REG_IQ(LMS7002M::Tx, tsgValue , tsgValue);
-   // Modify_SPI_Reg_bits(LMS7_DC_REG_TXTSP, I);
-       // Modify_SPI_Reg_bits(LMS7_TSGDCLDI_TXTSP, 0);
-     //   Modify_SPI_Reg_bits(LMS7_TSGDCLDI_TXTSP, 1);
-      //  Modify_SPI_Reg_bits(LMS7_TSGDCLDI_TXTSP, 0);
-        // Modify_SPI_Reg_bits(LMS7_DC_REG_TXTSP, Q);
-        // Modify_SPI_Reg_bits(LMS7_TSGDCLDQ_TXTSP, 0);
-        // Modify_SPI_Reg_bits(LMS7_TSGDCLDQ_TXTSP, 1);
-        // Modify_SPI_Reg_bits(LMS7_TSGDCLDQ_TXTSP, 0);
+   
     self->regs->reg_0x020c_dc_reg = tsgValue;
     LMS7002M_regs_spi_write(self, 0x020c);
 
@@ -672,7 +565,6 @@ int CalibrateTxGainSetup(LMS7002M_t *self, const LMS7002M_chan_t channel)
     self->regs->reg_0x0200_tsgdcldq = 0;
     LMS7002M_regs_spi_write(self, 0x0200);
 
-  //  SetNCOFrequency(LMS7002M::Tx, 0, 0.5e6);
     float_type TSPClk = GetReferenceClk_TSP(self, true);
     LMS7002M_set_nco_freq(self, LMS_TX, channel,  0.5e6/TSPClk); 
 

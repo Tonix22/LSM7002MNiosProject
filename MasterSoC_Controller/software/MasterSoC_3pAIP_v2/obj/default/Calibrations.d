@@ -5,7 +5,8 @@ obj/default/Calibrations.o: ../../Firmware/src/Calibrations.c \
  ../../Firmware/include/LMS7002M/LMS7002M_config.h \
  ../../Firmware/include/LMS7002M/LMS7002M_regs.h \
  ../../Firmware/include/LMS7002M/LMS7002M_time.h \
- ../../Firmware/src/mcu_program_lms7_dc_iq_calibration_bin.h
+ ../../Firmware/src/mcu_program_lms7_dc_iq_calibration_bin.h \
+ ../../Firmware/src/LMS7002M_enable_external_loopback.h
 
 ../../Firmware/src/Calibrations.h:
 
@@ -22,3 +23,5 @@ obj/default/Calibrations.o: ../../Firmware/src/Calibrations.c \
 ../../Firmware/include/LMS7002M/LMS7002M_time.h:
 
 ../../Firmware/src/mcu_program_lms7_dc_iq_calibration_bin.h:
+
+../../Firmware/src/LMS7002M_enable_external_loopback.h:

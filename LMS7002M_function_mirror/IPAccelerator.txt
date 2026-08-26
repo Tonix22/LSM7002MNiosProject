@@ -1,0 +1,20 @@
+10.07.2026 15:28:05   Configs Loaded: C:/WorkspaceDDigital/LSM7002MNiosProject/IpdiDriver/ID0000200F_config.csv
+
+MProgramMEMIN
+MMEMOUT
+CCONFREG
+
+10.07.2026 15:28:05   Connected to COM7: PICORV32_module, 
+10.07.2026 15:29:44   Variable parameters created
+
+
+10.07.2026 15:30:07   Write Memory MProgramMEMIN with 3 flits from variable parameters
+
+
+10.07.2026 15:30:51   Starting IP: PICORV32_module
+10.07.2026 15:33:11   Variable mcu_answer created
+
+
+10.07.2026 15:33:17   Read Memory 2 flits from MMEMOUT to varible mcu_answer
+10.07.2026 15:33:17   Response: 2 flits
+

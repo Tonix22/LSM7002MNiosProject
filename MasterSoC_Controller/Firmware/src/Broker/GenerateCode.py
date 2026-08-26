@@ -248,7 +248,9 @@ def generate_execute_opcode(excel_file, output_file):
     with open(output_file, 'w') as f:
         # Write the function header
         f.write("#include \"parser.h\" \n")
-        f.write("#include \"parser_typedefs.h\" \n\n")
+        f.write("#include \"parser_typedefs.h\" \n") 
+        f.write("#include \"ID00004003_masterSOC.h\" \n")
+        f.write("#include \"system.h\" \n\n")
         f.write("/**\n")
         f.write(" * @brief Executes the callback function for a given opcode.\n")
         f.write(" *\n")
@@ -293,7 +295,7 @@ def generate_execute_opcode(excel_file, output_file):
                 callbackNames = row["Callback"]
                 formatted_callbacks = "/"+"*"*180+"\n\t\t\t* " + "\n\t\t\t* ".join(x.strip() for x in callbackNames.split(",")) + "\n\t\t\t"+"*"*180+"/"
 
-               # str_opcode = ", ".join(opcode)
+               # str_opcode = ", ".join(opcode) 
                 f.write(f"            {formatted_callbacks}\n")
                 for str_opcode in opcode:
                     f.write(f"            case {str_opcode}:\n")
@@ -318,9 +320,9 @@ def generate_execute_opcode(excel_file, output_file):
                         param_casts.append(f"buffer[{i}].value.string")
                     elif param_type == "const int":
                         param_casts.append(f"buffer[{i}].value.const_int")
-                    elif param_type == "const int_arr4":
+                    elif param_type == "const int *":
                         param_casts.append(f"buffer[{i}].value.const_int_arr4") 
-                    elif param_type == "const short":
+                    elif param_type == "const short *":
                         param_casts.append(f"buffer[{i}].value.short_p")        
                     elif param_type == "const LMS7002M_chan_t":
                         param_casts.append(f"buffer[{i}].value.const_chan")
@@ -339,8 +341,20 @@ def generate_execute_opcode(excel_file, output_file):
 
                 # Write the callback casting and invocation
                 callback_signature = ", ".join(param_casts)
-                f.write(f"              (({typedef_name}*)descriptor->callback)({callback_signature});\n")
-                f.write(f"              break;\n\n")
+               
+                if "0x18" in opcode:
+                    f.write(f"              {{ uint32_t rssi = (({typedef_name}*)descriptor->callback)({callback_signature});\n")
+                    f.write(f"              rssi = rssi & 0x0000FFFF;\n")
+                    f.write(f"              ID00004003_writeData(AIP_UP_0_BASE, &rssi, 1, 0);\n")
+                    f.write(f"              break; }}\n\n")
+                elif "0x3" in opcode:
+                    f.write(f"              {{ uint32_t data = (({typedef_name}*)descriptor->callback)({callback_signature});\n")
+                    f.write(f"              data = data & 0x0000FFFF;\n")
+                    f.write(f"              ID00004003_writeData(AIP_UP_0_BASE, &data, 1, 0);\n") 
+                    f.write(f"              break; }}\n\n")
+                else:
+                    f.write(f"              (({typedef_name}*)descriptor->callback)({callback_signature});\n")
+                    f.write(f"              break;\n\n")
             f.write("            } \n")
             f.write("            break;\n")
             f.write("        }\n")

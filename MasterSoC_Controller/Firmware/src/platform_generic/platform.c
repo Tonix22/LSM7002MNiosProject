@@ -47,6 +47,7 @@
 #include "config.h"
 #include <stdbool.h>
 //#include "dupin_small.h"
+#include "spi.h"
 #define MICRO_DELAY_FACTOR 5
 #define MILLI_DELAY_FACTOR  5000
 
@@ -125,7 +126,6 @@ int32_t spi_read_API(uint8_t *data,
     unsigned char tx[2] = {rx[0], rx[1]};
     spi_write_then_read(NULL, tx, 2, rx, bytes_number, slave);
 
-   // printf("Hola, estas en la funcion de spi_read_API\n");
 	return 0;
 }
 
@@ -142,7 +142,6 @@ int spi_write_API(const unsigned char *txbuf, unsigned n_tx, uint8_t slave)
 	}*/
     spi_write_then_read(NULL, tx, n_tx, NULL, 0, slave);
 
-	//printf("Hola, estas en la funcion de spi_write_API\n");
 	return 0;
 }
 /***************************************************************************//**

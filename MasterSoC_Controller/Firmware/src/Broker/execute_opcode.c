@@ -1,5 +1,7 @@
 #include "parser.h" 
 #include "parser_typedefs.h" 
+#include "ID00004003_masterSOC.h" 
+#include "system.h" 
 
 /**
  * @brief Executes the callback function for a given opcode.
@@ -86,8 +88,10 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			* LMS7002M_spi_read
 			************************************************************************************************************************************************************************************/
             case 0x3:
-              ((spi_config_num_callback_dup_1*)descriptor->callback)(lms, buffer[1].value.const_int);
-              break;
+              { uint32_t data = ((spi_config_num_callback_dup_1*)descriptor->callback)(lms, buffer[1].value.const_int);
+              data = data & 0x0000FFFF;
+              ID00004003_writeData(AIP_UP_0_BASE, &data, 1, 0);
+              break; }
 
             /************************************************************************************************************************************************************************************
 			* rx_cal_init
@@ -102,8 +106,10 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 			* LMS7002M_rxtsp_read_rssi
 			************************************************************************************************************************************************************************************/
             case 0x18:
-              ((readrssi_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan);
-              break;
+              { uint32_t rssi = ((readrssi_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan);
+              rssi = rssi & 0x0000FFFF;
+              ID00004003_writeData(AIP_UP_0_BASE, &rssi, 1, 0);
+              break; }
 
             /************************************************************************************************************************************************************************************
 			* LMS7002M_reset_lml_fifo
@@ -243,10 +249,14 @@ int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, siz
 
             /************************************************************************************************************************************************************************************
 			* CalibrateAll
+			* CalibrateRx
+			* CalibrateTx
 			* LMS7002M_rxtsp_set_freq
 			* LMS7002M_txtsp_set_freq
 			************************************************************************************************************************************************************************************/
             case 0x117:
+            case 0x137:
+            case 0x157:
             case 0x17:
             case 0x37:
               ((trf_rbb_rfe_num_callback*)descriptor->callback)(lms, buffer[1].value.const_chan, buffer[2].value.const_double);

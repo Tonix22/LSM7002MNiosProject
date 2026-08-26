@@ -33,3 +33,13 @@ char u32_to_char(uint32_t w){
     memcpy(&c, &w, sizeof(char));
     return c;
 }
+
+short u32_to_short(uint32_t w)
+{
+    uint16_t low = (uint16_t)(w & 0xFFFF);
+
+    if (low & 0x8000)
+        return (short)((int32_t)low - 0x10000);
+
+    return (short)low;
+}

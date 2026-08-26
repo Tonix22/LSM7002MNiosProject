@@ -1,5 +1,6 @@
 
 #include "LMS7002M_RFIC_ENABLES.h"
+#include "platform.h"
 
 void LMS7002M_CORE_LDO_ENABLE (LMS7002M_t *lms, const bool enable) {
    

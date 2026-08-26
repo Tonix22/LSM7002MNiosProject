@@ -94,12 +94,12 @@ int LMS7002M_tune_vco(
     const int vco_cmp_addr
 )
 {
-   
     //check comparator under minimum setting
     *vco_csw_reg = 0;
     LMS7002M_regs_spi_write(self, vco_csw_addr);
      
     LMS7002M_read_vco_cmp(self, vco_cmp_addr);
+
     if (*vco_cmpho_reg == 1 && *vco_cmplo_reg == 1)
     {
         LMS7_log(LMS7_DEBUG, "VCO select FAIL - too high");
@@ -142,7 +142,7 @@ int LMS7002M_tune_vco(
     }
 
     //set the midpoint of the search
-    *vco_csw_reg = (csw_highest+csw_lowest)/2;
+    *vco_csw_reg = (csw_highest+csw_lowest)/2; 
     LMS7002M_regs_spi_write(self, vco_csw_addr);
     //LMS7_logf(LMS7_DEBUG, "lowest CSW_VCO %i, highest CSW_VCO %i, CSW_VCO %i", csw_lowest, csw_highest, *vco_csw_reg);
 
@@ -158,5 +158,5 @@ int LMS7002M_tune_vco(
         return -1;
     }
     
-    return 0;
+    return 0; 
 }

@@ -4,7 +4,7 @@
 
 // #include <stdio.h>
 
-// #include <string.h>
+#include <string.h>
 // #include <stdbool.h>
 #include <stdint.h>
 #include <math.h>
@@ -56,7 +56,7 @@ float_type GetFrequencyCGEN(LMS7002M_t *self);
 float_type GetReferenceClk_TSP(LMS7002M_t *self, bool tx);
 uint16_t Get_SPI_Reg_bits(LMS7002M_t *self, uint16_t address, uint8_t msb, uint8_t lsb);
 void Modify_SPI_Reg_bits(LMS7002M_t *self, const uint16_t address, const uint8_t msb, const uint8_t lsb, const uint16_t value);
-static inline int LMS7002M_regs_default_tofilter(const int addr);
+//static inline int LMS7002M_regs_default_tofilter(const int addr);
 void set_addrs_to_defaultFilter(LMS7002M_t *self, const LMS7002M_chan_t channel, const int start_addr, const int stop_addr);
 //int SetDefaults(LMS7002M_t *self, uint16_t dir1, uint16_t dir2);
 

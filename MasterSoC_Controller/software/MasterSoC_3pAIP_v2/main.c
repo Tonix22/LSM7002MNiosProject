@@ -6,6 +6,8 @@
 #include "aip.h"
 #include "ID0000100A_gpio.h"
 
+#include "ID00004003_masterSOC.h"
+
 // **************************************************************
 #include <LMS7002M/LMS7002M.h>
 //#include <LMS7002M/LMS7002M_logger.h>
@@ -19,60 +21,37 @@
 #include "platform.h"
 #include "parser.h"
 #include "reinterpret.h"
-#include "LMS7002M_set_work_mode.h"
-
-
+//#include "LMS7002M_set_work_mode.h"
+// #include "Tune_Filter_8051.h"
 
 
 // Procesador
-
-        #include "sys/alt_timestamp.h"
-        #include <sys/alt_alarm.h>
+#include "sys/alt_timestamp.h"
+#include <sys/alt_alarm.h>
  
-         #include "altera_avalon_timer_regs.h"
- 
-       
+#include "altera_avalon_timer_regs.h"
     
 #include <sys/time.h>
 #include <LMS7002M/LMS7002M_time.h>
  
 //***************************************************************************************
 #define GPIO_PORT AIP_0_BASE
-#define FLITS_AIP 128
+#define FLITS_AIP 128  // sufiecintes flits para el caso en que se reciben los coeficientes de los filtros GFIR
 #define REF_FREQ (61.44e6/2)
+#define MAX_PARAMETERS_FUNCTIONS 6
 
 volatile int edge_val = 0;
 volatile int start_state = 0;
-//void int_isr(void * context);
-void start_isr(void * context);
-//void int_setup();
-void start_setup();
 
-#include "Tune_Filter_8051.h"
+void start_isr(void * context);
+
+void start_setup();
 
 
 int main(void)
 { 
-    int ts_status;
-    unsigned int ts_freq;
-    alt_timestamp_type ts0, ts1;
-    struct timeval tv0, tv1;
-    long long lms_t0, lms_t1;
-    int i;
-
-    // for (i = 0; i < 10; i++)
-    // {
-    //     lms_t0 = LMS7_time_now();
-    //     printf("Current time: %lld ticks\n", lms_t0);
-    //     LMS7_sleep_for(LMS7_time_tps()/100);   // 10 ms
-    //     lms_t1 = LMS7_time_now();
-
-    //     printf("[%d] delta 10ms = %lld\n", i, lms_t1 - lms_t0);
-    // }
-
-	start_state = 0;
-    uint32_t dataFlit = 0;
-   // uint32_t dataFlits[DUMMY_MEM_SIZE];
+    start_state = 0;
+   // uint32_t dataFlit = 0;
 
     uint32_t data[FLITS_AIP];
 
@@ -98,50 +77,47 @@ int main(void)
 
 
     //  test
-    LMS7002M_set_lo_freq(lms, LMS_TX, 30720000.0, 1e9, NULL); 
-    LMS7002M_set_work_mode(lms);
-    LMS7002M_set_data_clock(lms, 30720000.0, 240e6, NULL); 
+    // LMS7002M_set_lo_freq(lms, LMS_TX, 30720000.0, 2.3e9, NULL); 
+    // LMS7002M_set_work_mode(lms);
+    // LMS7002M_set_data_clock(lms, 30720000.0, 80e6, NULL); 
 
 
-    // config rx para test
-    LMS7002M_set_lo_freq(lms, LMS_RX, 30720000.0, 1e9, NULL);
-    LMS7002M_rfe_enable(lms, LMS_CHA, 1);
-    LMS7002M_rxtsp_enable(lms, LMS_CHA, 1);
-    LMS7002M_rxtsp_set_decim(lms, LMS_CHA, 2);
-    LMS7002M_rxtsp_set_dc_correction(lms, LMS_CHA, 1, 0);
-    LMS7002M_configure_lml_port(lms, LMS_PORT1, LMS_TX, 1);    
-    LMS7002M_configure_lml_port(lms, LMS_PORT2, LMS_RX, 1);
-    LMS7002M_rfe_set_path(lms, LMS_CHA, 72);
+    // // config rx para test
+    // LMS7002M_set_lo_freq(lms, LMS_RX, 30720000.0, 2.3e9, NULL); 
+   
+    // LMS7002M_rfe_enable(lms, LMS_CHA, 1);
+    // LMS7002M_rxtsp_enable(lms, LMS_CHA, 1);
+    // LMS7002M_rxtsp_set_decim(lms, LMS_CHA, 2);
+    // LMS7002M_rxtsp_set_dc_correction(lms, LMS_CHA, 1, 0);
+    // LMS7002M_configure_lml_port(lms, LMS_PORT1, LMS_TX, 1);    
+    // LMS7002M_configure_lml_port(lms, LMS_PORT2, LMS_RX, 1);
+    // LMS7002M_rfe_set_path(lms, LMS_CHA, 72);
 
     
-    lms->regs->reg_0x0086_en_adcclkh_clkgn = 0;
-    LMS7002M_regs_spi_write(lms, 0x0086);
+    // lms->regs->reg_0x0086_en_adcclkh_clkgn = 0; 
+    // LMS7002M_regs_spi_write(lms, 0x0086);
 
 
-    lms->regs->reg_0x0089_clkh_ov_clkl_cgen = 2;
-    LMS7002M_regs_spi_write(lms, 0x0089);
+    // lms->regs->reg_0x0089_clkh_ov_clkl_cgen = 2;
+    // LMS7002M_regs_spi_write(lms, 0x0089);
+
 
     alt_timestamp_start();
 
+    uint32_t opcode; 
+    size_t buffer_size = 0;
+    Geric_Parameter buffer[MAX_PARAMETERS_FUNCTIONS];   
+    double data_pointer;   
+    short gfir_taps_tmp[120]; 
+    uint32_t valor = 0;
     
-   // set_work_mode(lms);
-
-
-    uint32_t opcode;
-    size_t buffer_size;
-    Geric_Parameter buffer[5];   
-    double data_pointer;    
-    
-//int sw = 0;
-    printf("Waiting 'start'\n");
 	while(1){
-		if(start_state != 0){
-            unsigned char txbuf[4];
+		if(start_state != 0) {
 
 				ID00004003_readData(AIP_UP_0_BASE, data, FLITS_AIP, 0);
                 
                 opcode = data[0];
-
+ 
                // buffer[0] no esta en uso
                
                 uint8_t Group_ID = opcode & 31;  
@@ -230,28 +206,31 @@ int main(void)
                         buffer[3].value.d = u32_to_double(data[3], data[4]);
                         // LMS7002M_t *, const LMS7002M_dir_t, const LMS7002M_chan_t, const double
                         break;
-                    case SET_GFIR_TAPS_NUM: {
+                    case SET_GFIR_TAPS_NUM:
+                    {
                         buffer_size = 6;
-                        buffer[1].value.const_dir = data[1];
+
+                        buffer[1].value.const_dir  = data[1];
                         buffer[2].value.const_chan = data[2];
-                        buffer[3].value.const_int = u32_to_int32(data[3]); 
+                        buffer[3].value.const_int  = u32_to_int32(data[3]);
                         buffer[5].value.size = u32_to_int32(data[5]);
 
-                        buffer[4].value.short_p = (short*)&data[6];
-                         
-                     // LMS7002M_t *
-                        break; }
+                        for (size_t i = 0; i < buffer[5].value.size; i++)
+                        {
+                            gfir_taps_tmp[i] = u32_to_short(data[6 + i]);
+                        }
+
+                        buffer[4].value.short_p = gfir_taps_tmp;
+
+                        break;
+                    }
                     case SET_LO_FREQ_NUM:
                         buffer_size = 5;
                         buffer[1].value.const_dir = data[1];
-                       // buffer[2].value.d = u32_to_double(data[2], data[3]);
                         buffer[2].value.d = 30720000.0;
-                       // printf(" el valor double es: %.10f\n", buffer[2].value.d);
                         buffer[3].value.d = u32_to_double(data[4], data[5]);
                         double factual;
                         buffer[4].value.d_pointer = &factual;
-                       // buffer[4].value.d_pointer = u32_to_double_ptr(data[6], data[7]);
-                      //  printf(" el valor double pointer es: %.10f\n", *buffer[4].value.d_pointer);
                         // LMS7002M_t *, const LMS7002M_dir_t, const double, const double, double *
                         break;
                     case TWO_PARAM_LMS_CONST_BOOL_NUM:
@@ -326,7 +305,14 @@ int main(void)
      
                 printf("Nuevo opcode enviado\n");
                 ret = executeOpcode(lms, opcode, buffer, buffer_size);
-                printf("ret = %d\n", ret);
+                
+                ID00004003_getStatus(AIP_UP_0_BASE, &valor);
+                valor = valor | 1; // Set bit 0 to indicate processing is done
+                ID00004003_setStatus(AIP_UP_0_BASE, &valor);
+
+                ID00004003_getStatus(AIP_UP_0_BASE, &valor);
+                valor = valor & ~1 ; 
+                ID00004003_setStatus(AIP_UP_0_BASE, &valor);
 
 		   start_state = 0;
 		}

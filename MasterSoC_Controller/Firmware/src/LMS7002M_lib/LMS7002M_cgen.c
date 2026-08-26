@@ -17,6 +17,7 @@
 
 int LMS7002M_set_data_clock(LMS7002M_t *self, const double fref, const double fout, double *factual)
 {
+   // printf("LMS7002M_set_data_clock: fref=%f, fout=%f\n", fref, fout);
     //LMS7_logf(LMS7_INFO, "CGEN tune %f MHz (fref=%f MHz) begin", fout/1e6, fref/1e6);
     //printf("Freq sampling: %.1f\n", fout);
 

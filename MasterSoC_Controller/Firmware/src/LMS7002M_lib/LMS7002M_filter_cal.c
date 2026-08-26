@@ -42,10 +42,7 @@ int cal_gain_selection(LMS7002M_t *self, const LMS7002M_chan_t channel)
 {
     while (true)
     {   const int rssi_value_50k = cal_read_rssi(self, channel);
-        
-        printf ("cg iamp_tbb: %d\n", LMS7002M_regs(self)->reg_0x0108_cg_iamp_tbb);
         if (rssi_value_50k > 0x8400) break;
-        printf ("cal_gain_selection: rssi_value_50k = %d\n", rssi_value_50k);
 
         LMS7002M_regs(self)->reg_0x0108_cg_iamp_tbb++;
         if (LMS7002M_regs(self)->reg_0x0108_cg_iamp_tbb > 63)
@@ -67,8 +64,6 @@ int cal_setup_cgen(LMS7002M_t *self, const double bw)
     if (cgen_freq < 60e6) cgen_freq = 60e6;
     if (cgen_freq > 640e6) cgen_freq = 640e6;
     while ((int)(cgen_freq/1e6) == (int)(bw/16e6)) cgen_freq -= 10e6;
-    printf("cal_setup_cgen: requested cgen_freq = %f MHz\n", cgen_freq/1e6);
-    printf("cal_setup_cgen: requested cgen_fref = %f MHz\n", self->cgen_fref/1e6);
     return LMS7002M_set_data_clock(self, self->cgen_fref, cgen_freq, NULL);
 }
 

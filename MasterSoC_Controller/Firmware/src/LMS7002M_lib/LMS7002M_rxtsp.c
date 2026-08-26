@@ -136,7 +136,7 @@ uint16_t LMS7002M_rxtsp_read_rssi(LMS7002M_t *self, const LMS7002M_chan_t channe
     const int rssi_hi = LMS7002M_spi_read(self, 0x040F);
     const int rssi_int = (rssi_hi << 2) | rssi_lo;
 
-    printf("rssi int %d\n", rssi_int);
+    // printf("rssi int %d\n", rssi_int);
     return (uint16_t)rssi_int;
 }
 

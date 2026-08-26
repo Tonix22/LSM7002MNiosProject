@@ -20,9 +20,10 @@
 void LMS7002M_sxx_enable(LMS7002M_t *self, const LMS7002M_dir_t direction, const bool enable)
 {
     LMS7002M_set_mac_dir(self, direction);
-    self->regs->reg_0x0124_en_dir_sxx = 1;
+    self->regs->reg_0x0124_en_dir_sxx = 0; 
     LMS7002M_regs_spi_write(self, 0x0124);
 
+    LMS7002M_regs_spi_read(self, 0x011C);
     self->regs->reg_0x011c_en_g = enable?1:0;
     LMS7002M_regs_spi_write(self, 0x011c);
 }
@@ -96,7 +97,7 @@ int LMS7002M_sxx_calc_tune_state(
 void LMS7002M_sxx_apply_tune_state(LMS7002M_t *self, const LMS7002M_sxx_tune_state *s)
 {
     //configure and enable synthesizer
-    self->regs->reg_0x011c_en_intonly_sdm = 0; //support frac-N
+    self->regs->reg_0x011c_en_intonly_sdm = 0; //support frac-N 
     self->regs->reg_0x011c_en_sdm_clk = 1; //enable
     self->regs->reg_0x011c_pd_cp = 0; //enable
     self->regs->reg_0x011c_pd_fbdiv = 0; //enable
@@ -127,9 +128,6 @@ void LMS7002M_sxx_apply_tune_state(LMS7002M_t *self, const LMS7002M_sxx_tune_sta
 
 int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const double fref, const double fout, double *factual)
 {
-    //LMS7_logf(LMS7_INFO, "SXX tune %f MHz (fref=%f MHz) begin", fout/1e6, fref/1e6);
-  //  printf("SXX tune %f MHz (fref=%f MHz) begin\n", fout/1e6, fref/1e6);
-
     LMS7002M_set_mac_dir(self, direction);
 
     //reset
@@ -184,17 +182,19 @@ int LMS7002M_set_lo_freq(LMS7002M_t *self, const LMS7002M_dir_t direction, const
     }
     //LMS7_logf(LMS7_DEBUG, "Choosing SEL_VCO = %d", SEL_VCO_best);
 
-    //select the best VCO now
-    self->regs->reg_0x0121_csw_vco = CSW_VCO_best;
-    self->regs->reg_0x0121_sel_vco = SEL_VCO_best;
-    LMS7002M_regs_spi_write(self, 0x0121);
-
-    self->regs->reg_0x011c_spdup_vco = 0; //done with fast settling
-    LMS7002M_regs_spi_write(self, 0x011c);
 
     //apply the best configuration
     LMS7002M_sxx_tune_state *s = states+SEL_VCO_best;
     LMS7002M_sxx_apply_tune_state(self, s);
+
+     //select the best VCO now
+    self->regs->reg_0x0121_csw_vco = CSW_VCO_best;
+    self->regs->reg_0x0121_sel_vco = SEL_VCO_best;
+    LMS7002M_regs_spi_write(self, 0x0121);
+
+     self->regs->reg_0x011c_spdup_vco = 0; //done with fast settling
+    LMS7002M_regs_spi_write(self, 0x011c);
+
 
     //after a successful tune, stash the frequency
     if (direction == LMS_RX) self->sxr_freq = fout;

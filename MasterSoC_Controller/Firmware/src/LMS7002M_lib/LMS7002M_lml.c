@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include "LMS7002M_impl.h"
+#include "ID0000100A_gpio.h"
 
 void LMS7002M_set_spi_mode(LMS7002M_t *self, const int numWires)
 {
@@ -39,7 +40,7 @@ void LMS7002M_reset(LMS7002M_t *self)
     ID0000100A_startIP(GPIO_PORT);
     for (int rep = 10; rep > 0; rep--)
 		{
-			__asm__ volatile ("nop");//asm volatile("");
+			__asm__ volatile ("nop");
 		}
     ID0000100A_wrGPIO_OUTDATA(GPIO_PORT,&dataO,1,0);  
     ID0000100A_startIP(GPIO_PORT);  
@@ -48,6 +49,7 @@ void LMS7002M_reset(LMS7002M_t *self)
 
 void LMS7002M_reset_lml_fifo(LMS7002M_t *self, const LMS7002M_dir_t direction)
 {
+    //printf("LMS7002M_reset_lml_fifo: direction %d\n", direction);
     //LML is in global register space
     LMS7002M_set_mac_ch(self, LMS_CHAB);
 
@@ -110,6 +112,7 @@ void LMS7002M_power_down(LMS7002M_t *self)
 
 void LMS7002M_configure_lml_port(LMS7002M_t *self, const LMS7002M_port_t portNo, const LMS7002M_dir_t direction, const int mclkDiv)
 {
+   // printf("LMS7002M_configure_lml_port: portNo %d, direction %d, mclkDiv %d\n", portNo, direction, mclkDiv);
     //LML is in global register space
     LMS7002M_set_mac_ch(self, LMS_CHAB);
 
@@ -271,6 +274,7 @@ static inline int __lms7002m_diq_index(const int search, const int positions[4])
 
 void LMS7002M_set_diq_mux(LMS7002M_t *self, const LMS7002M_dir_t direction, const int positions[4])
 {
+  //  printf("LMS7002M_set_diq_mux: direction %d, positions [%d, %d, %d, %d]\n", direction, positions[0], positions[1], positions[2], positions[3]);
     //LML is in global register space
     LMS7002M_set_mac_ch(self, LMS_CHAB);
 

@@ -21,11 +21,16 @@ int LMS7002M_set_gfir_taps(
     const short *taps,
     const size_t ntaps) {
 
+    printf("LMS7002M_set_gfir_taps: direction %d, channel %c, which %d, ntaps %d\n", direction, channel, which, ntaps);    
+    for (size_t i = 0; i < ntaps; i++)
+    {
+        printf("taps[%d] = %d\n", i, taps[i]);
+    }
+
     LMS7002M_set_mac_ch(self, channel);
 
     //bypass the filter for null/empty filter taps
     const bool bypass = (taps == NULL) || (ntaps == 0);
-    printf("byp %d y ntpas %d\n", bypass, ntaps);
 
     if (direction == LMS_RX)
     {

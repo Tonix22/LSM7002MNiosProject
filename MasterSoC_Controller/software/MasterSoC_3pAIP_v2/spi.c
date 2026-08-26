@@ -2,7 +2,7 @@
 #include "altera_avalon_spi_regs.h"
 #include "altera_avalon_pio_regs.h"
 #include "system.h"
-
+#include "spi.h"
 
 
 int32_t spi_read(uint8_t *data, uint8_t bytes_number, uint8_t slave) {

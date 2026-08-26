@@ -55,4 +55,7 @@ int8_t aip_getINT (void *aipBaseAddr, uint8_t* intVector);
 
 int8_t aip_getNotifications(void *aipBaseAddr, uint8_t* notificationsVector);
 
+
+//int8_t aip_writeStatus (void *aipBaseAddr, uint8_t configMem, uint32_t* dataWrite, uint16_t amountData);
+
 #endif /* AIP_H_ */

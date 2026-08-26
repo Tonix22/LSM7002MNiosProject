@@ -92,6 +92,7 @@ struct spi_device {
 	uint8_t 		id_no;
 };
 
+
 struct axiadc_chip_info {
 	char		*name;
 	int32_t		num_channels;

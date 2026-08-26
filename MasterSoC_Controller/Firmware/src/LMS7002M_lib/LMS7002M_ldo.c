@@ -14,6 +14,7 @@
 
 void LMS7002M_ldo_enable(LMS7002M_t *self, const bool enable, const int group)
 {
+   // printf("LMS7002M_ldo_enable: enable %d, group %d\n", enable, group);
     //LDO is a global register space
     LMS7002M_set_mac_ch(self, LMS_CHAB);
 

@@ -80,6 +80,17 @@ int8_t aip_writeMem (void *aipBaseAddr, uint8_t configMem, uint32_t* dataWrite, 
     return 0;
 }
 
+int8_t aip_writeStatus (void *aipBaseAddr, uint8_t configMem, uint32_t* dataWrite, uint16_t amountData)
+{
+
+    /* write data */
+    aip_aipWrite((void *)aipBaseAddr, configMem, dataWrite, amountData);
+
+    return 0;
+}
+
+
+
 int8_t aip_writeConfReg (void *aipBaseAddr, uint8_t configConfReg, uint32_t* dataWrite, uint16_t amountData, uint32_t offset)
 {
     /* set addrs */
@@ -90,6 +101,7 @@ int8_t aip_writeConfReg (void *aipBaseAddr, uint8_t configConfReg, uint32_t* dat
 
     return 0;
 }
+
 
 int8_t aip_start (void *aipBaseAddr)
 {

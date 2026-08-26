@@ -1,5 +1,5 @@
 #include "ID0000100A_gpio.h"
-//#include "aip.h"
+#include "aip.h"
 //#include "firmware.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -47,9 +47,9 @@ int32_t ID0000100A_init(uint32_t port)
 int32_t ID0000100A_GPIO_MODER_Write(uint32_t port, uint32_t data)
 {
   
-    aip_writeConfReg(port, CCONFREG, &data, 1, 0);
+    aip_writeConfReg((void *)port, CCONFREG, &data, 1, 0);
 
-    aip_enableINT(port, ID0000100A_STATUS_BIT_DONE);
+    aip_enableINT((void *)port, ID0000100A_STATUS_BIT_DONE);
 
     return 0;
 }
@@ -57,9 +57,9 @@ int32_t ID0000100A_GPIO_MODER_Write(uint32_t port, uint32_t data)
 int32_t ID0000100A_GPIO_INT_MODER_Write(uint32_t port, uint32_t data)
 {
   
-    aip_writeConfReg(port, CCONFREG, &data, 1, 1);
+    aip_writeConfReg((void *)port, CCONFREG, &data, 1, 1);
 
-    aip_enableINT(port, ID0000100A_STATUS_BIT_DONE);
+    aip_enableINT((void *)port, ID0000100A_STATUS_BIT_DONE);
 
     return 0;
 }
@@ -78,35 +78,35 @@ int32_t ID0000100A_GPIO_INT_MODER_Write(uint32_t port, uint32_t data)
 
 int32_t ID0000100A_startIP(uint32_t port)
 {
-    aip_start(port);
+    aip_start((void *)port);
 
     return 0;
 }
 
 int32_t ID0000100A_wrGPIO_OUTDATA(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
 {
-    aip_writeMem(port, MMEMIN, data, size, offset);
+    aip_writeMem((void *)port, MMEMIN, data, size, offset);
 
     return 0;
 }
 
 int32_t ID0000100A_readGPIO_INData(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
 {
-    aip_readMem(port, MMEMOUT, data, size, offset);
+    aip_readMem((void *)port, MMEMOUT, data, size, offset);
 
     return 0;
 }
 
 int32_t ID0000100A_readEXT_INTERRUPTS(uint32_t port, uint32_t *data, uint32_t size, uint32_t offset)
 {
-    aip_readMem(port, MMEMOUT2, data, size, offset);
+    aip_readMem((void *)port, MMEMOUT2, data, size, offset);
 
     return 0;
 }
 
 int32_t ID0000100A_getStatus(uint32_t port, uint32_t *status)
 {
-    aip_getStatus(port, status);
+    aip_getStatus((void *)port, status);
 
     return 0;
 }
@@ -117,7 +117,7 @@ int32_t ID0000100A_waitDone(uint32_t port)
 
     do
     {
-        aip_getINT(port, &statusINT);
+        aip_getINT((void *)port, &statusINT);
     } while (!(statusINT && 0x1));
 
     return 0;
@@ -127,9 +127,9 @@ static int32_t ID0000100A_clearStatus(uint32_t port)
 {
     for(uint8_t i = 0; i < ID0000100A_STATUS_BITS; i++)
     {
-        aip_disableINT(port, i);
+        aip_disableINT((void *)port, i);
         
-        aip_clearINT(port, i);
+        aip_clearINT((void *)port, i);
     }
 
     return 0;

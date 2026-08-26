@@ -3,12 +3,13 @@
 
 
 #include <stdint.h>
+#include "util.h"
 
 
-struct spi_device {
-	struct device	dev;
-	uint8_t 		id_no;
-};
+// struct spi_device {
+// 	struct device	dev;
+// 	uint8_t 		id_no;
+// }; 
 
 int32_t spi_read(uint8_t *data, uint8_t bytes_number, uint8_t slave);
 

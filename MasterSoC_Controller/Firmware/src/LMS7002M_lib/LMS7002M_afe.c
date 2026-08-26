@@ -15,6 +15,7 @@
 
 void LMS7002M_afe_enable(LMS7002M_t *self, const LMS7002M_dir_t direction, const LMS7002M_chan_t channel, const bool enable)
 {
+   // printf("LMS7002M_afe_enable: direction=%d, channel=%c, enable=%d\n", direction, channel, enable);
     //support using LMS_CHAB to set both ADCs or DACs
     if (channel == LMS_CHAB)
     {

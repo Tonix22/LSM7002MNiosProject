@@ -228,4 +228,6 @@ void push_param(uint32_t var, unsigned char idx);
  */
 void set_opcode_to_ptypes(long opcode);
 
+int executeOpcode(LMS7002M_t *lms, uint32_t opcode, Geric_Parameter* buffer, size_t buffer_size);
+
 #endif /* PARSER_H */

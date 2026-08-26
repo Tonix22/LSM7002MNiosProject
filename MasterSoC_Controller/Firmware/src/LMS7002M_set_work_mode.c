@@ -1,4 +1,5 @@
 #include "LMS7002M_set_work_mode.h"
+#include "platform.h"
 
 
 void LMS7002M_set_work_mode (LMS7002M_t *lms) {
@@ -341,7 +342,7 @@ void LMS7002M_set_work_mode (LMS7002M_t *lms) {
 // id = 01 corresponde a escritura a nios_cfg y id = 11 a escritura al LMS7002M
     unsigned char txbuf[4]; 
     int length = sizeof(word) / (4*sizeof(word[0]));  
-    printf("Length: %d\n", length); 
+  
      for (int i = 0; i<length; i++){
         txbuf[0] = word[i*4];
         txbuf[1] = word[i*4+1];
@@ -357,7 +358,6 @@ void LMS7002M_set_work_mode (LMS7002M_t *lms) {
             uint16_t dir = ((uint16_t)txbuf[0] << 8) | txbuf[1];
             uint16_t data = ((uint16_t)txbuf[2] << 8) | txbuf[3];
             uint32_t dta = ((uint32_t)dir << 16) | data;
-          //  printf("DATA: %08x\n", dta);
             spi_write_API(txbuf, 4, 1);
         }
      }    

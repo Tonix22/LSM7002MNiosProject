@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1787248581 source:c:\workspaceddigital\lsm7002mniosproject\lms7002m_function_mirror\c\functions_aip.c
+	"caip.h"
+	<stdint.h>
+	<stdio.h>
+	<conio.h>
+
+1690571348 c:\ipdi\wrappers\c\include\caip.h
+	<stdint.h>
+
+1787248635 source:c:\workspaceddigital\lsm7002mniosproject\lms7002m_function_mirror\c\main.c
+	<stdio.h>
+	"lms7002m_functions_mirror.h"
+
+1787171515 c:\workspaceddigital\lsm7002mniosproject\lms7002m_function_mirror\c\lms7002m_functions_mirror.h
+	<stdint.h>
+	<stdbool.h>
+	"functions_aip.h"
+
+1787253236 c:\workspaceddigital\lsm7002mniosproject\lms7002m_function_mirror\c\functions_aip.h
+	<stdint.h>
+
+1787327964 source:c:\workspaceddigital\lsm7002mniosproject\lms7002m_function_mirror\c\lms7002m_functions_mirror.c
+	"lms7002m_functions_mirror.h"
+	<string.h>
+
