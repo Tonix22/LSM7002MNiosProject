@@ -33,7 +33,7 @@ void execute_option(void *aip, int option){
         break;
 
     case 2:
-        LMS7002M_regs(aip);
+       // LMS7002M_regs(aip);
         break;
 
     case 3:

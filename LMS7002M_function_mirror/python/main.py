@@ -55,7 +55,7 @@ def show_menu():
     print("0. Salir")
     print("\n--- Funciones de gestión e inicialización ---")
     print("1. LMS7002M_create")
-    print("2. LMS7002M_regs")
+    //print("2. LMS7002M_regs")
     print("3. LMS7002M_destroy")
     print("4. LMS7002M_reset")
     print("5. LMS7002M_power_down")
@@ -158,9 +158,9 @@ def execute_option(option, aip):
         return True
 
     elif option == 2:
-        print("\nEjecutando LMS7002M_regs")
-        LMS7002M_regs(aip)
-        print("LMS7002M_regs ejecutada.")
+        print("\nInvalid option")
+        # LMS7002M_regs(aip)
+        # print("LMS7002M_regs ejecutada.")
         return True
 
     elif option == 3:

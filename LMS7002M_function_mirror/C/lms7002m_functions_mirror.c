@@ -56,13 +56,13 @@ void LMS7002M_create(void *aip)
     aip_start(aip);
 }
 
-void LMS7002M_regs(void *aip)
-{
-    uint32_t opcode = 0x01;
-    uint32_t buffer[] = {opcode};
-    aip_write(aip, buffer, 1, 0);
-    aip_start(aip);
-}
+// void LMS7002M_regs(void *aip)
+// {
+//     uint32_t opcode = 0x01;
+//     uint32_t buffer[] = {opcode};
+//     aip_write(aip, buffer, 1, 0);
+//     aip_start(aip);
+// }
 
 void LMS7002M_destroy(void *aip)
 {

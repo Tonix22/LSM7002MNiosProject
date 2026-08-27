@@ -40,10 +40,10 @@ def LMS7002M_create(aip):
     aip_start(aip)
 
 
-def LMS7002M_regs(aip):
-    opcode = 0x01
-    aip_write(aip, [opcode], 1, 0)
-    aip_start(aip)
+# def LMS7002M_regs(aip):
+#     opcode = 0x01
+#     aip_write(aip, [opcode], 1, 0)
+#     aip_start(aip)
 
 
 def LMS7002M_destroy(aip):
